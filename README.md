@@ -1,4 +1,3 @@
-MAKE README
-====
-*github 编辑README的经验
+# MAKE README
+* github 编辑README的经验
 
