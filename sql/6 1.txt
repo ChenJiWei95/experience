@@ -1,0 +1,21 @@
+SELECT * FROM student
+INSERT INTO student(学号,姓名,性别,出生日期,专业,总学分) VALUES(191312, '邱金城', 1, '1995-03-18', '计算机', 50);
+UPDATE student SET 姓名 = '邱小成' WHERE 学号 = 191312;
+DELETE FROM student WHERE 学号 = 191312;
+CREATE TABLE tt(
+	...
+	CONSTRAINT pk_PersonID PRIMARY KEY (Id_p)
+)ENGINE=INNODB CHARSET=utf8;
+CREATE TABLE tt(
+	...
+	CONSTRAINT uc_PersonID UNIQUE (Id_p)
+)ENGINE=INNODB CHARSET=utf8;
+CREATE TABLE tt(
+	...
+	CONSTRAINT fk_PersonID FOREIGN KEY (Id_p)
+)ENGINE=INNODB CHARSET=utf8;
+CREATE TABLE tt(
+	...
+	CONSTRAINT ck_PersonID CHECK (id>0)
+)ENGINE=INNODB CHARSET=utf8;
+创建索引
