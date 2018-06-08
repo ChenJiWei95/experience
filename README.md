@@ -1,4 +1,4 @@
 # MAKE README
 * github 编辑README的经验
-[百度](https://www.baidu.com/s?wd=%E4%BB%8A%E6%97%A5%E6%96%B0%E9%B2%9C%E4%BA%8B&tn=SE_Pclogo_6ysd4c7a&sa=ire_dl_gh_logo&rsv_dl=igh_logo_pc)
+![baidu](https://t12.baidu.com/it/u=3540691340,441273839&fm=175&app=25&f=JPEG?w=590&h=350&s=1E8B874500427F477405982503004061 "百度logo")  
 
