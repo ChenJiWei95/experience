@@ -29,6 +29,9 @@
 
 插入链接:
 [百度](http://baidu.com)
+
+图片：
+![](http://www.baidu.com/img/bdlogo.gif)
 ![baidu](http://www.baidu.com/img/bdlogo.gif "百度logo")  
 
 插入代码：
