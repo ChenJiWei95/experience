@@ -1,205 +1,205 @@
-������
-ѧ����Ϣ�� �� 
+背景：
+学生信息表 、 
 CREATE TABLE student(
-	ѧ�� INT(6) 				NOT NULL PRIMARY KEY,
-	���� CHAR(8) 				NOT NULL,
-	�Ա� bit 						NULL DEFAULT 1 COMMENT '1:�У�0��Ů',
-	�������� date 			NULL,
-	רҵ	CHAR(12) 			NULL DEFAULT '�����',
-	��ѧ�� INT 					NULL DEFAULT 0,
-	��ע	VARCHAR(500) 	NULL,
-	CONSTRAINT fk_sex CHECK (0<=�Ա�<=1)
+	学号 INT(6) 				NOT NULL PRIMARY KEY,
+	姓名 CHAR(8) 				NOT NULL,
+	性别 bit 						NULL DEFAULT 1 COMMENT '1:男，0：女',
+	出生日期 date 			NULL,
+	专业	CHAR(12) 			NULL DEFAULT '计算机',
+	总学分 INT 					NULL DEFAULT 0,
+	备注	VARCHAR(500) 	NULL,
+	CONSTRAINT ck_sex CHECK (0<=性别<=1)
 );
-INSERT INTO student(ѧ��,����,�Ա�,��������,רҵ,��ѧ��) 
-VALUES(191302, '����', 1, '1996-02-01', '�����', 70);
-INSERT INTO student(ѧ��,����,�Ա�,��������,רҵ,��ѧ��) 
-VALUES(191303, '����', 0, '1994-10-12', '�����', 50);
-INSERT INTO student(ѧ��,����,�Ա�,��������,רҵ,��ѧ��) 
-VALUES(191304, 'κ����', 0, '1996-05-18', '�����', 66);
-INSERT INTO student(ѧ��,����,�Ա�,��������,רҵ,��ѧ��) 
-VALUES(191305, '���', 0, '1996-02-19', '�����', 65);
-INSERT INTO student(ѧ��,����,�Ա�,��������,רҵ,��ѧ��) 
-VALUES(191306, '����', 1, '1997-03-19', '�����', 86);
-INSERT INTO student(ѧ��,����,�Ա�,��������,רҵ,��ѧ��) 
-VALUES(191307, '����', 0, '1995-08-13', '�����', 77);
-INSERT INTO student(ѧ��,����,�Ա�,��������,רҵ,��ѧ��) 
-VALUES(191309, '����', 1, '1995-12-10', '�����', 48);
-INSERT INTO student(ѧ��,����,�Ա�,��������,רҵ,��ѧ��) 
-VALUES(191310, '����', 0, '1995-12-27', '�����', 75);
-INSERT INTO student(ѧ��,����,�Ա�,��������,רҵ,��ѧ��) 
-VALUES(191311, '����', 1, '1995-06-10', '�����', 65);
+INSERT INTO student(学号,姓名,性别,出生日期,专业,总学分) 
+VALUES(191302, '程明', 1, '1996-02-01', '计算机', 70);
+INSERT INTO student(学号,姓名,性别,出生日期,专业,总学分) 
+VALUES(191303, '王燕', 0, '1994-10-12', '计算机', 50);
+INSERT INTO student(学号,姓名,性别,出生日期,专业,总学分) 
+VALUES(191304, '魏艳艳', 0, '1996-05-18', '计算机', 66);
+INSERT INTO student(学号,姓名,性别,出生日期,专业,总学分) 
+VALUES(191305, '李芳芳', 0, '1996-02-19', '计算机', 65);
+INSERT INTO student(学号,姓名,性别,出生日期,专业,总学分) 
+VALUES(191306, '张明', 1, '1997-03-19', '计算机', 86);
+INSERT INTO student(学号,姓名,性别,出生日期,专业,总学分) 
+VALUES(191307, '王敏', 0, '1995-08-13', '计算机', 77);
+INSERT INTO student(学号,姓名,性别,出生日期,专业,总学分) 
+VALUES(191309, '武威', 1, '1995-12-10', '计算机', 48);
+INSERT INTO student(学号,姓名,性别,出生日期,专业,总学分) 
+VALUES(191310, '刘艳', 0, '1995-12-27', '计算机', 75);
+INSERT INTO student(学号,姓名,性别,出生日期,专业,总学分) 
+VALUES(191311, '刘华', 1, '1995-06-10', '计算机', 65);
 
-ѧ���γ̱�
+学生课程表
 CREATE TABLE kcb(
-	�γ̺� 		CHAR(3) 		NOT NULL PRIMARY KEY,
-	�γ��� 		CHAR(16) 		NOT	NULL,
-	����ѧ�� 	TINYINT(1) 	NULL DEFAULT 1 COMMENT '��Χ1~8',
-	ѧʱ			TINYINT(1) 	NULL DEFAULT 0,
-	ѧ��			TINYINT(1) 	NOT NULL DEFAULT 0 COMMENT '��Χ1~6',
-	CONSTRAINT ck_time CHECK (1<=����ѧ��<=8),
-	CONSTRAINT ck_score CHECK (1<=ѧ��<=6)
+	课程号 		CHAR(3) 		NOT NULL PRIMARY KEY,
+	课程名 		CHAR(16) 		NOT	NULL,
+	开课学期 	TINYINT(1) 	NULL DEFAULT 1 COMMENT '范围1~8',
+	学时			TINYINT(1) 	NULL DEFAULT 0,
+	学分			TINYINT(1) 	NOT NULL DEFAULT 0 COMMENT '范围1~6',
+	CONSTRAINT ck_time CHECK (1<=开课学期<=8),
+	CONSTRAINT ck_score CHECK (1<=学分<=6)
 )ENGINE=INNODB CHARSET=utf8;
-INSERT INTO kcb(�γ̺�,�γ���,����ѧ��,ѧʱ,ѧ��) VALUES('003', '���������', 2, 18, 2);
+INSERT INTO kcb(课程号,课程名,开课学期,学时,学分) VALUES('003', '计算机基础', 2, 18, 2);
 
-�ɼ���
+成绩表
 CREATE TABLE cjb(
-	ѧ�� 		INT(6) 		NOT NULL PRIMARY KEY,
-	�γ̺� 	CHAR(3) 	NOT NULL,
-	�ɼ� 		INT 			NULL DEFAULT 0 COMMENT '��Χ0~100',
-	CONSTRAINT ck_sc CHECK (0<=�ɼ�<=100)
+	学号 		INT(6) 		NOT NULL PRIMARY KEY,
+	课程号 	CHAR(3) 	NOT NULL,
+	成绩 		INT 			NULL DEFAULT 0 COMMENT '范围0~100',
+	CONSTRAINT ck_sc CHECK (0<=成绩<=100)
 );
-INSERT INTO cjb(ѧ��,�γ̺�,�ɼ�) VALUES(191301, '003', 80);
-INSERT INTO cjb(ѧ��,�γ̺�,�ɼ�) VALUES(191302, '003', 89);
-INSERT INTO cjb(ѧ��,�γ̺�,�ɼ�) VALUES(191303, '003', 78);
-INSERT INTO cjb(ѧ��,�γ̺�,�ɼ�) VALUES(191304, '003', 76);
-INSERT INTO cjb(ѧ��,�γ̺�,�ɼ�) VALUES(191305, '003', 73);
-INSERT INTO cjb(ѧ��,�γ̺�,�ɼ�) VALUES(191306, '003', 81);
-INSERT INTO cjb(ѧ��,�γ̺�,�ɼ�) VALUES(191307, '003', 73);
-INSERT INTO cjb(ѧ��,�γ̺�,�ɼ�) VALUES(191309, '003', 70);
-INSERT INTO cjb(ѧ��,�γ̺�,�ɼ�) VALUES(191310, '003', 80);
-INSERT INTO cjb(ѧ��,�γ̺�,�ɼ�) VALUES(191311, '003', 88);
+INSERT INTO cjb(学号,课程号,成绩) VALUES(191301, '003', 80);
+INSERT INTO cjb(学号,课程号,成绩) VALUES(191302, '003', 89);
+INSERT INTO cjb(学号,课程号,成绩) VALUES(191303, '003', 78);
+INSERT INTO cjb(学号,课程号,成绩) VALUES(191304, '003', 76);
+INSERT INTO cjb(学号,课程号,成绩) VALUES(191305, '003', 73);
+INSERT INTO cjb(学号,课程号,成绩) VALUES(191306, '003', 81);
+INSERT INTO cjb(学号,课程号,成绩) VALUES(191307, '003', 73);
+INSERT INTO cjb(学号,课程号,成绩) VALUES(191309, '003', 70);
+INSERT INTO cjb(学号,课程号,成绩) VALUES(191310, '003', 80);
+INSERT INTO cjb(学号,课程号,成绩) VALUES(191311, '003', 88);
 
-//ɾ����
+//删除表
 DROP TABLE student;
 
-//������
+//创建表
 CREATE TABLE student(
 	id INT(4) NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	name CHAR(20)
 )ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 
-//���ṹ���޸� ������
+//表结构的修改 添加列
 ALTER TABLE test.student ADD age INT(3);
 ALTER TABLE test.student ADD score INT(3);
 
-//���ṹ���޸� ɾ����
+//表结构的修改 删除列
 ALTER TABLE test.student DROP COLUMN age;
 
-INSERT INTO student(name,score) VALUES('С��', 89);
+INSERT INTO student(name,score) VALUES('小明', 89);
 
 //
-INSERT INTO student(name,score) VALUES('С��', 88);
+INSERT INTO student(name,score) VALUES('小明', 88);
 
-//�޸�
-UPDATE student SET name = 'С��' WHERE id = 2;
+//修改
+UPDATE student SET name = '小红' WHERE id = 2;
 
-//����
-INSERT INTO student(name,score) VALUES('С��', 60);
+//插入
+INSERT INTO student(name,score) VALUES('小丽', 60);
 
 //
-INSERT INTO student(name,score) VALUES('С��', 100);
+INSERT INTO student(name,score) VALUES('小花', 100);
 
-//��ѯ
+//查询
 SELECT * FROM student;
 
-//ƽ��ֵ
-SELECT id AS '���',name AS '����' FROM student LIMIT 2;
+//平均值
+SELECT id AS '编号',name AS '名称' FROM student LIMIT 2;
 
-//�ۺϺ��� ����
-SELECT SUM(score) AS '����' FROM student;
+//聚合函数 总数
+SELECT SUM(score) AS '总数' FROM student;
 
-//�ۺϺ��� ƽ��ֵ
-SELECT AVG(score) AS 'ƽ��ֵ' FROM student;
+//聚合函数 平均值
+SELECT AVG(score) AS '平均值' FROM student;
 
-//�ۺϺ��� 
-SELECT MAX(score) AS '���ֵ' FROM student;
+//聚合函数 
+SELECT MAX(score) AS '最大值' FROM student;
 
-//�ۺϺ��� 
-SELECT COUNT(*) AS '����' FROM student;
+//聚合函数 
+SELECT COUNT(*) AS '人数' FROM student;
 
-//LIKEƥ��
-SELECT * FROM student WHERE name LIKE 'С_';
+//LIKE匹配
+SELECT * FROM student WHERE name LIKE '小_';
 
-//LIKEƥ��
+//LIKE匹配
 SELECT * FROM student WHERE score LIKE '%8_[1-9]';
 
-//������
+//导出表
 SELECT * FROM(
 	SELECT name,score FROM student WHERE score > 80
-) AS studenty WHERE studenty.`name` LIKE 'С_';
+) AS studenty WHERE studenty.`name` LIKE '小_';
 
-//����
-INSERT INTO student(name, score) VALUES('С��', 89);
-INSERT INTO student(name, score) VALUES('С��', 78);
-INSERT INTO student(name, score) VALUES('С��', 69);
+//插入
+INSERT INTO student(name, score) VALUES('小明', 89);
+INSERT INTO student(name, score) VALUES('小华', 78);
+INSERT INTO student(name, score) VALUES('小于', 69);
 
-//����ν��
+//连接谓词
 SELECT student.id, name, score, major
 	FROM student, classinfor
 	WHERE student.id = classinfor.id;
 	
-SELECT student.ѧ��, student.����, student.�Ա�, student.��������, student.רҵ, kcb.�γ���, cjb.�ɼ�
+SELECT student.学号, student.姓名, student.性别, student.出生日期, student.专业, kcb.课程名, cjb.成绩
 FROM cjb,kcb,student
-WHERE student.`ѧ��` = cjb.`ѧ��` 
-	AND kcb.�γ̺� = cjb.�γ̺�;
+WHERE student.`学号` = cjb.`学号` 
+	AND kcb.课程号 = cjb.课程号;
 	
-//������
-SELECT student.ѧ��, student.����, student.�Ա�, student.��������, student.רҵ, kcb.�γ���, cjb.�ɼ�
+//内连接
+SELECT student.学号, student.姓名, student.性别, student.出生日期, student.专业, kcb.课程名, cjb.成绩
 FROM cjb JOIN kcb JOIN student
-ON student.`ѧ��` = cjb.`ѧ��` 
-AND kcb.�γ̺� = cjb.�γ̺�;
+ON student.`学号` = cjb.`学号` 
+AND kcb.课程号 = cjb.课程号;
 
-//������
+//外连接
 SELECT *
 FROM cjb LEFT OUTER JOIN student
-ON student.`ѧ��` = cjb.`ѧ��` 
+ON student.`学号` = cjb.`学号` 
 
-//��������
+//交叉连接
 SELECT *
 FROM cjb CROSS JOIN student
-ON student.`ѧ��` = cjb.`ѧ��` 
+ON student.`学号` = cjb.`学号` 
 
 
-//ע�ͷ�ʽ
+//注释方式
 -- this comment...
 # this coment...
 /* this comment... */
 	
 ===========================================================================================
 	
-mysql��engine=innodb��engine=myisam������
+mysql中engine=innodb和engine=myisam的区别
 1. ISAM 
-	ISAM��һ��������ȷ������ʱ�俼������ݱ�������������������֮ʱ�Ϳ��ǵ����ݿⱻ��ѯ��
-	����ҪԶ���ڸ��µĴ�������ˣ�ISAMִ�ж�ȡ�������ٶȺܿ죬���Ҳ�ռ�ô������ڴ�ʹ洢��
-	Դ��ISAM��������Ҫ����֮�����ڣ�����֧����������Ҳ���ܹ��ݴ���������Ӳ�̱����ˣ���
-	ô�����ļ����޷��ָ��ˡ���������ڰ�ISAM���ڹؼ�����Ӧ�ó�����Ǿͱ��뾭������������
-	��ʵʱ���ݣ�ͨ���临�����ԣ�MySQL�ܹ�֧�������ı���Ӧ�ó��� 
+	ISAM是一个定义明确且历经时间考验的数据表格管理方法，它在设计之时就考虑到数据库被查询的
+	次数要远大于更新的次数。因此，ISAM执行读取操作的速度很快，而且不占用大量的内存和存储资
+	源。ISAM的两个主要不足之处在于，它不支持事务处理，也不能够容错：如果你的硬盘崩溃了，那
+	么数据文件就无法恢复了。如果你正在把ISAM用在关键任务应用程序里，那就必须经常备份你所有
+	的实时数据，通过其复制特性，MySQL能够支持这样的备份应用程序。 
 2. InnoDB 
-	���ṩ����������������ܣ���ȷ��һ������ȫ��ִ�гɹ������ߵ��κ�һ��������ִ���ʱ����
-	����Ľ���������ˣ����������ڵ���������������������Ƿǳ���Ҫ�ġ�֧��COMMIT��ROLLBACK
-	�������������ԡ����°汾��Mysql�Ѿ��ƻ��Ƴ���BDB��֧�֣�ת��ȫ����չInnoDB��
+	它提供了事务控制能力功能，它确保一组命令全部执行成功，或者当任何一个命令出现错误时所有
+	命令的结果都被回退，可以想像在电子银行中事务控制能力是非常重要的。支持COMMIT、ROLLBACK
+	和其他事务特性。最新版本的Mysql已经计划移除对BDB的支持，转而全力发展InnoDB。
 
-MyIASM��IASM�����°汾����������չ��
-	�����Ʋ�εĿ���ֲ�ԡ�
-	NULL��������
-	�Ա䳤�б�ISAM���и��ٵ���Ƭ��
-	֧�ִ��ļ���
-	���õ�����ѹ����
-	���õļ���ͳ�Ʒֲ���
-	���ú͸����auto_increment������ 
+MyIASM是IASM表的新版本，有如下扩展：
+	二进制层次的可移植性。
+	NULL列索引。
+	对变长行比ISAM表有更少的碎片。
+	支持大文件。
+	更好的索引压缩。
+	更好的键吗统计分布。
+	更好和更快的auto_increment处理。 
 
 
 MyISAM
-	�ŵ㣺�ٶȿ죬���̿ռ�ռ���٣�ĳ�������Ĵ���ռ������ȿ���ͨ������ϵͳ����Ӧ���ļ�
-	���У��Ĵ�С��֪��Ҳ����ͨ��SQL���SHOW TABLE STATUS���
-	ȱ�㣺û�����������Ի��ƣ�����֧����������
+	优点：速度快，磁盘空间占用少；某个库或表的磁盘占用情况既可以通过操作系统查相应的文件
+	（夹）的大小得知，也可以通过SQL语句SHOW TABLE STATUS查得
+	缺点：没有数据完整性机制，即不支持事务和外键
 
 InnoDB
-	�ŵ㣺֧���������������������Ի��ƱȽ��걸��������SHOW TABLE STATUS���ĳ��������
-	����ռ��
-	ȱ�㣺�ٶȳ��������̿ռ�ռ�öࣻ���пⶼ����һ����ͨ��������������ļ��У��޷�ͨ������
-	ϵͳ�˽�ĳ��������ռ�ÿռ�
+	优点：支持事务和外键，数据完整性机制比较完备；可以用SHOW TABLE STATUS查得某个库或表的
+	磁盘占用
+	缺点：速度超慢，磁盘空间占用多；所有库都存于一个（通常情况）或数个文件中，无法通过操作
+	系统了解某个库或表的占用空间
 
-InnoDB��MyISAM  ����������ʲô����
-	MyISAM���Ͳ�֧���������ȸ߼���������InnoDB����֧�֡� 
-	MyISAM���͵ı�ǿ���������ܣ���ִ�����ȱ�InnoDB���͸��죬���ǲ��ṩ����֧�֣���InnoDB
-	�ṩ����֧�֣�����ȸ߼����ݿ⹦�ܡ�
+InnoDB，MyISAM  两种类型有什么区别：
+	MyISAM类型不支持事务处理等高级处理，而InnoDB类型支持。 
+	MyISAM类型的表强调的是性能，其执行数度比InnoDB类型更快，但是不提供事务支持，而InnoDB
+	提供事务支持，外键等高级数据库功能。
 
-	MyISAM���͵Ķ����������ļ������ڲ�ͬ����ϵͳ��Ǩ�ơ�Ҳ���ǿ���ֱ�Ӵ�Windowsϵͳ������
-	linuxϵͳ��ʹ�á�
+	MyISAM类型的二进制数据文件可以在不同操作系统中迁移。也就是可以直接从Windows系统拷贝到
+	linux系统中使用。
 	
-�޸ı����������ͣ�
+修改表的引擎类型：
 	ALTER TABLE tablename ENGINE = MyISAM;
 
 

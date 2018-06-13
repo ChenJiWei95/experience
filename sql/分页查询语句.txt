@@ -1,0 +1,50 @@
+引自 https://www.cnblogs.com/ginponson/p/5746435.html
+MySQL、Oracle和SQL Server的分页查询语句
+　　假设当前是第PageNo页，每页有PageSize条记录，现在分别用Mysql、Oracle和SQL Server分页查询student表。
+
+1、Mysql的分页查询：　
+
+1 SELECT
+2     *
+3 FROM
+4     student
+5 LIMIT (PageNo - 1) * PageSize,PageSize;
+理解：(Limit n,m)  =>从第n行开始取m条记录，n从0开始算。
+
+2、Oracel的分页查询：
+
+复制代码
+ 1 SELECT
+ 2     *
+ 3 FROM
+ 4     (
+ 5         SELECT
+ 6             ROWNUM rn ,*
+ 7         FROM
+ 8             student
+ 9         WHERE
+10             Rownum <= pageNo * pageSize
+11     )
+12 WHERE
+13     rn > (pageNo - 1) * pageSize
+复制代码
+理解：假设pageNo = 1，pageSize = 10，先从student表取出行号小于等于10的记录，然后再从这些记录取出rn大于0的记录，从而达到分页目的。ROWNUM从1开始。
+
+3、SQL Server分页查询：
+
+复制代码
+ 1 SELECT
+ 2     TOP PageSize *
+ 3 FROM
+ 4     (
+ 5         SELECT
+ 6             ROW_NUMBER () OVER (ORDER BY id ASC) RowNumber ,*
+ 7         FROM
+ 8             student
+ 9     ) A
+10 WHERE
+11     A.RowNumber > (PageNo - 1) * PageSize
+复制代码
+ 理解：假设pageNo = 1，pageSize = 10，先按照student表的id升序排序，rownumber作为行号，然后再取出从第1行开始的10条记录。
+
+　　分页查询有的数据库可能有几种方式，这里写的可能也不是效率最高的查询方式，但这是我用的最顺手的分页查询，如果有兴趣也可以对其他的分页查询的方式研究一下。
