@@ -1,0 +1,249 @@
+12-12
+补充：
+##别名
+select s.xuehao from student as s;
+交叉查询
+##连接谓词
+select student.id, name, score, major
+	from student, classinfor
+	where student.id = classinfor.id;
+##三个表通过连接谓词
+select student.xuehao, student.xingming...
+	from cjb,kcb,student
+	where student.xuehao = cjb.xuehao
+	and kcb.kechenghao = cjb.kechenghao
+##内连接
+select student student.xuehao, student.xuehao...
+	from cjb join kcb join student
+	on student.xuehao = cjb.xuehao
+	and kcb.kechenghao=cjb.kechenghao
+##外连接
+select student.xuehao, student.xingbie
+	from cjb left outer join student
+	on student.xuehao=cjb.xuehao
+##交叉连接
+select student.xuehao...
+	from cjb cross join student
+	on student.xuehao = cjb.xuehao
+
+	
+添加列
+删除列
+limit限制一个结果
+select * from table limit m,n	##获取从第m行开始的n行的结果
+select * from student limit 1 	##限制一个结果的返回
+
+
+12-10
+ddl：
+create database 
+
+create table student(
+	xuehao int(8) not null primary key,
+	xingbie bit not null default 1,
+	age int(3) not null,
+	c_id int(8) not null,
+	constrant ck_sex check (0<=xingbie<=1),
+	constrant fk_cID foreign key (c_id)
+	references persons(id)
+)engine=innodb charset=utf-8;
+
+rename table student to student1;
+
+create index index_name
+	on student (xuehao);
+
+create unique index index_name
+	on student (xuehao);
+
+alert table student
+	drop index index_name;
+
+alert table student
+	add index index_name (xuehao)
+	
+dml;
+select xuehao, xingbie, age from student;
+
+update student set age = 30 where xuehao = 2222;
+
+delete from student where xuehao = 2222;
+
+insert into student (xuehao, xingbie) values(2222, 0);
+
+约束:
+xuehao int(6) not null primary key      - not null, primary key
+alert table student						- unique index
+	add unique index index_name (xuehao)
+constrant fk_cId foreign key person(id)	- foreign key 
+constrant ck_sex check (0<=xingbie<=1)
+xingbie bit not null default 1,
+
+索引：
+create index index_name on student(xuehao)
+alert table student 
+	add index index_name(xuehao)
+auto_increment
+
+
+11-28
+ddl：
+create database shop();
+alert database ...;
+
+create table student(
+	xuehao int(6) not null primary key,
+	xingbie bit not null default 1,
+	c_id int(6),
+	constrant fk_cID foreign key (c_id)
+		references person(id_p),
+	constrant ck_sex check (0<=xingbie<=1)
+)engine=innodb charset=utf-8;
+rename tabel student to student1;
+
+create index index_name 
+	on student (xuehao);
+create unique index index_name
+	on student (xuehao);
+alert table student
+	drop index index_name;
+alert table student 
+	add index index_name (xuehao);
+
+dml:
+select xuehao,xingbie,c_id from student where xuehao = "1";
+delete from student where xuehao = "1";
+insert into student(xuehao,xingbie,c_id) values(1, 1, 1);
+update student set xingbie = 0 where xuehao=1;
+
+约束：
+xuehao int(6) not null primary key,
+create table student(
+	...
+	constraint uc_id unique (xuehao, c_id)
+)engine = innodb charset=utf-8;
+alert table student add constraint uc_id unique (xuehao, c_id);
+create table student (
+	xuehao int(6) not null primary key,
+	...
+)engine=innodb charset=utf-8;
+alert table student 
+	add constraint pk_id primary key (xuehao);
+create table student (
+	...
+	c_id int(6) null,
+	constraint fk_cID foreign key c_id
+		references person(id);
+)engine=isam charset=utf-8;
+alert table student 
+	add fk_cID foreign key c_id
+		references person(id);
+create table student(
+	...
+	xingbie bit not null default 1,
+	...
+	constraint ck_sex check (0<=xingbie<=1)
+)engine=isam charset=utf-8;
+alert table student 
+	add constraint ck_sex check (0<=xingbie<=1);
+xingbie bit not null default 1,
+
+自增: auto increment
+xuehao int(6) not null auto_increment primary key, 
+
+修改表：
+alert table student 
+	add age int(3);
+alert table student 	
+	change xuehao xuehaoID int not null primary key;
+alert table student 
+	modify xingbie bit null;
+alert table student 
+	dorp xingbie;
+alert table student
+	dorp index index_name;
+alert table student 
+	dorp foreign key fk_xID;
+alert table student 
+	dorp primary key;
+alert table student 
+	dorp 
+
+消除重行：
+select distinct xuehao,xingbie from student;
+限制返回结果
+select top 6 xuehao,xingbie from student
+select xuehao,xingbie from student limit 6
+
+聚合函数:
+select sum(scorse)...
+select avg(scorse)
+select max(scorse)
+select min(scorse)
+select count(scorse)
+
+选择查询条件：
+select xuehao,xingbie from student where xuehao>=3 and xuehao<=8
+select xuehao,xingbie from student where xuehao like _[1,5]
+select xuehao,xingbie from student where xuehao between 1 and 5
+select xuehao,xingbie from student where xuehao in (
+	select * from student where xuehao=1;
+)
+select * from student where xuehao>=3
+	group by rollup(xingbie,c_id)
+select * from student where xuehao>=3
+	group by cube(xingbie,c_id)
+select * from student where xuehao >=3
+	group by grouping sets (xingbie,c_id)
+select * from student where xuehao>=3
+	group by xuehao having count(*) > 2
+select * from student where xuehao > 3
+	order by xuehao desc
+
+
+
+
+---------------------------------------------------------------------------------------		
+11-27
+ddl:
+create table student(
+	xuehao int(6) not null primary key,
+	xingming char(8) not null,
+	xingbie bit null default 1,
+	birstdate date null,
+	constraint ck_sex check (0<=xingbie<=1)
+)engine=innodb charset=utf-8;
+
+alter table student drop column age;
+
+drop table student;
+
+create database shop(
+	
+)
+
+create index index_name 
+	on student (xuehao)
+create unique index index_name
+	on student (xuehao)
+alter table student 
+	drop index index_name
+alter table student
+	add index index_name (xuehao)
+
+
+
+dml:
+select xuehao,xingbie,xingming from student where xuehao=1;
+insert into student(xuehao,xingming,xingbie) values(...);
+update student set xingming='xiaohong' where xuehao='1';
+DELETE FROM student WHERE xuehao BETWEEN '0015' AND '0099' 
+
+约束：
+xuehao int(6) not null primary key,
+create table student (
+	...
+	constrant uc_personID unique()
+)
+
+

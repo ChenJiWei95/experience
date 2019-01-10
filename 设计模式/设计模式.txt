@@ -1,0 +1,138 @@
+设计模式的六大原则：
+》开闭原则 对扩展开放，对修改关闭
+》里氏代换原则 里氏代换原则中说，任何基类可以出现的地方，子类一定可以出现
+》依赖倒转原则 针对接口编程，依赖于抽象而不依赖于具体。
+》接口隔离原则 使用多个隔离的接口，比使用单个接口要好。
+》迪米特法则 一个实体应当尽量少的与其他实体之间发生相互作用，使得系统功能模块相对独立
+》合成复用原则 尽量使用合成/聚合的方式，而不是使用继承
+
+Factory 工厂模式：
+	抽象工厂：
+	》不用担心工厂的具体实现，只关心接口（API）
+	public abstract class Factory{
+		//父类定义了工厂的实现
+		public static Factory getInstance(String className){
+			Factory instance = null;
+			try{
+				instance = Class.forName(className).newInstance();
+			}catch(...){
+				
+			}
+			return instance;
+		}
+		...
+	}
+	public class ListFactory extends Factory{
+		//只关心接口，不关心工厂的实现；
+		...
+	}
+	普通工厂：
+	》和模板模式方法结合，此时父类决定实例的生成方式，但不决定所要生成的具体的类，具体的处理全部交给子类负责。
+	》可以将生成实例的框架和实际负责生成实例的类解耦。
+	public abstract class Factory{
+		public Product create(){
+			return createInstance();
+		}
+		public abstract Product createInstance();
+	}
+	public class ListFactory extends Factory{
+		//工厂的具体实现由子类定义
+		public Product createInstance(){
+			...
+			return ;
+		}
+	}
+	
+Proxy 代理模式：
+	》书上案例中所表达的效果是，原本对象只要一使用就会一直耗时下去，
+	》》但是使用代理可以使对象在必要的的时候才实例化，就不会出现一直耗时的现象
+	》》当然此案例只是打比方，在开发中自由发挥
+	》代理类和原始类两个类是独立的组件，在进行修改时对对方都不会有影响
+	》代理人只代理它能解决的问题
+	public class Proxy{
+		public void test(){
+			Syso("orig...");
+		}
+	}
+	》理解：代理类和原始类是独立的，修改某一方都干扰不大甚至不干扰，操作代理类时原始类不一定被实例化，
+	》》而是在特定情况下才会被实例化
+	
+
+Singleton 单例模式：
+	》实例之间可能会相互影响，可能会有不可预料的结果
+	》如果能确保只有一个实例，因此可以放心编程
+	》有些时候需要考虑到线程安全
+	
+Delegate 委托模式：
+	》https://www.jianshu.com/p/bc9c6193f983 JavaScript委托讲解
+	》》从上面链接的委托来看，就是拥有着一个初始的协议。并根据协议扩展出一些委托，
+	》》根据不同的情况去判断使用委托或者协议
+	》和代理的不同是：搞不清
+
+Strategy 策略模式：
+	》灵活的整体替换算法
+	》当我们想要改善算法来提高算法的处理速度时，使用此模式就会容易得多。无需修改接口
+	》使用委托这种弱关联关系可以很方便地整体替换算法
+	//策略接口
+	public interface Strategy{
+		test();
+	}
+	//策略1
+	public class Strategy1 implements Strategy{
+		test(){
+			Syso("Strategy1 ...");
+		}
+	}
+	//策略2
+	public class Strategy2 implements Strategy{
+		test(){
+			Syso("Strategy2 ...");
+		}
+	}
+	//玩家对象
+	public class Player{
+		private Strategy obj;
+		public Player(Strategy obj){
+			this.obj = obj;
+		}
+		do(){
+			obj.test();
+		}
+	}
+	//main方法使用策略过程
+	public static void main(String[] args){
+		Player p = new Player(new Strategy1());	//使用策略1
+		//Player p = new Player(new Strategy2()); 使用策略2
+		p.do();
+	}
+Prototype 原型模式：	
+	》new创建对象比clone要耗性能；不必要的过多的new出对象
+	》想要复制一个实例，但是生成这个实例又太过于复杂，使用此模式
+	》解耦框架与实例
+	//父类定义接口
+	public interface Product extends Cloneable{ 
+		createClone();
+	}
+	//框架生成实例解耦的效果
+	public class Manager {
+		private HashMap showcase = new HashMap();
+		public void register(String name, Product proto){
+			showcase.put(name, proto);
+		}
+		public Product create(String protoName){
+			Product p = (Product) showcase.get(protoName);
+			return p.createClone();}
+	}
+	//子类实现接口
+	public class TestProduct implements Product{
+		createClone(){
+			Product p = null;
+			try{
+				p = (Product) clone();
+			}catch(Exception e){}
+			return p;
+		}
+	}
+
+Template 模板模式：
+	》在父类中定义处理流程的框架，在子类中实现具体处理

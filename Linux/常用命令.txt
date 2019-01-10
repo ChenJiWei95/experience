@@ -1,0 +1,259 @@
+常用指令：
+目录和文件的管理：
+	pwd	
+	》显示当前目录
+	cd	
+	》切换目录
+	》cd ../ 在当前的基础上返回上一级目录
+	》cd win7 在当前的基础上跳转至子目录win7
+	ls	
+	》显示文件或目录
+	》-l	列出文件详细信息
+	》-a	列出当前目录下所有文件及目录，包括隐藏的文件
+	touch	
+	》创建空文件
+	mkdir	
+	》创建目录
+	》-p	创建目录，若无父目录，则创建
+	rmdir	
+	》删除空目录
+	cp	
+	》拷贝
+	mv
+	》移动文件
+	rm
+	》删除文件或目录
+	》-r	递归删除，可删除子目录及文件
+	》-f	强制删除
+	wc
+	》统计文件行数、单词数、字节数和字符数
+	》-l	统计行数
+	》-w	统计单词数
+	》-c	统计字节数
+	》-m	统计字符数
+	》-L	统计文件中最长行的长度
+文本内容的显示：
+	cat
+	》查看文本文件内容
+	more
+	》分页显示文本
+	less
+	》回卷显示文本文件
+	head
+	》显示指定文件前若干行
+	tail
+	》查看文件末尾数据
+文件和命令查找：
+	grep
+	》查找文件中符合条件的字符串/在文本文件中查找某个字符串
+	find
+	》列出文件系统内符合条件的文件/在文件系统中搜索某文件
+	locate
+	》在数据库中查找文件
+系统信息显示：
+	uname
+	》显示计算机及操作系统相关信息
+	hostname
+	》显示或修改计算机主机名
+	free
+	》查看内存信息
+	du
+	》显示目录或文件的磁盘占用量
+用户账户的设置：
+	useradd
+	》创建用户账户
+	》useradd 【选项】 【用户名】
+	usermod
+	》修改用户账户
+	userdel
+	》删除用户账户
+组群账户设置
+	创建组群账户
+	groupadd
+	》创建组群账户
+	groupmod
+	》修改组群账户
+	groupdel
+	》删除组群账户
+用户和组群账户维护
+	passwd
+	》设置或者修改用户的密码
+	gpasswd
+	》设置一个组群的组群密码或者在组群中添加删除用户
+	su
+	》切换到其他用户账户进行登录
+	newgrp
+	》让用户账户以另一个组群的身份进行登录
+	groups
+	》显示指定的用户账户的群组成员身份
+用户及用户组管理
+	》/etc/passwd		存储用户账号
+	》/etc/group		存储组账号
+	》/etc/shadow		存储用户账号的密码
+	》/etc/gshadow	存储用户组账号的密码
+权限设置	
+	》r	读取
+	》w	写入
+	》x	执行
+	》-	不具备权限
+	》-rwx------ 用户所有者具有读取写入执行权限，其他用户则不具备任何操作权限
+	》-rwxr--r-- 用户所有者具有读取写入执行权限，其他用户则具有读取权限
+	》-rw-rw-r-x 用户所有者和组群所有者对文件具有读取写入权限，而其他用户只具有读取和执行权限
+	》从上可以看出规则是：文件标识符+所有者权限+组群所有者权限+其他用户权限
+	chmod
+	》权限的设置
+	》chmod [操作对象] [操作符号] [权限] [文件]
+	》操作对象 u、g、o、a 	分别是用户所有者、组群所有者、其他用户、所有用户
+	》操作符号 +、-、= 		分别是添加某个权限、取消某个权限、重置新的权限
+	》权限     r、w、x		分别是读、写、执行
+	chown
+	》更改文件和目录所有者
+	》chown [选项] [用户.组群|用户:组群] [文件|目录]
+网络命令
+	traceroute
+	》显示数据包到目标主机之间的路径
+	ifconfig
+	》显示和配置网络接口 IP地址 MAC地址 激活或关闭网络接口
+	ping
+	》测试与目标计算机之间的连通性
+	netstat
+	》显示网络状态信息（整个linux系统的网络情况）
+	arp
+	》用来增加、删除和显示ARP缓存条目
+	tcpdump
+	》网络数据采集工具之一 捕获经过某个网络接口的数据包
+	
+vi编辑器使用：
+	vi三种模式：（使用ESC或i或：来切换模式）
+	命令模式（vi 文件名）
+	》控制屏幕光标的移动，字符、字或行的删除，某区域的移动、复制
+	插入模式（输入i，按esc键退回命令模式）
+	》只有在插入模式才能进行文本编辑
+	编辑模式（输入':'）
+	》将文件进行保存或退出vi编辑器，也可以设置编辑环境、替换字符或删除字符。
+	》:q		退出
+	》:q!		强制退出
+	》:wq		保存并退出
+	》:set number		显示行号
+	》:set nonumber		隐藏行号
+	》/apache			在文档中查找apache 按n跳到下一个，shiift+n上一个
+	》yyp				复制光标所在行，并粘贴
+	
+eche	创建带有内容的文件	
+
+tree	树形结构显示目录，需要安装tree包
+
+ln	创建链接文件
+
+ctrl+alt+F1	命令行全屏模式
+
+系统管理命令：
+stat	显示指定文件的详细信息，比ls更详细
+
+who	显示在线登录用户
+
+whoami	显示当前操作用户
+
+top	动态显示当前耗费资源最多进程信息
+
+ps	显示瞬间进程状态 ps -aux
+
+du	查看目录大小
+
+df	查看磁盘大小
+
+
+man	
+
+clear	请屏
+
+alias	对命令重命名
+
+kill 杀死进程，可以先用ps 或top命令查看进程的id，然后在用kill命令杀死进程
+
+打包压缩相关命令
+gzip	
+bzip2
+tar	打包压缩
+ -c	归档文件
+ -x	压缩文件
+ -z	gzip压缩文件
+ -j	bzip2压缩文件
+ -v	显示压缩或解压过程 
+ -f	使用档名
+
+例：tar -cvf /home/abc.tar /home/abc 只打包不解压
+tar -zcvf /home/abc.tar.gz /home/abc 打包 并用gzip压缩
+tar -jcvf /home/abc.bz2 /home/abc    打包 并用bzip2压缩
+
+当然，如果想解压缩 就直接替换上面的命令tar -cvf / tar -zcvf / tar -jcvf 中的c换成x就可以了
+
+关机、重启机器
+shutdown
+ -r	关机重启
+ -h	关机不重启
+ now	立刻关机
+
+halt	关机
+
+rebot	重启
+
+Linux管道
+将一个命令的标准输出作为另一个命令的标准输入。
+也就是把几个命令组合起来使用，后一个命令除一千一个命令的结果
+
+例： grep -r "close" /home.* | more 在home目录下所有文件中查找，包括close的文件 并分页输出
+
+Linux软件包管理
+dpkg（Debian Package）管理工具，软件包名以.del后缀。这种方法适合系统不能联网的情况下
+
+比如安装tree 命令的安装包，先将tree.deb 传到Linux系统中，再使用如下命令安装
+sudo dpkg -i tree_1.5.3-1_i386.deb	安装软件
+sudo dpkg -r tree			卸载软件
+注：将tree.deb传到Linux系统中，有多种方式。VMwareTool，使用挂载方式；使用winSCP工具等
+
+APT（Advanced Packaging Tool）高级软件工具。这种方法适合系统能够连接互联我网的情况
+例：
+sudo apt-get install tree
+sudo apt-get remove tree
+sudo apt-get update
+sudo apt-get upgrade
+
+将rpm文件转为.deb文件
+.rpm为RedHat使用的软件格式。在Ubuntu下部能直接使用，所以需要转换一下。sudo alien abc.rpm
+
+
+
+
+
+useradd		用户名
+userdel		用户名
+adduser		用户名
+groupadd	组名
+groupdel	组名
+passwd root	给root设置密码
+
+su root		
+su -root
+/etc/profile	系统环境变量
+bash_profile	用户环境变量
+.bashrc		用户环境变量
+
+su user		切换用户，加载配置文件.bashrc
+su -user	切换用户，加载配置文件/etc/profile，加载bash_profile
+
+更改文件的用户及用户组
+sudo chown [-R] owner[:group]
+{File|Directory}
+
+例如：以jdk-7u21-linux-i586.tar.gz为例属于用户hadoop，组hadopp
+
+切换所属的用户的组，可以使用命令
+sudo chown root:root jdk-7u21-linux-i586.tar.gz
+
+文件权限管理
+三种基本权限
+R	读		数值为4
+W	写		数值为2
+X	可执行	数值为1
+

@@ -1,0 +1,156 @@
+11-22
+pwd
+ls -a
+ls -l
+cd ../
+cd win7
+mkdir
+mkdir -p
+touch
+rmdir
+cp
+mv
+wc
+cat 1.txt
+more
+less
+head
+tail
+grep
+find
+locate
+uname
+hostname
+free
+du
+useradd
+usermod
+userdel
+groupadd
+groupmod
+groupdel
+passwd
+gpasswd
+su
+newgrp
+newgrp
+groups
+-rwxrwxrwx
+chmod ugoa +-= rwx
+chown 
+
+ls -l
+ls -a
+mkdir test
+mkdir -p ../test
+cd ../
+cd win7
+touch
+eche 
+cat test.txt
+cp
+mv
+rm
+rm -r
+rm -f
+find 
+grep
+wc
+
+rmdir
+tree
+pwd
+ln
+more/less
+head/tall
+ctrl+alt+F1
+stat
+who
+whoami
+hostname
+uname
+top
+ps
+du
+df
+ifconfig
+ping
+netstat
+man
+clear
+alias
+kill
+
+gzip
+bzip2
+tar
+-c
+-x
+-z
+-j
+-v
+-f
+tar -cvf /home/abc.tar /home/abc
+tar -zcvf /home/abc.tar.gz /home/abc
+tar -zcvf /home/abc.bz2 /home/abc
+tar -xvf /home/abc.tar /home/abc
+shutdown
+-r
+-h
+now
+halt
+rebot
+
+针对文件的命令
+ls 列出文件的详细信息
+cat 内容
+stat 比ls更详细
+
+mkdir
+mkdir -p
+
+cd ../
+cd wind
+touch
+echo
+eche
+cat
+cp
+mv
+rm
+rm -r
+rm -f
+find
+grep
+
+touch
+eche
+
+cp
+
+cat
+wc
+mkdir
+rmdir
+tree
+
+pwd
+cat
+ls
+ls -l
+ls -a
+ln
+more less
+head tall
+
+i
+i
+:q
+:q!
+:wq
+:set number
+:set nonumber
+/apache
+yyp
+
+

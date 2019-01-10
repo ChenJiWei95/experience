@@ -1,4 +1,4 @@
-背景：
+﻿背景：
 学生信息表 、 
 CREATE TABLE student(
 	学号 INT(6) 				NOT NULL PRIMARY KEY,
@@ -155,6 +155,50 @@ ON student.`学号` = cjb.`学号`
 -- this comment...
 # this coment...
 /* this comment... */
+
+11-27
+ddl:
+create table student(
+	xuehao int(6) not null primary key,
+	xingming char(8) not null,
+	xingbie bit null default 1,
+	birstdate date null,
+	constraint ck_sex check (0<=xingbie<=1)
+)engine=innodb charset=utf-8;
+
+alter table student drop column age;
+
+drop table student;
+
+create database shop(
+	
+)
+
+create index index_name 
+	on student (xuehao)
+create unique index index_name
+	on student (xuehao)
+alter table student 
+	drop index index_name
+alter table student
+	add index index_name (xuehao)
+
+
+
+dml:
+select xuehao,xingbie,xingming from student where xuehao=1;
+insert into student(xuehao,xingming,xingbie) values(...);
+update student set xingming='xiaohong' where xuehao='1';
+DELETE FROM student WHERE xuehao BETWEEN '0015' AND '0099' 
+
+约束：
+xuehao int(6) not null primary key,
+create table student (
+	...
+	constrant uc_personID unique()
+)
+
+
 	
 ===========================================================================================
 	
@@ -202,6 +246,68 @@ InnoDB，MyISAM  两种类型有什么区别：
 修改表的引擎类型：
 	ALTER TABLE tablename ENGINE = MyISAM;
 
-
-
-
+数据库优化：（https://www.cnblogs.com/zhouyusheng/p/8038224.html）
+	1.为查询缓存优化你的查询：
+	》大多数的mysql服务器都开启了查询缓存。这是提高性能最有效的方法之一，而且这是被mysql的数据库引擎处理的。
+	》》当有很多相同的查询被执行了多次的时候，这些查询结果会被放到一个缓存中，这样，
+	》》后续的相同的查询就不用操作表而直接访问缓存结果了。
+	》// 查询缓存不开启
+	》》$r = mysql_query("SELECT username FROM user WHERE signup_date >= CURDATE()");
+	》》// 开启查询缓存
+	》》$today = date("Y-m-d");
+	》》$r = mysql_query("SELECT username FROM user WHERE signup_date >= '$today'");
+	》》CURDATE()、NOW()、RAND()这些函数的返回是会不定的、易变的，所以需要用一个变量来代替MySQL的函数，开启缓存。
+	2.EXPLAIN 你的 SELECT 查询：
+	》这可以帮你分析你的查询语句或是表结构的性能瓶颈。
+	》EXPLAIN 的查询结果还会告诉你你的索引主键被如何利用的，你的数据表是如何被搜索和排序的……等等
+	3.当只要一行数据时使用 LIMIT 1：
+	》// 没有效率的：
+	》》$r = mysql_query("SELECT * FROM user WHERE country = 'China'");
+	》》if (mysql_num_rows($r) > 0) {
+    》》	// ...
+	》》}
+	》// 有效率的：
+	》》$r = mysql_query("SELECT 1 FROM user WHERE country = 'China' LIMIT 1");
+	》》if (mysql_num_rows($r) > 0) {
+    》》	// ...
+	》》}
+	4.为搜索字段建索引；
+	》索引并不一定就是给主键或是唯一的字段。
+	》有某个字段你总要会经常用来做搜索，那么，请为其建立索引吧。
+	》有索引和没有索引性能差4倍左右。
+	5.在Join表的时候使用相当类型的例，并将其索引：
+	》如果你的应用程序有很多 JOIN 查询，你应该确认两个表中Join的字段是被建过索引的。
+	》MySQL内部会启动为你优化Join的SQL语句的机制。
+	》这些被用来Join的字段，应该是相同的类型的。
+	》// 在state中查找company
+	》》$r = mysql_query("SELECT company_name FROM users
+	》》	LEFT JOIN companies ON (users.state = companies.state)
+	》》	WHERE users.id = $user_id");
+	》》// 两个 state 字段应该是被建过索引的，而且应该是相当的类型，相同的字符集。 
+	6.千万不要 ORDER BY RAND()：
+	》这样使用只让你的数据库的性能呈指数级的下降。
+	》MySQL会不得不去执行RAND()函数（很耗CPU时间），而且这是为了每一行记录去记行，然后再对其排序。
+	》》就算是你用了Limit 1也无济于事（因为要排序）
+	》》// 千万不要这样做：
+	》》$r = mysql_query("SELECT username FROM user ORDER BY RAND() LIMIT 1");
+	》》 
+	》》// 这要会更好：
+	》》$r = mysql_query("SELECT count(*) FROM user");
+	》》$d = mysql_fetch_row($r);
+	》》$rand = mt_rand(0,$d[0] - 1);
+	》》
+	》》$r = mysql_query("SELECT username FROM user LIMIT $rand, 1");
+	7.避免 SELECT *
+	》从数据库里读出越多的数据，那么查询就会变得越慢。
+	》如果你的数据库服务器和WEB服务器是两台独立的服务器的话，这还会增加网络传输的负载。
+	8.永远为每张表设置一个ID
+	》我们应该为数据库里的每张表都设置一个ID做为其主键，而且最好的是一个INT型的（推荐使用UNSIGNED），
+	》》并设置上自动增加的AUTO_INCREMENT标志。
+	9.使用 ENUM 而不是 VARCHAR:
+	》ENUM 类型是非常快和紧凑的。在实际上，其保存的是 TINYINT，但其外表上显示为字符串。
+	》如果知道这些字段的取值是有限而且固定的，那么，你应该使用 ENUM 而不是 VARCHAR。
+	10.从 PROCEDURE ANALYSE() 取得建议：
+	》此函数会分析你的字段和其实际的数据，并会给你一些有用的建议。
+	》只有表中有实际的数据，这些建议才会变得有用，因为要做一些大的决定是需要有数据作为基础的。
+	11.尽可能的使用 NOT NULL：
+	》除非你有一个很特别的原因去使用 NULL 值，你应该总是让你的字段保持 NOT NULL。

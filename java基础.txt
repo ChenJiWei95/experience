@@ -1,0 +1,1129 @@
+﻿面试题：
+	1、让该循环循环三次，可是这可能是一个死循环。
+	》代码如下：
+	public static final int ENDNUMBER = Integer.MAX_VALUE;
+	public static final int STARTNUMBER = ENDNUMBER - 2;
+	public static void main(String[] args){
+		for(int i = STARTNUMBER; i <= ENDNUMBER; i++)
+			count++;
+		System.out.println(count);
+	}
+	》死循环的原因：STARTNUMBER要大于ENDNUMBER，两个都是整数，而ENDNUMBER就是最大的
+	》STARTNUMBER整数怎可能大于整数的最大值呢？而且MAX_VALUE+1 = MIN_VALUE，最终导致死循环
+
+servlet：
+	定义：
+	》独立于平台和协议的服务器端的java应用程序，处理请求的信息并将其发送到客户端。
+	》客户端可以提出请求并动态获得响应。
+	》动态生成web页面，担当浏览器或其他客户端发出的请求与HTTP服务器上的数据库或应用程序之间的中间层。
+	》对于所有客户端请求，都只需要创建一次Servlet实例，因此，节省了大量内存。
+	Servlet运行原理：
+	》web服务器收到一个http请求后，判断请求内容，若是静态页面数据，自行处理，若为动态数据，交给Servlet容器，
+	》》Servlet容器找到相应Servlet实例处理；处理结果交给web服务器，再转交给客户端。
+	》针对同一个Servlet，Servlet容器会在第一次收到HTTP请求时建立一个Servlet实例，
+	》》然后启动一个线程，第二次收到http请求后，Servlet容器无需创建相同Servlet ,仅开启第二个线程来处理请求。
+	》》多线程的方式有效提高执行效率，降低服务器负担。
+	Servlet 优势：
+	》具有优良的跨平台性
+	》可移植性良好：java语言编写，Servlet API标准完善，企业编写的Servlet程序可轻松移植到其他服务器中;
+	》执行效率高：Servlet请求到来时激活Servlet，处理完成后等待新请求；新请求产生新线程，而不是进程；
+	》使用方便：可轻松处理HTML表单数据，并读取和设置HTTP头，处理cookie,跟踪会话；
+	基础知识：
+	
+	Servlet生命周期：
+	》
+	
+	简介/定义：
+	》Servlet是sun公司提供的一门用于开发动态web资源的技术
+	》sun公司在其API中提供了一个servlet接口
+	》开发一个动态web资源，两个步骤：
+	》1、编写一个java类，实现servlet接口
+	》2、把开发好的java类部署到web服务器中
+	
+	Servlet的运行过程
+	servlet程序是由WEB服务器调用，web服务器收到客户端的Servlet访问请求后：
+	》1、Web服务器首先检查是否已经装载并创建了该Servlet的实例对象。如果是，则执行4
+	》2、装载并创建该Servlet的一个实例对象
+	》3、调用Servlet实例对象的init()方法
+	》4、创建一个用于封装HTTP请求消息的HttpServletRequest对象和一个代表HTTP响应消息的HttpServletResponse对象，
+	》》然后调用Servlet的service方法并将请求和响应对象作为参数传递进去。
+	》5、WEB应用程序被停止或重新启动之前，Servlet引擎将卸载Servlet，
+	》》并在卸载之前调用Serlvet的destroy()方法（以便释放它所使用的资源）
+	
+	Servlet访问URL映射配置：
+	》<servlet>
+	》	<servlet-name>ServletDemo1</servlet-name>
+	》	<servlet-class>com.chen.serlvet<servlet-class>
+	》</servlet>
+	》<servlet-mapping>
+	》 	<servlet-name>ServletDemo1</servlet-name>
+	》	<url-pattern>/servlet/ServletDemo1</url-pattern>
+	》</servlet-mapping>
+	》或者使用注解：@Servlet
+	》缺省配置：
+	》<servlet>...<load-on-startup>1</load-on-startup></servlet>
+	》<servlet-mapping>...<url-pattern>/</url-pattern></servlet-mapping>
+	总结：
+	》加载和实例化
+	》初始化
+	》处理业务
+	》服务终止
+	
+	Servlet线程安全问题：
+	》当多个客户端并发访问同一个Servlet时，web服务器会为每一个客户端的访问创建一个线程，并在这个线程上调用Servlet的service方法，
+	》》因此service方法内如果访问了同一个资源的话，就有可能引发线程安全问题。
+	》解决的方法：让Servlet去实现一个SingleThreadMode接口，Servlet引擎将以单线程模式来调用其service方法。
+	
+	ServletConfig
+	配置文件：
+	<servlet>
+		<servlet-name></servlet-name>
+		<servlet-class></servlet-class>
+		<init-param>
+			<param-name>user</param-name>
+			<param-value>username</param-value>
+		</init-param>
+	</servlet>
+	代码获取：
+	》private ServletConfig config;
+	》@Override
+	》public void init(ServletConfig config) throws ServletException {
+	》    this.config = config;
+	》}
+	》String username=config.getInitParameter("user");
+	
+	ServletContext
+	》ServletContext context = this.getServletConfig().getServletContext();//获得ServletContext对象
+	》context.setAttribute("data", data);  //将data存储到ServletContext对象中
+	
+JSP：
+	描述：
+	》Servlet对于逻辑处理是非常方便的，但是对于页面的展现是非常麻烦的。
+	》》JSP的诞生是为了解决Servlet页面展现麻烦的问题的。
+	》一般我们需要将两门技术结合使用，Servlet做业务处理，jsp做页面的展现
+	》在我们访问jsp文件的时候，并没有直接去执行JSP文件，而是被服务器所拦截执行了jspServlet的类。
+	》》此类会将jsp文件转译成对应的Servlet文件并执行。所以jsp本质还是Servlet。
+	
+	特点：
+	》方便的页面展现
+	jsp的使用：（参考https://www.cnblogs.com/haozhengfei/p/6537909.html）
+	*常用指令：
+	page：
+	》language 声明jsp文件支持的语言
+	》import   转译的时候导入的包
+	》pageEncoding  设置转译及客户端展现数据的编码格式
+	》session   true代表使用session对象（默认） false不适用session对象
+	》errorPage jsp运行错误会自动跳转到指定页面
+	include：（转译成一个Servlet类）
+	》静态引入：  <%@include file="include01.jsp" %> 不能出现同名的变量，耦合性高
+	》》先将页面包含，后执行页面代码
+	》动态引入：  <jsp:include page="include02.jsp"></jsp:include> 可以出现同名的变量耦合性低
+	》》先执行页面代码，后将页面包含
+	forward：
+	》请求转发（自带return）
+	》<jsp:forward page="要求转发的文件路径">
+	》	<jsp:param value="值" name="键" />
+	》</jsp:forward>	
+	》服务器端发挥的作用，提交信息在多个页面间进行传递。并且可以共享request范围内的数据。
+	》与重定向的区别：
+	》》重定向是在客户端发挥作用，通过请求新的地址实现页面的转向。
+	》》并且不能共享request范围内的数据。
+	*java代码声明：
+	》<%java代码%>  会被转译到——jspServlet方法中，局部代码
+	*全局代码段声明：
+	》<%!声明方法%> 会被转译成全局代码
+	*表达式语句（重要）：
+	》<%=变量名/方法 %> 后面一定不能加分号
+	*九大内置对象：
+	四个作用域：
+	》pageContext 页面上下文对象，此对象封装了其他对象的获取方式 当前页面有效
+	》request     请求对象 同一个请求范围内有效
+	》session     session对象 同一个会话有效
+	》application ServletContext对象 整个WEB服务器有效
+	两个输出：
+	》out         输出对象
+	》response    输出对象，比resp对象多了缓冲区，效率提高
+	其他三个：
+	》page        代表该页面对象        
+	》config	  ServletConfig
+	》exception   异常对象，弃用
+	注释：
+	》HTML注释：	会被转译并发送到客户端
+	》css注释： 	会被转译，还会被发送
+	》js注释：		会被转译，还会被发送
+	》java注释：	会被转译
+	》jsp注释：		%-- 注释内容 --%  直接不转译
+	
+	jsp工作原理：
+	》第一步是翻译阶段，Web服务器会将接收到的JSP文件翻译成Java文件。
+	》第二步是编译阶段，Web容器将Java文件编译成字节码文件(.class文件)。
+	》第三步是执行阶段，Web容器执行字节码文件将生成的结果返回给客户端进行显示。
+	
+	jsp中文乱码的解决：
+	》生成中文乱码的根本原因，jsp页面默认编码格式“ISO-8859-1” 不支持中文
+	》三种支持中文的编码方式：gb2312（常用简体），gbk（比前者好），utf-8（国际编码）
+	post方式提交表单的解决方案：
+	》1、request.setCharacterEncoding("utf-8")
+	》2、response.setCharacterEncoding("utf-8")
+	get方式提交表单的解决方案：
+	》1.读取数据时对数据进行编码 new String(s.getBytes("iso-8859-1"), "utf-8")
+	》2.通过配置文件设置解决中文乱码显示
+	》》配置tomcat\conf\server.xml文件
+	》》<Connector connectionTimeout="20000" port="8080" protocol="HTTP/1.1"
+	》》redirectPort="8843" URIEncoding="UTF-8" />
+	
+EL表达式：
+	学习案例：（http://www.cnblogs.com/zhplovelnn/p/6947696.html）
+	*描述：
+	》${javaBean.property}
+	》EL 提供 . 和 [ ] 两种运算符来导航数据。 
+	》${sessionScope.user.sex}等于${sessionScope.user["sex"]}
+	》当要存取的属性名称中包含一些特殊字符，如. 或 – 等并非字母或数字的符号，就一定要使用 [ ]，
+	》》例如：${user.My-Name } ，应当改为：${user["My-Name"] }
+	》${sessionScope.user[data]} 假如data是动态变量
+	》》如果要动态取值时，就可以用上述的方法来做，但. 无法做到动态取值。
+	*隐含对象（11个）：
+	》pageContext		表示JSP的PageContext
+	》PageScope         指定范围
+	》RequestScope		指定范围
+	》sessionScope		指定范围
+	》applicationScope	指定范围
+	》param				ServletRequest.getParameter(String name)。
+	》paramValues		ServletRequest.getParameterValues(String name)。
+	》header			ServletRequest.getHeader(String name)。
+	》headerValues		ServletRequest.getHeaders(String name)。
+	》cookie			HttpServletRequest.getCookies()
+	》initParam			ServletContext.getInitParameter(String name)。
+	使用pageContext：
+	》${pageContext.request.queryString}	取得请求的参数字符串
+	》${pageContext.request.requestURL}		取得请求的URL，但不包括请求之参数字符串,即servlet的HTTP地址。
+	》${pageContext.request.contextPath}	服务的webapplication的名称
+	》${pageContext.request.method}			取得HTTP的方法(GET、POST)
+	》${pageContext.request.protocol}		取得使用的协议(HTTP/1.1、HTTP/1.0)
+	》${pageContext.request.remoteUser}		取得用户名称
+	》${pageContext.request.remoteAddr}		取得用户的IP地址
+	》${pageContext.session.new}			判断session是否为新的，所谓新的session，表示刚由server产生而client尚未使用
+	》${pageContext.session.id}				取得session的ID
+	》${pageContext.servletContext.serverInfo}	取得主机端的服务信息
+	*EL算术运算：
+	》所有在Java语言里支持的算术运算符，表达式语言都可以使用；
+	*EL关系运算符：
+	*EL逻辑运算符：
+	*Empty 运算符：
+	》Empty 运算符主要用来判断值是否为空（NULL,空字符串，空集合）。
+	*条件运算符
+	》${ A ? B : C}
+	
+java特性：
+	多态
+	》子类重定义父类成员表现出多态性
+	继承
+	》
+	封装
+	》
+	
+java基本类型的转换：
+	基本类型：
+	》8种基本类型 byte，short，char，int，long，float，double，boolean
+	类型的转换：
+	》系统自动转换（向上转换）：根据以上基本类型的排列顺序自动向上转换，除了boolean
+	》强制转换：（目标类型）原类型表达式；向下转型时需要强制类型的转换
+	》》使用包装对象中的接口例如 Integer.parseInt("12"); 
+jdbc:
+	》注册驱动
+	》建立连接
+	》获取statement对象
+	》执行sql语句
+	》处理结果
+	》释放资源
+	public class test{
+		private String url = "";
+		private String user = "";
+		private String pass = "";
+		public void test(){
+			try{
+				Class.forName(driver);
+			}catch(ClassNotFoundException e){
+				e.printStackTrace();}
+			Connection conn = null;
+			Statement st = null;
+			ResultSet rs = null;
+			try{
+				conn = DriverManager.getConnection(url, user, pass);
+				st = conn.createStatement();
+				rs = st.executeQuery("");
+				while(rs.next())
+					rs.getString(1);
+			}catch(SQLException e){
+				e.printStackTrace();
+			}finally{
+				try{
+					rs.close();
+					st.close();
+					conn.close();
+				}catch(SQLException e){e.printStackTrace();}
+			}
+		}
+	}
+	Statement：
+	》用于执行静态SQL语句并返回其生成的结果的对象。
+	》常用的接口：类似于getString(index) 获取序号index的字符串数据值
+	PreparedStatement：
+	》继承Statement
+	》预编译的SQL语句的对象。
+	》PreparedStatement pstmt = con.prepareStatement("UPDATE EMPLOYEES
+    》》                               SET SALARY = ? WHERE ID = ?");
+	》》pstmt.setBigDecimal(1, 153833.00);
+	》》pstmt.setInt(2, 110592);
+	》》使用setter方法设置sql中设置IN参数值
+	》SQL语句已预编译并存储在PreparedStatement对象中。 然后可以使用该对象多次有效地执行此语句。 
+	ResultSet：
+	》默认的ResultSet对象不可更新，并且只有一个向前移动的光标。
+	ResultSetMetaData：
+	》可用于获取关于 ResultSet 对象中列的类型和属性信息的对象。
+	》ResultSetMetaData rsmd = rs.getMetaData();
+扩展知识点：
+	不同的虚拟机运行同样的代码将会遇到哪些棘手的问题：
+	》例如：在线程中的抢占式与协作式的调度方式，据了解现大部分虚拟机都使用抢占调度，这会极大可能的避免饥饿问题的出现
+	》》不过有些较早的虚拟机依然采用协作式调度，因此会有不可预知的问题
+线程：
+	定义：
+	》利用线程去处理短连接
+	》利用异步I/O去处理长连接
+	使用：
+	》派生Thread子类
+	》实现接口Runnable
+	》使用Executor
+	同步：
+	》多个线程共享资源，那么就会有同步问题
+	》如果需要作为一个原子连续地完成两个操作，中间不能有中断，就需要同步。
+	同步块：
+	》同步某一个对象
+	》synchronized(object){...}
+	同步方法：
+	》在方法返回类型前加synchronized关键字
+	》public synchronized void test(){}
+	同步的替代方式：
+	》1.使用局部变量而不是字段，局部变量不存在同步问题
+	》2.构造函数一般不需要担心线程安全问题。在构造函数返回前，没有线程有这个对象的引用。因为构造函数完成，才能创建一个对象
+	》3.在类中利用不可变性。将字段声明为private和final，不需要编写任何改变它们的方法。例如String、Integer、Double
+	》》将非线程安全的类用作为线程安全的类的一个私有字段。
+	》》相关的包：java.util.concurrent.atomic 特意设计为保证线程安全但可变的类。
+	》》相关的包：java.util.Collections 包装了一些线程安全的集合对象
+	死锁：
+	》如果两个线程需要独占访问同样的一个资源集，而每个线程分别有这些资源的不同子集的锁，就会发生死锁。
+	如何防止死锁：
+	》避免不必要的同步，如上文的同步替代方法就是解决此处的良药。
+	》》同步应当是确保线程安全的最后一道防线。
+	线程调度：
+	》
+	cpu受限：
+	》线程往往更多地忙于处理，而不是等待更多的输入。可能会造成其他线程处于“饥饿”状态。
+	暂停或者指示它准备暂停的十种方式：
+	》可以对I/O阻塞
+	》可以对同步对象阻塞
+	》可以放弃
+	》可以休眠
+	》可以连接另一个线程
+	》可以等待一个对象
+	》可以结束
+	》可以被挂起    废弃 可能会造成对象不一致的状态
+	》可以停止		废弃 可能会造成对象不一致的状态
+
+	
+设计模式：
+	生产者与消费者模式：
+	》生产者为若干个线程队列，消费者为若干个线程队列，生产者生产数据到缓冲区中，消费者从缓冲区中取数据。
+	》旦凡有一个生产者生产了产品就解开消费者的锁，但凡有消费者消费了一件产品就解开生产者的锁。
+	》相关知识点 https://www.cnblogs.com/chentingk/p/6497107.html
+	》相关知识点 https://www.cnblogs.com/fankongkong/p/7339848.html
+	》有什么需要注意的
+	》好处，缺点不足
+并发包：（java.util.concurrent ）
+	定义：
+	》在并发编程中很常用的实用工具类。
+	执行程序：（管理线程）
+		1.接口：
+		Executor：
+		》是一个简单的标准化接口，用于定义类似于线程的自定义子系统，包括线程池、
+		》》异步 IO 和轻量级任务框架。
+		》可能顺序或并发执行任务
+		ExecutorService：
+		》提供了多个完整的异步任务执行框架。ExecutorService 管理任务的排队和安排，
+		》》并允许受控制的关闭。
+		ScheduledExecutorService：
+		》子接口及相关的接口添加了对延迟的和定期任务执行的支持。
+		2.实现：
+		ThreadPoolExecutor 和 ScheduledThreadPoolExecutor：
+		》提供可调的、灵活的线程池。
+		Executors：
+		》提供大多数 Executor 的常见类型和配置的工厂方法，以及使用它们的几种实用工具方法。
+	队列：
+		ConcurrentLinkedQueue：
+		》类提供了高效的、可伸缩的、线程安全的非阻塞 FIFO 队列。
+		》
+		LinkedBlockingQueue、ArrayBlockingQueue、SynchronousQueue、PriorityBlockingQueue 和 DelayQueue：
+		》五个实现都支持扩展的 BlockingQueue 接口，该接口定义了 put 和 take 的阻塞版本
+		ArrayBlockingQueue：
+		》一个由数组支持的有界阻塞队列。
+		》此队列按 FIFO（先进先出）原则对元素进行排序。
+		》代码实现案例在Condition中有讲解
+	计时：
+		TimeUnit：
+		》为指定和控制基于超时的操作提供了多重粒度（包括纳秒级）。
+	同步器：
+		Semaphore：
+		》经典的并发工具
+		CountDownLatch：
+		》是一个极其简单但又极其常用的实用工具，用于在保持给定数目的信号、事件或条件前阻塞执行。
+		CyclicBarrier：
+		》是一个可重置的多路同步点，在某些并行编程风格中很有用。
+		Exchanger：
+		》允许两个线程在 collection 点交换对象，它在多流水线设计中是有用的。
+	并发Collection：
+		见下文。
+		
+数据结构：
+	hash表：（http://www.cnblogs.com/s-b-b/p/6208565.html）
+	1.定义：
+	》哈希表是一种根据关键码去寻找值的数据映射结构，该结构通过把关键码映射的位置去寻找存放值的地方
+	》类似于字典
+	2.冲突：
+	》key1≠key2，但f(key1)=f(key2)；就是两个key不同，但是所映射的地址相同
+	3.尽量减少冲突：
+	》1.尽量使关键字对应的记录均匀分配在哈希表里面
+	》2.关键字极小的变化可以引起哈希值极大的变化。
+	4.冲突解决：
+	》1.开发定址法
+	》2.链地址法
+	5.性能：
+	》由于哈希表高效的特性，查找或者插入的情况在大多数情况下可以达到O(1)退化成链表，
+	》》查找的时间复
+	》时间主要花在计算hash上，当然也有最坏的情况就是hash值全都映射到同一个地址上，这样哈希表就会杂度变成O(n)
+	》但是这种情况比较少，只要不要把hash计算的公式外漏出去并且有人故意攻击
+	
+	数据结构概念：
+	》数据的逻辑结构、数据的存储结构和对数据的操作。
+	逻辑结构：
+	》线性结构（线性表、串、栈、队列、数组和广义表）
+	》树结构（二叉树，线索二叉树、Huffman树）
+	》图              
+	存储结构：
+	》顺序存储结构
+	》链式存储结构
+	数据的操作：
+	》初始化
+	》判断是否空状态
+	》存取，指获得。设置指定元素值
+	》统计数据元素个数
+	》遍历，指按照某种次序访问一个数据结构中的所有元素。
+	
+	对逻辑结构的详细研究：
+	链接：https://www.cnblogs.com/wanghuaijun/p/7302303.html
+	线性表：
+	》线性表是最常用且最简单的一种数据结构，它是n个数据元素的有限序列。
+	》实现线性表的方式一般有两种。一种是使用数组存储线性表的元素，另一种是使用链表存储线性表的元素。
+	》循环单链表 	主要是链表的最后一个节点指向第一个节点，整体构成一个链环。
+	》双向链表 		主要是节点中包含两个指针部分，一个指向前驱元，一个指向后继元，
+	》》JDK中LinkedList集合类的实现就是双向链表。
+	》循环双向链表 	是最后一个节点指向第一个节点。
+	》栈和队列也是比较常见的数据结构，它们是比较特殊的线性表，
+	》》因为对于栈来说，访问、插入和删除元素只能在栈顶进行，
+	》》对于队列来说，元素只能从队列尾插入，从队列头访问和删除。
+	
+	非线性结构：
+	》树型结构是一类非常重要的非线性数据结构，其中以树和二叉树最为常用。
+	二叉树：
+	》二叉树是每个节点最多有两棵子树的树结构。通常子树被称作“左子树”和“右子树”。
+	》》二叉树常被用于实现二叉查找树和二叉堆。
+	性质：
+	》二叉树的每个结点至多只有2棵子树(不存在度大于2的结点)，二叉树的子树有左右之分，次序不能颠倒。
+	》二叉树的第i层至多有2^(i-1)个结点；深度为k的二叉树至多有2^k-1个结点。
+	》一棵深度为k，且有2^k-1个节点的二叉树称之为 满二叉树 ；
+	》深度为k，有n个节点的二叉树，当且仅当其每一个节点都与深度为k的满二叉树中，
+	》》序号为1至n的节点对应时，称之为 完全二叉树 。
+	三种遍历方法：
+	》先序遍历 若二叉树为空，则空操作，否则先访问根节点，再先序遍历左子树，最后先序遍历右子树。
+	protected void preorder(TreeNode<E> root) {
+		if (root == null) return;
+		System.out.println(root.element + " ");
+		preorder(root.left);
+		preorder(root.right);
+	}
+	》中序遍历 若二叉树为空，则空操作，否则先中序遍历左子树，再访问根节点，最后中序遍历右子树。
+	protected void inorder(TreeNode<E> root) {
+		if (root == null) return;
+		inorder(root.left);
+		System.out.println(root.element + " ");
+		inorder(root.right);
+	}
+	》后序遍历 若二叉树为空，则空操作，否则先后序遍历左子树访问根节点，再后序遍历右子树，最后访问根节点。
+	protected void postorder(TreeNode<E> root) {
+		if (root == null) return;
+		postorder(root.left);
+		postorder(root.right);
+		System.out.println(root.element + " ");
+	}
+	树和二叉树的区别：
+	》二叉树每个节点最多有2个子节点，树则无限制。
+	》二叉树中节点的子树分为左子树和右子树，即使某节点只有一棵子树，
+	》》也要指明该子树是左子树还是右子树，即二叉树是有序的。 
+	》树决不能为空，它至少有一个节点，而一棵二叉树可以是空的。
+	二叉查找树：
+	》二叉查找树就是二叉排序树，也叫二叉搜索树。
+	二叉查找树性质：
+	》若左子树不空，则左子树上所有结点的值均小于它的根结点的值；
+	》若右子树不空，则右子树上所有结点的值均大于它的根结点的值；
+	》左、右子树也分别为二叉排序树；(4) 没有键值相等的结点。
+	二叉查找树性能：
+	》最坏情况下，当先后插入的关键字有序时，构成的二叉查找树蜕变为单支树，树的深度为n，
+	》》其平均查找长度(n+1)/2(和顺序查找相同）
+	》最好的情况是二叉查找树的形态和折半查找的判定树相同，其平均查找长度和log2(n)成正比。
+	》平均情况下，二叉查找树的平均查找长度和logn是等数量级的。
+	》》所以为了获得更好的性能，通常在二叉查找树的构建过程需要进行“平衡化处理”，之后我们将介绍平衡二叉树和红黑树，
+	》》这些均可以使查找树的高度为O(log(n))。
+	二叉树搜索：
+	//将目标元素与根节点开始比较
+	//如果比根节点小则取左节点继续循环比较
+	//大则取右节点继续循环比较
+	//在当前节点不为空的情况下找到并返回ture
+	//找不到则返回false
+    public boolean search(E e) {
+        TreeNode<E> current = root;
+        while (current != null) {
+            if (e.compareTo(current.element) < 0) {
+                current = current.left;
+            } else if (e.compareTo(current.element) > 0) {
+                current = current.right;
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
+	二叉树插入：
+	//如果之前是空二叉树 插入的元素就作为根节点
+	//否则就从根节点开始遍历 直到找到合适的父节点
+	public boolean insert(E e) {
+        // 如果之前是空二叉树 插入的元素就作为根节点
+        if (root == null) {
+            root = createNewNode(e);
+        } else {
+            // 否则就从根节点开始遍历 直到找到合适的父节点
+            TreeNode<E> parent = null;
+            TreeNode<E> current = root;
+            while (current != null) {
+                if (e.compareTo(current.element) < 0) {
+                    parent = current;
+                    current = current.left;
+                } else if (e.compareTo(current.element) > 0) {
+                    parent = current;
+                    current = current.right;
+                } else {
+                    return false;
+                }
+            }
+            // 插入
+            if (e.compareTo(parent.element) < 0) {
+                parent.left = createNewNode(e);
+            } else {
+                parent.right = createNewNode(e);
+            }
+        }
+        return true;
+    }
+	二叉搜索树删除节点：
+	public boolean delete(E e) {
+        TreeNode<E> parent = null;
+        TreeNode<E> current = root;
+        // 找到要删除的节点的位置
+        while (current != null) {
+            if (e.compareTo(current.element) < 0) {
+                parent = current;
+                current = current.left;
+            } else if (e.compareTo(current.element) > 0) {
+                parent = current;
+                current = current.right;
+            } else {
+                break;
+            }
+        }
+        // 没找到要删除的节点
+        if (current == null) {
+            return false;
+        }
+        // 考虑第一种情况
+        if (current.left == null) {
+            if (parent == null) {
+                root = current.right;
+            } else {
+                if (e.compareTo(parent.element) < 0) {
+                    parent.left = current.right;
+                } else {
+                    parent.right = current.right;
+                }
+            }
+        } else { // 考虑第二种情况
+            TreeNode<E> parentOfRightMost = current;
+            TreeNode<E> rightMost = current.left;
+            // 找到左子树中最大的元素节点
+            while (rightMost.right != null) {
+                parentOfRightMost = rightMost;
+                rightMost = rightMost.right;
+            }
+            // 替换
+            current.element = rightMost.element;
+            // parentOfRightMost和rightMost左孩子相连
+            if (parentOfRightMost.right == rightMost) {
+                parentOfRightMost.right = rightMost.left;
+            } else {
+                parentOfRightMost.left = rightMost.left;
+            }
+        }
+        return true;
+    }
+	二叉树查找树删除节点：
+	public boolean delete(E e) {
+        TreeNode<E> parent = null;
+        TreeNode<E> current = root;
+        // 找到要删除的节点的位置
+        while (current != null) {
+            if (e.compareTo(current.element) < 0) {
+                parent = current;
+                current = current.left;
+            } else if (e.compareTo(current.element) > 0) {
+                parent = current;
+                current = current.right;
+            } else {
+                break;
+            }
+        }
+        // 没找到要删除的节点
+        if (current == null) {
+            return false;
+        }
+        // 考虑第一种情况 找到的节点没有左节点
+        if (current.left == null) {
+            if (parent == null) { //要删除的节点是根节点
+                root = current.right;
+            } else {
+                if (e.compareTo(parent.element) < 0) {
+                    parent.left = current.right;
+                } else {
+                    parent.right = current.right;
+                }
+            }
+        } else { // 考虑第二种情况 有左节点
+            TreeNode<E> parentOfRightMost = current;
+            TreeNode<E> rightMost = current.left;
+            // 找到左子树中最大的元素节点
+            while (rightMost.right != null) {
+                parentOfRightMost = rightMost;
+                rightMost = rightMost.right;
+            }
+            // 替换
+            current.element = rightMost.element;
+            // parentOfRightMost和rightMost左孩子相连
+            if (parentOfRightMost.right == rightMost) {
+                parentOfRightMost.right = rightMost.left;
+            } else {
+                parentOfRightMost.left = rightMost.left;
+            }
+        }
+        return true;
+    }
+	平衡二叉树：
+	》平衡二叉树又称AVL树，它或者是一棵空树
+	平衡二叉树具有以下性质：
+	》它的左子树和右子树都是平衡二叉树，且左子树和右子树的深度之差的绝对值不超过1。
+	图：
+	图简介：
+	》图是一种较线性表和树更为复杂的数据结构。
+	》》在线性表中，数据元素之间仅有线性关系
+	》》在树形结构中，数据元素之间有着明显的层次关系
+	》》在图形结构中，节点之间的关系可以是任意的，图中任意两个数据元素之间都可能相关
+	》图的应用相当广泛，特别是近年来的迅速发展，
+	》》已经渗入到诸如语言学、逻辑学、物理、化学、电讯工程、计算机科学以及数学的其他分支中。
+	
+	算法：
+	》是一个有穷规则的集合，其规则确定一个解决某一特定类型问题的操作序列。
+	5个必备特性：
+	》有穷性、确定性、可行性、有输入、有输出
+	算法和数据结构：
+	》算法建立在数据结构之上，对数据结构的操作需要用算法来描述。
+	
+	时间复杂度：
+	常见复杂度：
+	》1、常数阶O(1)
+	》2、对数阶O(logn)
+	》3、线性阶O(n)
+	》4、线性对数阶O(nlog2n)
+	》5、k方阶O(n^k)
+	》6、指数阶O(2^n)一般不用，性能太差
+	计算方法：
+	》①选取相对增长最高的项
+	》②最高项系数是都化为1
+	》③若是常数的话用O(1)表示
+	空间复杂度：
+	》链接：https://blog.csdn.net/HaloTrriger/article/details/78994122
+	》空间复杂度是对一个算法在运行过程中临时占用存储空间大小的量度。
+	计算方法：
+	》①忽略常数，用O(1)表示
+	》②递归算法的空间复杂度=递归深度N*每次递归所要的辅助空间
+	》③对于单线程来说，递归有运行时堆栈，求的是递归最深的那一次压栈所耗费的空间的个数，
+	》》因为递归最深的那一次所耗费的空间足以容纳它所有递归过程。
+java变量内存分配
+	栈
+		定义一个特殊的引用变量
+		取值等于数组或对象在堆内存的中的首地址
+		该变量将在运行到作用域之外被释放
+		
+	堆
+		为new操作（创建对象）分配内存
+		运行到创建该对象的代码块之外，该快内存并不会被释放；当没有引用时才会被垃圾收集器在某一
+		时间释放。
+		
+		参考：http://www.importnew.com/14630.html 堆的讲解以及垃圾回收的一些分析
+		》堆被划分为两个不同的区域：新生代、老年代
+		》新生代被划分为三个区域：Eden、From Survivor、To Survivor
+		GC堆：
+		》有两个；分别存在于新生代和老年代之中，其中新生代的gc比较频繁，执行时间比较短
+		》老年代相对不那么频繁且执行时间长
+		GC：
+		Minor GC：
+		》是发生在新生代中的垃圾收集动作，所采用的是复制算法。
+		》如果还存活就复制到to区域；经历十五回合这样的生存将会载入老年代
+		Full GC（Major GC ）：
+		》是发生在老年代的垃圾收集动作，所采用的是标记-清除算法。
+		》发生的次数不会有 Minor GC 那么频繁，并且做一次 Full GC 要比进行一次 Minor GC 的时间更长。
+		System.gc() 通知gc收集
+	
+	非堆 PermGen永久代
+		主要用来存储由jvm加载的类文件信息，常量、静态变量
+
+代码的优化 http://www.importnew.com/28395.html
+	尽量指定类、方法的final修饰符：
+	》如果指定了一个类为final，则该类所有的方法都是final的。
+	》Java编译器会寻找机会内联所有的final方法，内联对于提升Java运行效率作用重大
+	尽量重用对象：
+	》例如String，尽量使用StringBuilder/StringBuffer代替
+	》考虑到代码的创建和废弃后垃圾的回收所耗能，因此，生成过多的对象将会给程序的性能带来很大的影响。
+	尽可能的使用局部变量：
+	》调用方法时传递的参数以及在调用中创建的临时变量都保存在栈中，速度较快，其他变量，
+	》如静态变量、实例变量等，都在堆中创建，速度较慢。另外，栈中创建的变量，
+	》随着方法的运行结束，这些内容就没了，不需要额外的垃圾回收。
+	及时关闭流:
+	》进行数据库连接、I/O流操作时务必小心，在使用完毕后，及时关闭以释放资源。
+	》因为对这些大对象的操作会造成系统大的开销，稍有不慎，将会导致严重的后果。
+	尽量减少对变量的重复计算：
+	》for (int i = 0, length = list.size(); i < length; i++){} list.size()只需要计算一次即可
+	尽量采用懒加载的策略，即在需要的时候才创建：
+	慎用异常：
+	》异常只能用于错误处理，不应该用来控制程序流程。
+	不要在循环中使用try…catch…，应该把其放在最外层：
+    如果能估计到待添加的内容长度，为底层以数组方式实现的集合、工具类指定初始长度：
+    当复制大量数据时，使用System.arraycopy()命令：
+    乘法和除法使用移位操作：
+    》for(){a = val * 8; b = val / 2;}
+    》for(){a = val << 3; b = val << 1;}
+    循环内不要不断创建对象引用：
+    》for(){Object obj = new Object();}
+    》改为：Object obj = null; for(){obj = new Object();}
+	
+重载、重写
+	重载
+		同方法名，不同参数
+	重写
+		同方法名，同参数--继承
+		
+匿名对象
+	new Person().say();
+	
+构造函数
+	构造方法不能直接调用，只能通过new运算符调用
+	构造函数不能被继承和重写，可重载
+	
+static 
+	静态方法是属于整个类的方法，非静态方法是属于整个对象的方法
+	静态变量是一个公共的存储单元
+	
+Serializable 序列化接口
+	序列化步骤：
+	首先要创建某些OutputStream对象：OutputStream outputStream = new FileOutputStream("output.txt")
+	将其封装到ObjectOutputStream对象内：ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+	此后只需调用writeObject()即可完成对象的序列化，并将其发送给OutputStream：objectOutputStream.writeObject(Object);
+	最后不要忘记关闭资源：objectOutputStream.close(), outputStream .close();
+	
+	反序列化步骤：
+	首先要创建某些OutputStream对象：InputStream inputStream= new FileInputStream("output.txt")
+	将其封装到ObjectInputStream对象内：ObjectInputStream objectInputStream= new ObjectInputStream(inputStream);
+	此后只需调用writeObject()即可完成对象的反序列化：objectInputStream.readObject();
+	最后不要忘记关闭资源：objectInputStream.close()，inputStream.close();
+	
+红黑树
+	存储有序数据，时间复杂度O(lgn)
+	红黑树理解：https://blog.csdn.net/chen_zhang_yu/article/details/52415077
+	红黑树深入：https://www.cnblogs.com/skywang12345/p/3245399.html
+
+
+“==”与equals的区别
+	==：
+	》如果作用于基本数据类型的变量，则直接比较其存储的 “值”是否相等；
+	》如果作用于引用类型的变量，则比较的是所指向的对象的地址
+	equals：
+	》注意：equals方法不能作用于基本数据类型的变量
+	》如果没有对equals方法进行重写，则比较的是引用类型的变量所指向的对象的地址；
+	》诸如String、Date等类对equals方法进行了重写的话，比较的是所指向的对象的内容。
+	
+JMX API MBean
+	类似于javaBean 遵循了JMX规范的一些设计模式。
+	一个设备、一个应用或者任何需要被管理的资源都可以被表示为MBean
+	MBean会暴露一个管理接口，接口主要包括：
+		一组可以读取或者写入，或既能读取也能写入的属性
+		一组触发读取或者写入的操作
+		一个自我描述
+	JMX API规范定义了5中类型的MBean
+		标准MBean
+		动态MBean
+		开发MBean
+		模型MBean
+		MXBean
+
+集合
+    Arrays
+    》提供一些关于数组操作的静态接口
+    》.asList ： 可以从 Array 转换成 List。可以作为其他集合类型构造器的参数。
+    》.binarySearch ：在一个已排序的或者其中一段中快速查找。
+    》.copyOf ： 如果你想扩大数组容量又不想改变它的内容的时候可以使用这个方法。
+    》.copyOfRange ：可以复制整个数组或其中的一部分。
+    》Arrays.deepEquals、Arrays.deepHashCode：Arrays.equals/hashCode的高级版本，支持子数组的操作。
+    》.equals：如果你想要比较两个数组是否相等，应该调用这个方法而不是数组对象中的 equals方法
+    》.fill：用一个给定的值填充整个数组或其中的一部分。
+    》.hashCode：用来根据数组的内容计算其哈希值（数组对象的hashCode()不可用）。
+    》   这个方法集合了Java 5的自动装箱和无参变量的特性，
+    》   来实现将一个变量快速地传给 Arrays.hashcode方法——只是传值进去，不是对象。
+    》.sort：对整个数组或者数组的一部分进行排序。
+    》.toString：打印数组的内容。
+    》复制整个数组或其中一部分到另一个数组，可以调用System.arraycopy方法
+    》   此方法从源数组中指定的位置复制指定个数的元素到目标数组里。（ ByteBuffer bulk复制可以研究）
+    》所有的集合都可以用“return coll.toArray( new T[ coll.size() ] );”这样的方式复制到数组中
+	
+   
+    单线程集合：（这些集合所在包java.util包里）
+    相关链接：https://blog.csdn.net/u014744118/article/details/50705424
+	对集合性能的分析，要考虑到遍历、存取等因素
+    List：（有序的 collection（也称为序列）。）
+    ArrayList：
+    》不指定顺序它就默认按先后顺序排序
+    》可扩展大小
+    》访问元素的时间开销固定（线性复杂度）
+    》尾部添加元素成本低（为常数复杂度O(1)）
+    》头部添加元素成本很高（线性复杂度O(n)）
+    》CPU缓存友好的集合是基于数组的。（其实也不是很友好，因为有时数组会包含对象，这样存储的只是指向实际对象的指针）。
+    Vector：
+    》一个带有线程同步方法的ArrayList版本。现在直接用ArrayList代替了。
+    LinkedList
+    》Deque实现
+    》每一个节点都保存着上一个节点和下一个节点的指针。
+    》数据的存取和更新具有线性复杂度
+    》每次操作都不会遍历数组一半以上，操作成本最高的元素就是数组中间的那个
+    》也因为是Deque实现，链接列表可用作堆栈、队列或双端队列。
+    》高效操作LinkedList代码可以使用 ListIterators 。
+    
+    Queues/deques：（在处理元素前用于保存元素的 collection。）
+    ArrayDeque:
+    》Deque是基于有首尾指针的数组（环形缓冲区）实现的。
+    》和LinkedList不同，这个类没有实现List接口。
+    》因此，如果没有首尾元素的话就不能取出任何元素。
+    》这个类比LinkedList要好一些，因为它产生的垃圾数量较少（在扩展的时候旧的数组会被丢弃）。
+    Stack：
+    》一种后进先出的队列。
+    》不要在生产代码中使用，使用别的Deque来代替（ArrayDeque比较好）。
+    PriorityQueue：
+    》一个基于优先级的队列。
+    》使用自然顺序或者制定的比较器来排序。
+    》优先级队列不允许使用 null 元素。不允许插入不可比较的对象
+    》PriorityQueue还实现了Iterable接口，队列迭代时不进行排序（或者其他顺序）。
+    》在需要排序的集合中，使用这个队列会比TreeSet等其他队列要方便。
+    
+    Maps：（将键映射到值的对象。一个映射不能包含重复的键；每个键最多只能映射到一个值。）
+    HashMap：
+    》最常用的Map实现。只是将一个键和值相对应，并没有其他的功能。
+    》对于复杂的hashCode method，get/put方法有固定的复杂度。
+    》允许使用 null 值和 null 键。
+    》除了非同步和允许使用 null 之外，HashMap 类与 Hashtable 大致相同。
+    》不保证映射的顺序，要想保证映射顺序可以使用LinkedHashMap
+    EnumMap：
+    》枚举类型作为键值的Map。
+    》因为键的数量相对固定，所以在内部用一个数组储存对应值。通常来说，效率要高于HashMap。
+    》不允许使用 null 键，允许使用 null 值。 
+    HashTable：
+    》Hashtable 是同步的 
+    》任何非 null 对象都可以用作键或值。
+	》除了以上说明，大致与HashMap类似
+    IdentityHashMap：
+    》这是一个特殊的Map版本，它违背了一般Map的规则：它使用 “==” 来比较引用而不是调用Object.equals来判断相等。
+    》这个特性使得此集合在遍历图表的算法中非常实用——可以方便地在IdentityHashMap中存储处理过的节点以及相关的数据。
+    》允许 null 值和 null 键
+    LinkedHashMap：
+    》HashMap和LinkedList的结合，所有元素的插入顺序存储在LinkedList中。
+    》这就是为什么迭代LinkedHashMap的条目（entry）、键和值的时候总是遵循插入的顺序。
+    》在JDK中，这是每元素消耗内存最大的集合。
+    TreeMap：
+    》一种基于已排序且带导向信息Map的红黑树。
+    》每次插入都会按照自然顺序或者给定的比较器排序。这个Map需要实现equals方法和Comparable/Comparator。
+    》这个类实现了一个NavigableMap接口：可以带有与键数量不同的入口，可以得到键的上一个或者下一个入口，
+    》可以得到另一Map某一范围的键（大致和SQL的BETWEEN运算符相同），以及其他的一些方法
+    WeakhashMap:
+    》这种Map通常用在数据缓存中。
+    》它将键存储在WeakReference中，就是说，如果没有强引用指向键对象的话，这些键就可以被垃圾回收线程回收。
+    》值被保存在强引用中。
+    》因此，你要确保没有引用从值指向键或者将值也保存在弱引用中m.put(key, new WeakReference(value))。
+	》确保值对象不会直接或间接地强引用其自身的键，这会导致键无法被移除
+    
+    Sets：（一个不包含重复元素的 collection。）
+    HashSet：
+    》一个基于HashMap实例的Set实现。
+    》在处理元素前用于保存元素的 collection。
+	》在添加新对象时，首先比较对象的hashcode值，如果相等则比较两个对象是否相等，是则不添加，并且按照hashCode的值排序
+    EnumSet：
+	》值为枚举类型的Set。Java的每一个enum都映射成一个不同的int。
+    》这就允许使用BitSet——一个类似的集合结构，其中每一比特都映射成不同的enum。
+    BitSet：
+	》一个比特Set。需要时常考虑用BitSet处理一组密集的整数Set（比如从一个预先知道的数字开始的id集合）。
+    》这个类用 long[]来存储bit。
+	LinkedHashSet：
+	》与HashSet一样，这个类基于LinkedHashMap实现。
+	》这是唯一一个保持了插入顺序的Set。
+    TreeSet：
+	》与HashSet类似。这个类是基于一个TreeMap实例的。
+	》这是在单线程部分唯一一个排序的Set。
+	
+	并发集合：（java.util.concurrent包中线程安全的集合）
+	》多数为1.5引入
+	》Java 1.6引入ConcurrentSkipListMap / ConcurrentSkipListSet 和 LinkedBlockingDeque
+	》Java 1.7引入ConcurrentLinkedDeque 和 LinkedTransferQueue
+	Lists：
+	CopyOnWriteArrayList：
+	》list的实现
+	》每一次更新都会产生一个新的隐含数组副本，所以这个操作成本很高。
+	》通常用在遍历操作比更新操作多的集合，比如listeners/observers集合。
+	Queues/deques：
+	ArrayBlockingQueue：
+	》基于数组实现的一个有界阻塞队，大小不能重新定义。
+	》所以当你试图向一个满的队列添加元素的时候，就会受到阻塞，直到另一个方法从队列中取出元素。
+	ConcurrentLinkedDeque / ConcurrentLinkedQueue:
+	》基于链表实现的无界队列，添加元素不会堵塞。
+	》但是这就要求这个集合的消费者工作速度至少要和生产这一样快，不然内存就会耗尽。
+	》严重依赖于CAS(compare-and-set)操作。
+	DelayQueue：
+	》无界的保存Delayed元素的集合。
+	》元素只有在延时已经过期的时候才能被取出。
+	LinkedBlockingDeque / LinkedBlockingQueue：
+	》可选择有界或者无界基于链表的实现。
+	》在队列为空或者满的情况下使用ReentrantLock-s。
+	LinkedTransferQueue：
+	》基于链表的无界队列。除了通常的队列操作，它还有一系列的transfer方法，
+	》》可以让生产者直接给等待的消费者传递信息，这样就不用将元素存储到队列中了。
+	》这是一个基于CAS操作的无锁集合。
+	PriorityBlockingQueue：
+	》PriorityQueue的无界的版本。
+	SynchronousQueue：
+	》一个有界队列，其中没有任何内存容量。
+	》这就意味着任何插入操作必须等到响应的取出操作才能执行，反之亦反。
+	》如果不需要Queue接口的话，通过Exchanger类也能完成响应的功能。
+	Maps：
+	ConcurrentHashMap
+	》集合使用了线程锁分段技术，每次访问只允许一个线程修改哈希表的映射关系，所以是线程安全的
+	》可以在高并发的场景使用
+	》进去就判断key和value是否为空
+	》通过spread(key.hashCode())获取每一个key的哈希值，创建新的Node的时候会将key的哈希值存到node数组里面
+	》低层put方法通过锁代码块实现线程安全
+	》会比较key的哈希值，哈希值相等就修改key的value。不相等就新建一个Node
+	》key和value都不可以为空
+	》get操作全并发访问，put操作可配置并发操作的哈希表。
+	》这种Map不是代替HashMap的线程安全版本——任何 get-then-put的操作都需要在外部进行同步。
+	ConcurrentSkipListMap:
+	》基于跳跃列表（Skip List）的ConcurrentNavigableMap实现。
+	》本质上这种集合可以当做一种TreeMap的线程安全版本来使用。
+	Sets：
+	ConcurrentSkipListSet：
+	》使用 ConcurrentSkipListMap来存储的线程安全的Set。
+	CopyOnWriteArraySet：
+	》使用CopyOnWriteArrayList来存储的线程安全的Set。
+	
+    
+http
+	理解：
+	》超文本传输协议（HTTP，HyperText Transfer Protocol)是互联网上应用最为广泛的一种网络协议。
+	》能够正确快速地传输超文本文档。显示的顺序是文本先于图片。
+	》HTTP使用TCP而不是UDP的原因在于（打开）一个网页必须传送很多数据，而TCP协议提供传输控制，按顺序组织数据，		
+    》和错误纠正。
+	头域：
+	》通用头，
+	》请求头，
+	》响应头和实体头。
+	》每个头域由一个域名，冒号（:）和域值三部分组成。
+	》通用头域包含Cache-Control、Connection、Date、Pragma、Transfer-Encoding、Upgrade、Via。
+	报文格式：
+	》请求行 － 通用信息头 － 请求头 － 实体头 － 报文主体
+	》状态行 － 通用信息头 － 响应头 － 实体头 － 报文主体
+	一次HTTP操作称为一个事务：
+	》首先客户机与服务器需要建立连接。只要单击某个超级链接，HTTP的工作就开始了。
+	》建立连接后，客户机发送一个请求给服务器，请求方式的格式为：统一资源标识符（URL）、协议版本号，	
+    》后边是MIME信息包括请求修饰符、客户机信息和可能的内容。
+	》服务器接到请求后，给予相应的响应信息，其格式为一个状态行，包括信息的协议版本号、一个成功或错误的代码，		
+    》后边是MIME信息包括服务器信息、实体信息和可能的内容。
+	》客户端接收服务器所返回的信息通过浏览器显示在用户的显示屏上，
+	》然后客户机与服务器断开连接。
+	GET/POST的区别：
+	》就数据量，GET请求数据没有POST多
+	》格式，GET的参数都是附在链接上的         例如：/index.jsp?username=holmofy&password=123123
+	》隐私相关的信息也直接暴露在URI中，保密性不好
+	》在http0.9版本时只接受 GET 一种请求方法
+
+	HTTP/1.1；HTTP/1.1相较于 HTTP/1.0 协议的区别主要体现在：：
+	》缓存处理
+	》带宽优化及网络连接的使用
+	》错误通知的管理
+	》消息在网络中的发送
+	》互联网地址的维护
+	》安全性及完整性
+
+	格式：
+	请求：
+	》POST /index.html HTTP/1.1    									(method url version \r\n)
+	》HOST: www.XXX.com												(key : value \r\n)
+	》User-Agent: Mozilla/5.0(Windows NT 6.1;rv:15.0) Firefox/15.0	(key : value \r\n)
+	》																(\r\n)
+	》Username=admin&password=admin									(body)
+	响应：
+	》HTTP/1.1 200 OK												(version status desc \r\n)
+	》Content-Encoding: gzip										(key : value \r\n)
+	》Content-Type: text/html;charset=utf-8							(key : value \r\n)
+	》																(\r\n)
+	》<!DOCTYPE html></html>										(body)
+	
+	HTTP头信息： 
+	常见请求头：
+	Host：
+	》Host:www.baidu.com  
+	》指定请求资源的主机名和端口号
+	User-Agent： 
+	》User-Agent:Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 
+	》(KHTML, like Gecko) Chrome/57.0.2987.110 Safari/537.36 
+	》用户的操作系统浏览器等相关属性
+	Referer：
+	》Referer: https://www.baidu.com/
+	》代表当前访问的URL的上一个URL，也就是用户是从什么地方转到本页面的。
+	》比如说html中有图片需要显示，请求图片是就会加上该html所在的url。
+	Cookie：
+	》Cookie:BAIDUID=AAABBBCCCDDDEEEFFFGGG;BIDUPSID=ZYXWVUOPQRST;PSTM=1494145048
+	Range：
+	》请求实体内容的一部分，多线程下载一定会用到该请求头
+	Accept：
+	》Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+	》客户端接受什么类型的信息。类型用MIME表示。
+	Accept-Charset：
+	》客户端接受什么字符集的文本内容。常用的如UTF-8，GBK，iso-8859-1等。
+	Accept-Language：
+	》客户端接受什么语言的文本内容。
+	Accept-Encoding：
+	》客户端接受什么压缩格式的内容。如gzip压缩格式，deflate压缩，sdch压缩。
+	常见响应头：
+	Server：
+	》Server: Apache/2.4.6 (CentOS)
+	》服务器所使用的Web服务器名称。攻击者可以通过查看该头信息，来探测Web服务器名称。
+	》所以一般服务器端会对该头信息进行修改。
+	Set-Cookie：
+	》Set-Cookie: __bsi=12777267876439010180_00_68_R_N_70_0303_C027_N_I_I_0;
+	》向客户端设置Cookie。
+	》Cookie头是客户端向服务器传客户端已经保存的Cookie信息。
+	Last-Modified：
+	》服务器通过该头信息告诉浏览器，资源最后的修改时间。从而让客户端及时地更新缓存内容。
+	Location:
+	》服务器通过该头信息告诉浏览器去访问那个页面，浏览器接收到这样的响应信息后，
+	》通常会立刻访问Location头所指向的页面。这个头通常配合302重定向状态码使用。
+	Refresh：
+	》服务器通过Refresh头信息让浏览器定时刷新。
+	》Refresh: 3;url="http://www.baidu.com" 比如这个头信息定时三秒后，刷新到百度页面。
+	Cache-Control：
+	》Cache-Control: no-cache
+	》指定客户端对页面的缓存策略。
+	响应实体头信息：
+	Content-Type：
+	》Content-Type: text/html;charset=utf-8
+	》响应实体的内容类型。
+	Content-Encoding：
+	》Content-Encoding: gzip
+	》响应实体的编码方式
+	Content-Length：
+	》响应实体的内容长度
+	
+	状态码：
+	》1XX：信息提示   表示请求已被服务器接受，但需要继续处理，范围为100~101。
+	》2XX：请求成功。服务器成功处理了请求。范围为200~206。
+	》3XX：客户端重定向。重定向状态码用于告诉客户端浏览器，它们访问的资源已被移动，
+	》并告诉客户端新的资源位置。客户端收到重定向会重新对新资源发起请求。范围为300~305。
+	》4XX：客户端信息错误。客户端可能发送了服务器无法处理的东西，比如请求的格式错误，	
+	》或者请求了一个不存在的资源。范围为400~415。
+	》5XX：服务器出错。客户端发送了有效的请求，但是服务器自身出现错误，比如Web程序运行出错。
+	》范围是500~505。
+	对请求头信息的详细解析：https://blog.csdn.net/holmofy/article/details/68492045
+TCP/IP
+	理解：
+	》TCP/IP是“transmission Control Protocol/Internet Protocol”
+	》网络协议即网络中（包括互联网）传递、管理信息的一些规范。
+	》计算机之间的相互通信需要共同遵守一定的规则，这些规则就称为网络协议。
+	》TCP/IP协议是网络的基础，是Internet的语言
+	》在数据传送中，可以形象地理解为有两个信封，TCP和IP就像是信封，要传递的信息被划分成若干段，
+	》每一段塞入一个TCP信封，并在该信封面上记录有分段号的信息，再将TCP信封塞入IP大信封，
+	》发送上网。
+    格式：
+    》格式详细解析图 https://blog.csdn.net/yefanchen01/article/details/70053191
+    》在局域网环境，IP协议往往被封装在以太网帧中传送。
+    》而所有的TCP、UDP、ICMP、IGMP数据都被封装在IP数据报中传送。
+	结构解析：
+	》1、链路层，有时也称作数据链路层或网络接口层，通常包括操作系统中的设备驱动程序和计算机中对应的网络接口卡。它们一		
+	》起处理与电缆（或其他任何传输媒介）的物理接口细节。
+    》作用：提供给其上层-网络层一个访问接口，以便在其上传递IP分组
+	》2、网络层，有时也称作互联网层，处理分组在网络中的活动，例如分组的选路。在TCP/IP协议族中，网络层协议包括IP协议（		
+	》网际协议），ICMP协议（internet互联网控制报文协议），以及IGMP协议（internet组治理协议）。
+	》作用：把分组发往目标网络或主机
+    》3、传输层，主要为两台主机上的应用程序提供端到端的通信。在TCP/IP协议族中，有两个互不相同的传输协议： TCP（传输控		
+	》制协议）和UDP（用户数据报文协议）。
+	》4、应用层负责处理特定的应用程序细节。几乎各种不同的TCP/IP实现都会提供下面这些通用的应用程序：
+	》Telnet 远程登录。FTP 文件传输协议。SMTP 简单邮件传送协议。 SNMP 简单网络治理协议。
+    UDP：
+    》UDP协议是一个不可靠的、无连接协议，主要适用于不需要对报文进行排序和流量控制的场合。　
+    》源主机在传送数据前不需要和目标主机建立连接。
+    》数据被冠以源、目标端口号等UDP报头字段后直接发往目的主机。
+    》每个数据段的可靠性依靠上层协议来保证。在传送数据较少、较小的情况下，UDP比TCP更加高效。
+    TCP：
+    》TCP是一种可靠的、面向连接的字节流服务。
+    》源主机在传送数据前需要先和目标主机建立连接。
+    》然后，在此连接上，被编号的数据段按序收发。同时，要求对每个数据段进行确认，保证了可靠性。
+    》如果在指定的时间内没有收到目标主机对所发数据段的确认，源主机将再次发送该数据段。
+	ICMP：
+	》全称是 Internet Control Message Protocol 。作用在网络层的一个协议
+	》是一个“错误侦测与回报机制”，其目的就是让我们能够检测网路的连线状况﹐也能确保连线的准确性
+	》功能：侦测远端主机是否存在；建立及维护路由资料；重导资料传送路径（ICMP重定向）；资料流量控制
+	》运用到ICMP的例子：ping远程主机
+	》ICMP协议对于网络安全具有极其重要的意义。向目标主机长时间、连续、大量地发送ICMP数据包，也会最终使系统瘫痪。
+	》》大量的ICMP数据包会形成“ICMP风暴”，使得目标主机耗费大量的CPU资源处理，疲于奔命。
+	》防范：第一种方法是在路由器上对ICMP数据包进行带宽限制，将ICMP占用的带宽控制在一定的范围内，这样即使有ICMP攻击，
+	》》它所占用的带宽也是非常有限的，对整个网络的影响非常少；
+	》第二种方法就是在主机上设置ICMP数据包的处理规则，最好是设定拒绝所有的ICMP数据包。
+	IGMP：
+	》IGMP协议（Internet Group Management Protocol），是因特网协议家族中的一个组播协议。
+	》该协议运行在主机和组播路由器之间。IGMP协议共有三个版本，即IGMPv1、v2 和v3。
+    TCP建立连接的三次握手过程：
+    》三次握手的目标是使数据段的发送和接收同步。同时也向其他主机表明其一次可接收的数据量（窗口大小），
+    》并建立逻辑连接。三次握手的过程可以简述如下：　　
+    》1.源主机发送一个同步标志位（SYN）置1的TCP数据段。此段中同时标明初始序号（Initial Sequence Number，ISN）。
+    》ISN是一个随时间变化的随机值。
+    》2.目标主机发回确认数据段，此段中的同步标志位（SYN）同样被置1，且确认标志位（ACK）也置1，
+    》同时在确认序号字段表明目标主机期待收到源主机下一个数据段的序号（即表明前一个数据段已收到并且没有错误）。
+    》此外，此段中还包含目标主机的段初始序号。
+    》3.源主机再回送一个数据段，同样带有递增的发送序号和确认序号。　
+    网络基础知识总结 https://blog.csdn.net/Scenlyf/article/details/52127296
