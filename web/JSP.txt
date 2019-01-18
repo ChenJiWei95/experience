@@ -1,0 +1,66 @@
+
+目录：
+	》简介：
+	》JSP的优势：
+	》生命周期：
+	》jsp语法：
+	》过滤器：
+	》九大内置对象：
+	》引用：
+	
+简介：
+	》可以响应客户端请求，而动态生成 HTML、XML 或其他格式文档的Web网页的技术标准。
+	》Java Server Pages，是一种动态网页开发技术。它使用JSP标签在HTML网页中插入Java代码。标签通常以<%开头以%>结束。
+	
+		
+JSP的优势：
+	》与ASP相比：1、动态部分用Java编写，所以更加强大与易用。2、JSP易于移植到非MS平台上。
+	》与纯 Servlet 相比：JSP可以很方便的编写或者修改HTML网页而不用去面对大量的println语句。
+	》与SSI相比：SSI无法使用表单数据、无法进行数据库链接。
+	》与JavaScript相比：JavaScript很难与服务器交互，不能提供复杂的服务，比如访问数据库和图像处理等等。
+	》与静态HTML相比：静态HTML不包含动态信息。
+	》总结：部分用java编写，易用；易于移植；方便编写或者修改HTML网页；使得与服务器交互更容易；
+	
+生命周期：
+	》编译阶段：编译servlet源文件，生成servlet类
+	》初始化阶段：加载与JSP对应的servlet类，创建其实例，并调用它的初始化方法
+	》执行阶段：调用与JSP对应的servlet实例的服务方法
+	》销毁阶段：调用与JSP对应的servlet实例的销毁方法，然后销毁servlet实例
+	
+jsp语法：
+	》参考思维导图
+	
+过滤器：
+	过滤器类型：
+	》身份验证过滤器（
+	》数据压缩过滤器
+	》加密过滤器
+	》触发资源访问事件过滤器
+	》图像转换过滤器
+	》日志记录和审核过滤器
+	》MIME-TYPE 链过滤器
+	》标记化过滤器
+	》XSL/T 过滤器（XSL/T Filters），转换 XML 内容。
+	过滤器:
+	》实现了 javax.servlet.Filter 接口的 Java 类
+	》void doFilter (ServletRequest, ServletResponse, FilterChain) 先调用
+	》void init(FilterConfig filterConfig) web 应用程序启动时 FilterConfig 获取<init-param>参数
+	》void destroy() Servlet容器在销毁过滤器实例前调用
+
+九大内置对象：
+	四个作用域：
+	》pageContext 页面上下文对象，此对象封装了其他对象的获取方式 当前页面有效
+	》request     请求对象 同一个请求范围内有效
+	》session     session对象 同一个会话有效
+	》application ServletContext对象 整个WEB服务器有效
+	两个输出：
+	》out         输出对象
+	》response    输出对象，比resp对象多了缓冲区，效率提高
+	其他三个：
+	》page        代表该页面对象        
+	》config	  ServletConfig
+	》exception   异常对象，弃用	
+	
+引用：
+	》http://www.runoob.com/jsp/jsp-page-redirect.html
+	》》学习网站

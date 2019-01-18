@@ -1,6 +1,7 @@
 目录：
 	》简介
-	》spring IoC和DI
+	》spring IoC和DI （注入的三种方式）
+	》spring IOC和DI 注解操作 
 	》spring AOP
 	》spring的优势
 	》spring能做什么
@@ -17,8 +18,31 @@
 spring IoC和DI
 	》Inverse of Control（控制反转）：这是一种设计思想，将原本程序中手动创建对象的控制权，交由spring框架来管理。
 	》Dependency Injection（依赖注入）：将对象依赖属性通过配置设值给该对象
-
-spring AOP:
+	
+spring IOC和DI 注解操作
+	引用：https://blog.csdn.net/weixin_42166907/article/details/82919717
+	注册：
+	》@Controller 控制层
+	》@Service 业务层
+	》@Component 通用，不提倡使用
+	》@Repository 持久层
+	注入:
+	》@Autowired 自动按照类型注入，使用注解注入时set方法可省略，使用注入对象的名称查找，找不到会报错
+	》@Qualifier 按照类型注入的基础之上，在按照Bean的id注入。给字段注入时不能独立使用。value：指定bean的id
+	》@Resource 直接按照bean的id注入。如果没有指定名称或找不到 则按照类型查找对象
+	》@Value  注入基本数据类型和String类型数据的，可以使用el表达式读取properties文件中的属性
+	通过注解完全遗弃配置文件 （aop怎么解决）  
+	》@Configuration 指定当前类是一个spring配置类，当创建容器时会从该类上加载注解。
+	》》获取容器时需要使用AnnotationApplicationContext(有@Configuration注解的类.class)。
+	》@ComponentScan 指定spring在初始化容器时要扫描的包。
+	》》属性： basePackages：用于指定要扫描的包。和该注解中的value属性作用一样。
+	》@PropertySource 用于加载.properties文件中的配置。此注解指定properties配置文件的位置。
+	》》属性： value[]：用于指定properties文件位置。如果是在类路径下，需要写上classpath:
+	》@Import 用于导入其他配置类，在引入其他配置类时
+	》》属性： value[]：用于指定其他配置类的字节码。
+	》@Bean 只能写在方法上，表明使用此方法创建一个对象，并且放入spring容器。
+	》》name：给当前@Bean注解方法创建的对象指定一个名称(即bean的id）。
+spring AOP: 
 	定义：
 	》Aspect Oriented Program（面向切面编程） 
 	》在面向切面编程的思想里面，把功能分为核心业务功能，和周边功能。
@@ -102,11 +126,26 @@ spring框架（模块）结构：
 	
 事务：
 	声明式事务：
-	1、Spring 的声明式事务管理在底层是建立在 AOP 的基础上。其本质是在方法前后进行拦截，
-	然后在目标方法开始之前创建一个事务，在执行这目标方法结束后，根据执行情况提交或进行回滚事务。
-	2、声明式事务最大的优点就是不需通过编程的方式而进行管理事务，这样就不需要在业务逻辑代码中掺杂事务管理的代码，
-	只需在配置文件中做相关的事务规则声明，便可将事务规则应用到业务逻辑中。
-	3、声明式事务不足的地方在于，与编程式事务相比，只能作用到方法级别，无法像编程式事务那样可以作用到代码块级别。
+		原理解析：
+		》1、Spring 的声明式事务管理在底层是建立在 AOP 的基础上。其本质是在方法前后进行拦截，
+		》》然后在目标方法开始之前创建一个事务，在执行这目标方法结束后，根据执行情况提交或进行回滚事务。
+		》2、声明式事务最大的优点就是不需通过编程的方式而进行管理事务，
+		》》这样就不需要在业务逻辑代码中掺杂事务管理的代码，
+		》》只需在配置文件中做相关的事务规则声明，便可将事务规则应用到业务逻辑中。
+		》3、声明式事务不足的地方在于，与编程式事务相比，只能作用到方法级别，
+		》》无法像编程式事务那样可以作用到代码块级别。
+		配置配置文件：
+		》配置见：声明式事务配置文件1.png，声明式事务配置文件2.png
+		》tx.method解析 见：tx.method解析.PNG
+		》需要将openSession获取会话的方式改为getCurrentSession：
+		》openSession与getCurrentSession两者的区别：
+		》》1.getCurrentSession的方式会在事务结束时自动关闭连接，而openSession则需要手动关闭连接。
+		》》2.采用getCurrentSession创建的session会绑定带当前的线程中去，但openSession则不会。
+		@Transactional注解定义事务：
+		》@Transactional    
+		》》注解一个类表示所有方法都加入事务管理  
+		》》注解一个方法表示该方法加入事务管理
+		》<tx:annotation-driven transaction-manager="transactionManager"/>
 	编程式事务：
 	》
 
@@ -126,12 +165,16 @@ IoC 如何实现：
 	Comparable和Comparator的区别一文中，详细讲了Comparator的使用。比方说Collections里面有一个sort方法，
 	因为集合里面的元素有可能是复合对象，复合对象并不像基本数据类型，可以根据大小排序，复合对象怎么排序呢？
 	基于这个问题考虑，Java要求如果定义的复合对象要有排序的功能，就自行实现Comparable接口或Comparator接口.
+	（实例化对象的时候用到Strategy模式）
 	7.原型模式：使用原型模式创建对象比直接new一个对象在性能上好得多，因为Object类的clone()方法是一个native方法，
 	它直接操作内存中的二进制流，特别是复制大对象时，性能的差别非常明显。
 	8.迭代器模式：Iterable接口和Iterator接口 这两个都是迭代相关的接口，可以这么认为，实现了Iterable接口，
 	则表示某个对象是可被迭代的；Iterator接口相当于是一个迭代器，实现了Iterator接口，
 	等于具体定义了这个可被迭代的对象时如何进行迭代的	
-
+	9.包装器（decorator）
+	Spring中用到的包装器模式在类名上有两种表现：一种是类名中含有Wrapper，另一种是类名中含有Decorator。
+	基本上都是动态地给一个对象添加一些额外的职责。 
+	
 面试题：
 	Spring面试题
 	1、spring在ssm中起什么作用？
@@ -141,8 +184,8 @@ IoC 如何实现：
 	》》AOP：面向切面编程
 	
 	2、Spring的事务？
-	》编程式事务管理：编程方式管理事务，极大灵活性，难维护。
-	》声明式事务管理：可以将业务代码和事务管理分离，用注解和xml配置来管理事务。
+	》编程式事务管理：式管理事务，极大灵活性，难维护。
+	》声明式事务管理：可以将编程方业务代码和事务管理分离，用注解和xml配置来管理事务。
 	
 	3、IOC在项目中的作用？
 	》作用：Ioc解决对象之间的依赖问题，把所有Bean的依赖关系通过配置文件或注解关联起来，降低了耦合度。
@@ -156,7 +199,7 @@ IoC 如何实现：
 	》不用编写Dao层的实现类
 	
 	5、Spring下的注解？
-	》注册：@Controller @Service @Component
+	》注册：@Controller @Service @Component @Repository（dao层）
 	》注入：@Autowired @Resource
 	》请求地址：@RequestMapping
 	》返回具体数据类型而非跳转：@ResponseBody
