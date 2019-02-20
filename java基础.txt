@@ -10,168 +10,7 @@
 	}
 	》死循环的原因：STARTNUMBER要大于ENDNUMBER，两个都是整数，而ENDNUMBER就是最大的
 	》STARTNUMBER整数怎可能大于整数的最大值呢？而且MAX_VALUE+1 = MIN_VALUE，最终导致死循环
-
-servlet：
-	定义：
-	》独立于平台和协议的服务器端的java应用程序，处理请求的信息并将其发送到客户端。
-	》客户端可以提出请求并动态获得响应。
-	》动态生成web页面，担当浏览器或其他客户端发出的请求与HTTP服务器上的数据库或应用程序之间的中间层。
-	》对于所有客户端请求，都只需要创建一次Servlet实例，因此，节省了大量内存。
-	Servlet运行原理：
-	》web服务器收到一个http请求后，判断请求内容，若是静态页面数据，自行处理，若为动态数据，交给Servlet容器，
-	》》Servlet容器找到相应Servlet实例处理；处理结果交给web服务器，再转交给客户端。
-	》针对同一个Servlet，Servlet容器会在第一次收到HTTP请求时建立一个Servlet实例，
-	》》然后启动一个线程，第二次收到http请求后，Servlet容器无需创建相同Servlet ,仅开启第二个线程来处理请求。
-	》》多线程的方式有效提高执行效率，降低服务器负担。
-	Servlet 优势：
-	》具有优良的跨平台性
-	》可移植性良好：java语言编写，Servlet API标准完善，企业编写的Servlet程序可轻松移植到其他服务器中;
-	》执行效率高：Servlet请求到来时激活Servlet，处理完成后等待新请求；新请求产生新线程，而不是进程；
-	》使用方便：可轻松处理HTML表单数据，并读取和设置HTTP头，处理cookie,跟踪会话；
-	基础知识：
-	
-	Servlet生命周期：
-	》
-	
-	简介/定义：
-	》Servlet是sun公司提供的一门用于开发动态web资源的技术
-	》sun公司在其API中提供了一个servlet接口
-	》开发一个动态web资源，两个步骤：
-	》1、编写一个java类，实现servlet接口
-	》2、把开发好的java类部署到web服务器中
-	
-	Servlet的运行过程
-	servlet程序是由WEB服务器调用，web服务器收到客户端的Servlet访问请求后：
-	》1、Web服务器首先检查是否已经装载并创建了该Servlet的实例对象。如果是，则执行4
-	》2、装载并创建该Servlet的一个实例对象
-	》3、调用Servlet实例对象的init()方法
-	》4、创建一个用于封装HTTP请求消息的HttpServletRequest对象和一个代表HTTP响应消息的HttpServletResponse对象，
-	》》然后调用Servlet的service方法并将请求和响应对象作为参数传递进去。
-	》5、WEB应用程序被停止或重新启动之前，Servlet引擎将卸载Servlet，
-	》》并在卸载之前调用Serlvet的destroy()方法（以便释放它所使用的资源）
-	
-	Servlet访问URL映射配置：
-	》<servlet>
-	》	<servlet-name>ServletDemo1</servlet-name>
-	》	<servlet-class>com.chen.serlvet<servlet-class>
-	》</servlet>
-	》<servlet-mapping>
-	》 	<servlet-name>ServletDemo1</servlet-name>
-	》	<url-pattern>/servlet/ServletDemo1</url-pattern>
-	》</servlet-mapping>
-	》或者使用注解：@Servlet
-	》缺省配置：
-	》<servlet>...<load-on-startup>1</load-on-startup></servlet>
-	》<servlet-mapping>...<url-pattern>/</url-pattern></servlet-mapping>
-	总结：
-	》加载和实例化
-	》初始化
-	》处理业务
-	》服务终止
-	
-	Servlet线程安全问题：
-	》当多个客户端并发访问同一个Servlet时，web服务器会为每一个客户端的访问创建一个线程，并在这个线程上调用Servlet的service方法，
-	》》因此service方法内如果访问了同一个资源的话，就有可能引发线程安全问题。
-	》解决的方法：让Servlet去实现一个SingleThreadMode接口，Servlet引擎将以单线程模式来调用其service方法。
-	
-	ServletConfig
-	配置文件：
-	<servlet>
-		<servlet-name></servlet-name>
-		<servlet-class></servlet-class>
-		<init-param>
-			<param-name>user</param-name>
-			<param-value>username</param-value>
-		</init-param>
-	</servlet>
-	代码获取：
-	》private ServletConfig config;
-	》@Override
-	》public void init(ServletConfig config) throws ServletException {
-	》    this.config = config;
-	》}
-	》String username=config.getInitParameter("user");
-	
-	ServletContext
-	》ServletContext context = this.getServletConfig().getServletContext();//获得ServletContext对象
-	》context.setAttribute("data", data);  //将data存储到ServletContext对象中
-	
-JSP：
-	描述：
-	》Servlet对于逻辑处理是非常方便的，但是对于页面的展现是非常麻烦的。
-	》》JSP的诞生是为了解决Servlet页面展现麻烦的问题的。
-	》一般我们需要将两门技术结合使用，Servlet做业务处理，jsp做页面的展现
-	》在我们访问jsp文件的时候，并没有直接去执行JSP文件，而是被服务器所拦截执行了jspServlet的类。
-	》》此类会将jsp文件转译成对应的Servlet文件并执行。所以jsp本质还是Servlet。
-	
-	特点：
-	》方便的页面展现
-	jsp的使用：（参考https://www.cnblogs.com/haozhengfei/p/6537909.html）
-	*常用指令：
-	page：
-	》language 声明jsp文件支持的语言
-	》import   转译的时候导入的包
-	》pageEncoding  设置转译及客户端展现数据的编码格式
-	》session   true代表使用session对象（默认） false不适用session对象
-	》errorPage jsp运行错误会自动跳转到指定页面
-	include：（转译成一个Servlet类）
-	》静态引入：  <%@include file="include01.jsp" %> 不能出现同名的变量，耦合性高
-	》》先将页面包含，后执行页面代码
-	》动态引入：  <jsp:include page="include02.jsp"></jsp:include> 可以出现同名的变量耦合性低
-	》》先执行页面代码，后将页面包含
-	forward：
-	》请求转发（自带return）
-	》<jsp:forward page="要求转发的文件路径">
-	》	<jsp:param value="值" name="键" />
-	》</jsp:forward>	
-	》服务器端发挥的作用，提交信息在多个页面间进行传递。并且可以共享request范围内的数据。
-	》与重定向的区别：
-	》》重定向是在客户端发挥作用，通过请求新的地址实现页面的转向。
-	》》并且不能共享request范围内的数据。
-	*java代码声明：
-	》<%java代码%>  会被转译到——jspServlet方法中，局部代码
-	*全局代码段声明：
-	》<%!声明方法%> 会被转译成全局代码
-	*表达式语句（重要）：
-	》<%=变量名/方法 %> 后面一定不能加分号
-	*九大内置对象：
-	四个作用域：
-	》pageContext 页面上下文对象，此对象封装了其他对象的获取方式 当前页面有效
-	》request     请求对象 同一个请求范围内有效
-	》session     session对象 同一个会话有效
-	》application ServletContext对象 整个WEB服务器有效
-	两个输出：
-	》out         输出对象
-	》response    输出对象，比resp对象多了缓冲区，效率提高
-	其他三个：
-	》page        代表该页面对象        
-	》config	  ServletConfig
-	》exception   异常对象，弃用
-	注释：
-	》HTML注释：	会被转译并发送到客户端
-	》css注释： 	会被转译，还会被发送
-	》js注释：		会被转译，还会被发送
-	》java注释：	会被转译
-	》jsp注释：		%-- 注释内容 --%  直接不转译
-	
-	jsp工作原理：
-	》第一步是翻译阶段，Web服务器会将接收到的JSP文件翻译成Java文件。
-	》第二步是编译阶段，Web容器将Java文件编译成字节码文件(.class文件)。
-	》第三步是执行阶段，Web容器执行字节码文件将生成的结果返回给客户端进行显示。
-	
-	jsp中文乱码的解决：
-	》生成中文乱码的根本原因，jsp页面默认编码格式“ISO-8859-1” 不支持中文
-	》三种支持中文的编码方式：gb2312（常用简体），gbk（比前者好），utf-8（国际编码）
-	post方式提交表单的解决方案：
-	》1、request.setCharacterEncoding("utf-8")
-	》2、response.setCharacterEncoding("utf-8")
-	get方式提交表单的解决方案：
-	》1.读取数据时对数据进行编码 new String(s.getBytes("iso-8859-1"), "utf-8")
-	》2.通过配置文件设置解决中文乱码显示
-	》》配置tomcat\conf\server.xml文件
-	》》<Connector connectionTimeout="20000" port="8080" protocol="HTTP/1.1"
-	》》redirectPort="8843" URIEncoding="UTF-8" />
-	
+		
 EL表达式：
 	学习案例：（http://www.cnblogs.com/zhplovelnn/p/6947696.html）
 	*描述：
@@ -665,15 +504,22 @@ jdbc:
 	平衡二叉树具有以下性质：
 	》它的左子树和右子树都是平衡二叉树，且左子树和右子树的深度之差的绝对值不超过1。
 	图：
-	图简介：
+	图简介：（重点：存储结构、遍历、最小生成树、最短路径）
 	》图是一种较线性表和树更为复杂的数据结构。
 	》》在线性表中，数据元素之间仅有线性关系
 	》》在树形结构中，数据元素之间有着明显的层次关系
 	》》在图形结构中，节点之间的关系可以是任意的，图中任意两个数据元素之间都可能相关
 	》图的应用相当广泛，特别是近年来的迅速发展，
 	》》已经渗入到诸如语言学、逻辑学、物理、化学、电讯工程、计算机科学以及数学的其他分支中。
-	》引用：https://blog.csdn.net/Ontheroad_/article/details/72739380 
-	》》详细
+	图的存储结构：
+	》邻接矩阵：一个数组保存顶点集，一个数组保存边集。
+	》邻接表：数组与链表相结合的存储方法。
+	图的遍历：
+	》深度优先遍历（DFS）：从图中某个顶点v出发，访问此顶点，然后从v的未被访问的邻接点出发深度优先遍历图
+	》广度优先遍历（BFS）：类似于树的层次遍历
+	引用：
+	》https://blog.csdn.net/Ontheroad_/article/details/72739380 
+	》详细
 	
 	算法：
 	》是一个有穷规则的集合，其规则确定一个解决某一特定类型问题的操作序列。

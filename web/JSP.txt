@@ -1,4 +1,4 @@
-
+实践资料请见：E:\学习\《JSP&Servlet实战开发》
 目录：
 	》简介：
 	》JSP的优势：
@@ -6,12 +6,18 @@
 	》jsp语法：
 	》过滤器：
 	》九大内置对象：
+	》jsp中文乱码的解决：
+	》常用指令：
 	》引用：
 	
 简介：
 	》可以响应客户端请求，而动态生成 HTML、XML 或其他格式文档的Web网页的技术标准。
 	》Java Server Pages，是一种动态网页开发技术。它使用JSP标签在HTML网页中插入Java代码。标签通常以<%开头以%>结束。
-	
+	》Servlet对于逻辑处理是非常方便的，但是对于页面的展现是非常麻烦的。
+	》》JSP的诞生是为了解决Servlet页面展现麻烦的问题的。
+	》一般我们需要将两门技术结合使用，Servlet做业务处理，jsp做页面的展现
+	》在我们访问jsp文件的时候，并没有直接去执行JSP文件，而是被服务器所拦截执行了jspServlet的类。
+	》》此类会将jsp文件转译成对应的Servlet文件并执行。所以jsp本质还是Servlet。
 		
 JSP的优势：
 	》与ASP相比：1、动态部分用Java编写，所以更加强大与易用。2、JSP易于移植到非MS平台上。
@@ -22,13 +28,29 @@ JSP的优势：
 	》总结：部分用java编写，易用；易于移植；方便编写或者修改HTML网页；使得与服务器交互更容易；
 	
 生命周期：
-	》编译阶段：编译servlet源文件，生成servlet类
+	》编译/加载阶段：编译servlet源文件，生成servlet类
 	》初始化阶段：加载与JSP对应的servlet类，创建其实例，并调用它的初始化方法
 	》执行阶段：调用与JSP对应的servlet实例的服务方法
 	》销毁阶段：调用与JSP对应的servlet实例的销毁方法，然后销毁servlet实例
+	jsp工作原理：
+	》第一步是翻译阶段，Web服务器会将接收到的JSP文件翻译成Java文件。
+	》第二步是编译阶段，Web容器将Java文件编译成字节码文件(.class文件)。
+	》第三步是执行阶段，Web容器执行字节码文件将生成的结果返回给客户端进行显示。
 	
 jsp语法：
 	》参考思维导图
+	*java代码声明：
+	》<%java代码%>  会被转译到——jspServlet方法中，局部代码
+	*全局代码段声明：
+	》<%!声明方法%> 会被转译成全局代码
+	*表达式语句（重要）：
+	》<%=变量名/方法 %> 后面一定不能加分号
+	*注释：
+	》HTML注释：	会被转译并发送到客户端
+	》css注释： 	会被转译，还会被发送
+	》js注释：		会被转译，还会被发送
+	》java注释：	会被转译
+	》jsp注释：		%-- 注释内容 --%  直接不转译
 	
 过滤器：
 	过滤器类型：
@@ -60,7 +82,44 @@ jsp语法：
 	》page        代表该页面对象        
 	》config	  ServletConfig
 	》exception   异常对象，弃用	
+
+jsp中文乱码的解决：
+	》生成中文乱码的根本原因，jsp页面默认编码格式“ISO-8859-1” 不支持中文
+	》三种支持中文的编码方式：gb2312（常用简体），gbk（比前者好），utf-8（国际编码）
+	post方式提交表单的解决方案：
+	》1、request.setCharacterEncoding("utf-8")
+	》2、response.setCharacterEncoding("utf-8")
+	get方式提交表单的解决方案：
+	》1.读取数据时对数据进行编码 new String(s.getBytes("iso-8859-1"), "utf-8")
+	》2.通过配置文件设置解决中文乱码显示
+	》》配置tomcat\conf\server.xml文件
+	》》<Connector connectionTimeout="20000" port="8080" protocol="HTTP/1.1"
+	》》redirectPort="8843" URIEncoding="UTF-8" />
+	
+常用指令：
+	page：
+	》language 声明jsp文件支持的语言
+	》import   转译的时候导入的包
+	》pageEncoding  设置转译及客户端展现数据的编码格式
+	》session   true代表使用session对象（默认） false不适用session对象
+	》errorPage jsp运行错误会自动跳转到指定页面
+	include：（转译成一个Servlet类）
+	》静态引入：  <%@include file="include01.jsp" %> 不能出现同名的变量，耦合性高
+	》》先将页面包含，后执行页面代码
+	》动态引入：  <jsp:include page="include02.jsp"></jsp:include> 可以出现同名的变量耦合性低
+	》》先执行页面代码，后将页面包含
+	forward：
+	》请求转发（自带return）
+	》<jsp:forward page="要求转发的文件路径">
+	》	<jsp:param value="值" name="键" />
+	》</jsp:forward>	
+	》服务器端发挥的作用，提交信息在多个页面间进行传递。并且可以共享request范围内的数据。
+	》与重定向的区别：
+	》》重定向是在客户端发挥作用，通过请求新的地址实现页面的转向。
+	》》并且不能共享request范围内的数据。
 	
 引用：
 	》http://www.runoob.com/jsp/jsp-page-redirect.html
 	》》学习网站
+	》https://www.cnblogs.com/haozhengfei/p/6537909.html
+	》》jsp的使用
