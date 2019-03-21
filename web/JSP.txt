@@ -11,6 +11,14 @@
 	》引用：
 	
 简介：
+	》Java Server Pages，是一种动态网页开发技术。jsp做页面的展现
+	
+	》mar,13,2019
+	》Servlet是一个功能，如果你希望你的项目功能多一些，那就要多写一此Servlet；
+	》Servlet是JavaWeb三大组件之一，也是最重要的组件！ 三大组件：Servlet、Filter、Listener
+	》须要实现javax.servlet.Servlet接口。
+	》Servlet是动态资源
+	》以往理解:
 	》可以响应客户端请求，而动态生成 HTML、XML 或其他格式文档的Web网页的技术标准。
 	》Java Server Pages，是一种动态网页开发技术。它使用JSP标签在HTML网页中插入Java代码。标签通常以<%开头以%>结束。
 	》Servlet对于逻辑处理是非常方便的，但是对于页面的展现是非常麻烦的。
@@ -118,8 +126,20 @@ jsp中文乱码的解决：
 	》》重定向是在客户端发挥作用，通过请求新的地址实现页面的转向。
 	》》并且不能共享request范围内的数据。
 	
+使用案例：
+	导入jstl function标签
+		<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %> 
+		集合
+		<c:forEach items="${messagelist }" var = "message">  
+			 <h3>${fn:length(messagelist) }</h3>  
+		</c:forEach>
+	前后台向前台传递
+		${msg}   后台msg： model(Model).addAttribute("msg", "内容");
+ 	
 引用：
 	》http://www.runoob.com/jsp/jsp-page-redirect.html
 	》》学习网站
 	》https://www.cnblogs.com/haozhengfei/p/6537909.html
 	》》jsp的使用
+	》https://www.cnblogs.com/du-0210/p/8426624.html
+	》》web基础知识 http servlet

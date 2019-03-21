@@ -1,4 +1,16 @@
-﻿面试题：
+﻿目录：
+	#线程#
+	#面试题#
+	#EL表达式#
+	#java特性#
+	#Object的公共方法#
+	#java基本类型的转换#
+	#jdbc#
+	#设计模式#
+	#数据结构#
+	#并发包#
+	
+#面试题#：
 	1、让该循环循环三次，可是这可能是一个死循环。
 	》代码如下：
 	public static final int ENDNUMBER = Integer.MAX_VALUE;
@@ -10,8 +22,22 @@
 	}
 	》死循环的原因：STARTNUMBER要大于ENDNUMBER，两个都是整数，而ENDNUMBER就是最大的
 	》STARTNUMBER整数怎可能大于整数的最大值呢？而且MAX_VALUE+1 = MIN_VALUE，最终导致死循环
-		
-EL表达式：
+
+	五大基本原则：
+	1、单一职责原则
+		指一个类的功能要单一，不能包罗万象。
+	2、开放封闭原则
+		对扩展开放对修改关闭。
+	3、替换原则
+		总是保证子类可以替换它的基类。
+		父类出现的地方子类也可以出现。
+	4、依赖倒置原则
+		依赖于抽象不依赖于具体
+		不管是高低层模块，都依赖于抽象，构成强内聚低耦合的编程思想
+	5、接口分离原则
+		模块间要通过抽象接口隔离开，而不是通过具体的类强耦合起来
+	
+#EL表达式#：
 	学习案例：（http://www.cnblogs.com/zhplovelnn/p/6947696.html）
 	*描述：
 	》${javaBean.property}
@@ -53,22 +79,63 @@ EL表达式：
 	*条件运算符
 	》${ A ? B : C}
 	
-java特性：
-	多态
+#java特性#：
+	封装：解决了数据的安全性问题
+	封装：解决了数据的安全性问题
+	多态：解决了程序的扩展问题
+	多态：
 	》子类重定义父类成员表现出多态性
-	继承
+	》对同一方法的重写
 	》
-	封装
+	》实现多态：
+	》接口实现
+	》继承父类重写方法
+	》同一类中进行方法重载
 	》
+	》好处：从实现多态来分析
+	》接口性
+	》扩展性
+	》可替换性 灵活性 简化性
+	》
+	》虚拟机对多态的实现
+	》动态绑定，执行期间判断所引用对象的实际类型，根据实际类型调用对应的方法
+	继承：
+	》
+	》
+	》
+	》
+	封装：
+	》
+	抽象：
+	》意义：
+	》为子类提供一个公共的类型
+	》封装子类中重复定义的内容
+	》定义抽象方法，子类虽然有不同的实现，但是定义时一致的
+#Object的公共方法#：
+	》equals
+	》clone
+	》getClass
+	》notify notifyAll wait
+	》toString
+	》hashCode 哈希值
+	》finalize 垃圾回收器调用
 	
-java基本类型的转换：
+#java基本类型的转换#：
 	基本类型：
 	》8种基本类型 byte，short，char，int，long，float，double，boolean
 	类型的转换：
 	》系统自动转换（向上转换）：根据以上基本类型的排列顺序自动向上转换，除了boolean
 	》强制转换：（目标类型）原类型表达式；向下转型时需要强制类型的转换
 	》》使用包装对象中的接口例如 Integer.parseInt("12"); 
-jdbc:
+	
+	使用什么数据类型来代表价格
+	》BigDecimal和使用预定义精度的 double 
+	++ 操作符是线程安全的吗
+	》不安全；读取变量值，增加，然后存储回内存，这个过程可能会出现多个线程交差。
+	a = a + b 与 a += b 的区别？ 
+	》a + b首先会将它们提升到int然后在执行加法
+	》+= b 隐式转换为结果类型
+#jdbc#:
 	》注册驱动
 	》建立连接
 	》获取statement对象
@@ -121,17 +188,21 @@ jdbc:
 	ResultSetMetaData：
 	》可用于获取关于 ResultSet 对象中列的类型和属性信息的对象。
 	》ResultSetMetaData rsmd = rs.getMetaData();
+	事务：
+	》con.setAutoCommit(false)	开启事务
+	》con.commit()				提交事务
+	》con.rollback() 			回滚事务
 扩展知识点：
 	不同的虚拟机运行同样的代码将会遇到哪些棘手的问题：
 	》例如：在线程中的抢占式与协作式的调度方式，据了解现大部分虚拟机都使用抢占调度，这会极大可能的避免饥饿问题的出现
 	》》不过有些较早的虚拟机依然采用协作式调度，因此会有不可预知的问题
-线程：
+#线程#：
 	定义：
 	》利用线程去处理短连接
 	》利用异步I/O去处理长连接
 	使用：
 	》派生Thread子类
-	》实现接口Runnable
+	》实现接口Runnable Callable
 	》使用Executor
 	同步：
 	》多个线程共享资源，那么就会有同步问题
@@ -168,9 +239,110 @@ jdbc:
 	》可以结束
 	》可以被挂起    废弃 可能会造成对象不一致的状态
 	》可以停止		废弃 可能会造成对象不一致的状态
-
+	进程和线程区别
+	》一个程序至少有一个进程,一个进程至少有一个线程.
+	》进程在执行过程中拥有独立的内存单元，而多个线程共享内存，从而极大地提高了程序的运行效率
+	》线程不能够独立执行，必须依存在应用程序中，由应用程序提供多个线程执行控制
+	》多线程的意义在于一个应用程序中，有多个执行部分可以同时执行。但操作系统并没有将多个线程看做多个独立的应用，
+	》》来实现进程的调度和管理以及资源分配。这就是进程和线程的重要区别。
+	Synchronize和lock
+	》存在层次
+		sync 
+			java的关键字，jvm层面上；
+		lock 
+			是一个类
+	》锁的释放
+		sync
+			以获取锁的线程执行完同步代码，释放锁
+			线程执行发生异常，释放锁
+		lock
+			在finally中必须释放锁，不然容易造成线程死锁
+	》锁获取
+		sync
+			假设A线程获得锁，B线程等待。如果A线程阻塞，B线程会一直等待
+		lock
+			多个锁的获取方式
+	》锁状态
+		无法判断
+		可以判断
+	》锁类型
+		可重入 不可中断 非公
+		可重入 可判断 可公平
+	》性能
+		少量同步
+		大量同步
+	wait-notify实现的生产者消费者模式
+	public class Prolducer implements Runnable{
+		private Queue<Integer> queue;
+		private int maxSize;
+		public Producer(Queeu<Integer> q, int max){
+			this.queue = q;
+			this.maxSize = max;
+		}
+		public void run(){
+			while(true){
+				synchronized(queue){
+					while(queue.size() == maxSize){
+						try{
+							queue.wait();
+						}catch(){}
+					}
+					Random random = new Random();
+					int i = random.nextInt();
+					System.out.println("Produce " + i);
+					queue.add(i);
+					queue.notifyAll();
+				}
+			}
+		}
+	}
+	public class Consumer implements Runnable{
+		private Queue<Integer> queue;
+		private int maxSize;
+		
+		public Consumer(Queue<Integer> queue, int maxSize){
+			this.queue = queue;
+			this.maxSize = maxSize;
+		}
+		
+		public void run() {
+			while (true){
+				synchronized (queue){
+					while(queue.isEmpty()){
+						try{
+							queue.wait();
+						}catch(){}
+					}
+					int v = queue.remove();
+					System.out.println("Consume " + v);
+					queue.notifyAll();
+				}
+			}
+		}
+	}
 	
-设计模式：
+	此处给线程命名：
+	》callable的使用：
+	》实现一个callable接口 并实现其中的call方法 例如：ThreadByCallable
+	》ThreadByCallable tc = new ThreadByCallable();
+	》FutureTask<Integer> task = new FutureTask<Integer>(tc);
+	》new Thread(task, "命名的名称").start();//此处给线程命名
+	
+	》Thread.currentThread.setName(“线程名”)
+	
+	线程开发良好的实践：
+	》给线程命名，对调试有帮助
+	》最小化同步范围，而不是将整个方法同步，只对关键部分做同步
+	》优先使用volatile	，而不是使用synchronized
+		一种实践是用 volatile 修饰 long 和 double 变量，使其能按原子类型来读写。
+		作用是提供内存屏障
+	》尽可能使用更高层次的并发工具而非wait和notify()来实现线程通信,如BlockingQueue,Semeaphore
+	》优先使用并发容器（并发集合）而非同步容器（对集合进行同步）。
+	》考虑使用线程池
+		
+	
+#设计模式#：
+	参考20个设计面试题：https://www.cnblogs.com/wozixiaoyao/p/5658820.html
 	生产者与消费者模式：
 	》生产者为若干个线程队列，消费者为若干个线程队列，生产者生产数据到缓冲区中，消费者从缓冲区中取数据。
 	》旦凡有一个生产者生产了产品就解开消费者的锁，但凡有消费者消费了一件产品就解开生产者的锁。
@@ -178,7 +350,29 @@ jdbc:
 	》相关知识点 https://www.cnblogs.com/fankongkong/p/7339848.html
 	》有什么需要注意的
 	》好处，缺点不足
-并发包：（java.util.concurrent ）
+	
+	单例模式：
+	》使用enum实现的线程安全单例；
+	》懒汉模式 
+	》class Test{ private Test t = null;
+	》	static{ t = new Test();}
+	》	public static Test getInstance(){ return t; }	
+	》}
+	Builder模式
+	》Builder（建造者接口）、ConcreateBuilder（具体建造者）、Director（监工）
+	》Director不依赖于ConcreateBuilder，并调用Builder中定义的方法
+	Composite模式
+	》容器和内容具有一致性，称之为多个和单个的一致性。
+	Decorator模式
+	》装饰和被装饰的一致性
+	工厂模式
+	》提供一个抽象工厂，根据抽象工厂定义具体工厂
+	Adapter模式
+	》加个适配器以备复用
+	Strategy模式
+	》根据Strategy接口定义具体的策略，灵活，多样。
+	
+#并发包#：（java.util.concurrent ）
 	定义：
 	》在并发编程中很常用的实用工具类。
 	执行程序：（管理线程）
@@ -222,7 +416,7 @@ jdbc:
 	并发Collection：
 		见下文。
 		
-数据结构：
+#数据结构#：
 	hash表：（http://www.cnblogs.com/s-b-b/p/6208565.html）
 	1.定义：
 	》哈希表是一种根据关键码去寻找值的数据映射结构，该结构通过把关键码映射的位置去寻找存放值的地方
@@ -573,9 +767,35 @@ java变量内存分配
 		》是发生在老年代的垃圾收集动作，所采用的是标记-清除算法。
 		》发生的次数不会有 Minor GC 那么频繁，并且做一次 Full GC 要比进行一次 Minor GC 的时间更长。
 		System.gc() 通知gc收集
-	
-	非堆 PermGen永久代
+		
+	非堆 PermGen持久代
 		主要用来存储由jvm加载的类文件信息，常量、静态变量
+		
+	优缺点
+		》堆的优势可以动态分配内存大小， 	缺点，存取速度较慢
+		》栈的优势存取速度要快，			缺点，内存大小必须是确定，无灵活
+		》
+
+内存溢出
+	》一次从数据库中取出所有数据
+	》集合类中有对对象的引用使用后未清空
+	》有死循环，或者循环产生过多重复的对象实体
+	》启动参数内存值设定的过小
+	》
+	》解决：
+	》修改JVM启动参数，直接增加内存
+	》检查错误日志
+	》对代码重新检查
+		》检查代码中是或有死循环或递归调用
+		》检查是否有大循环重复产生新对象实体
+		》检查对数据库查询中是否有一次获取全部数据的查询
+	》使用内存工具动态的查看内存大使用情况
+	
+JVM内存模型：
+	》https://www.cnblogs.com/dingyingsi/p/3760447.html
+	》虚拟机内存模型中定义的访问操作与物理计算机处理的基本一致；所有的线程共享JVM内存区域main memory，
+	》》而每个线程又单独的有自己的工作内存，当线程与内存区域进行交互时，数据从主存拷贝到工作内存，
+	》》进而交由线程处理（操作码+操作数）。
 
 代码的优化 http://www.importnew.com/28395.html
 	尽量指定类、方法的final修饰符：
@@ -616,21 +836,48 @@ java变量内存分配
 	new Person().say();
 	
 构造函数
-	构造方法不能直接调用，只能通过new运算符调用
-	构造函数不能被继承和重写，可重载
+	》构造方法不能直接调用，只能通过new运算符调用
+	》构造函数不能被继承和重写，可重载
+	》
+	
+	》
+	》
 	
 static 
-	静态方法是属于整个类的方法，非静态方法是属于整个对象的方法
-	静态变量是一个公共的存储单元
+	》静态方法是属于整个类的方法，非静态方法是属于整个对象的方法
+	》静态变量是一个公共的存储单元
+	》static 表明一个成员变量或者是成员方法可以在没有所属的类的实例变量的情况下被访问
+	》
+	》是否能被Override：
+	》方法覆盖是基于运行时动态绑定的
+	》而static方法是编译时静态绑定。并且跟类的任何实例都不相关
+	》
+	》是否可在static环境中访问非static变量
+	》静态方法是属于整个类的方法，非静态方法是属于整个对象的方法，在所有实例中的值是一样的
+	》而当类被虚拟机载入时，会对static变量进行初始化。此时并没有实例生成，因此也访问不到非static变量
 	
 Serializable 序列化接口
-	序列化步骤：
+	》序列化可以达到对象持久化的目的
+	》序列化注意：
+		序列化对象必须实现序列化接口。
+		序列化对象里面的属性是对象的话也要实现序列化接口。
+		类的对象序列化后，类的序列化ID不能轻易修改，不然反序列化会失败。
+		类的对象序列化后，类的属性有增加或者删除不会影响序列化，只是值会丢失。
+		如果父类序列化了，子类会继承父类的序列化，子类无需添加序列化接口。
+		如果父类没有序列化，子类序列化了，子类中的属性能正常序列化，但父类的属性会丢失，
+			不能序列化。
+		用Java序列化的二进制字节数据只能由Java反序列化，不能被其他语言反序列化。
+			如果要进行前后端或者不同语言之间的交互一般需要将对象转变成Json/Xml通用格式的数据，
+			再恢复原来的对象。
+		如果某个字段不想序列化，在该字段前加上transient关键字即可。
+	
+	》序列化步骤：
 	首先要创建某些OutputStream对象：OutputStream outputStream = new FileOutputStream("output.txt")
 	将其封装到ObjectOutputStream对象内：ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
 	此后只需调用writeObject()即可完成对象的序列化，并将其发送给OutputStream：objectOutputStream.writeObject(Object);
 	最后不要忘记关闭资源：objectOutputStream.close(), outputStream .close();
 	
-	反序列化步骤：
+	》反序列化步骤：
 	首先要创建某些OutputStream对象：InputStream inputStream= new FileInputStream("output.txt")
 	将其封装到ObjectInputStream对象内：ObjectInputStream objectInputStream= new ObjectInputStream(inputStream);
 	此后只需调用writeObject()即可完成对象的反序列化：objectInputStream.readObject();
@@ -666,6 +913,13 @@ JMX API MBean
 		MXBean
 
 集合
+	面试：
+	》https://blog.csdn.net/puppet100/article/details/80145519
+	》Vector和ArrayList  Vector是线程安全的
+	》LinkedList通过一个双向链接的节点列表实现
+	》只有List和Map具有高效的线程安全实现
+	》HashMap几乎可以等价于Hashtable  线程同步Hashtable；ConcurrentHashMap，它是HashTable的替代
+	
     Arrays
     》提供一些关于数组操作的静态接口
     》.asList ： 可以从 Array 转换成 List。可以作为其他集合类型构造器的参数。
@@ -830,6 +1084,8 @@ JMX API MBean
 	
     
 http
+	借鉴：
+	》https://www.cnblogs.com/du-0210/p/8426624.html
 	理解：
 	》超文本传输协议（HTTP，HyperText Transfer Protocol)是互联网上应用最为广泛的一种网络协议。
 	》能够正确快速地传输超文本文档。显示的顺序是文本先于图片。
@@ -959,7 +1215,7 @@ TCP/IP
     》格式详细解析图 https://blog.csdn.net/yefanchen01/article/details/70053191
     》在局域网环境，IP协议往往被封装在以太网帧中传送。
     》而所有的TCP、UDP、ICMP、IGMP数据都被封装在IP数据报中传送。
-	结构解析：
+	TCP/IP模型 结构解析：
 	》1、链路层，有时也称作数据链路层或网络接口层，通常包括操作系统中的设备驱动程序和计算机中对应的网络接口卡。它们一		
 	》起处理与电缆（或其他任何传输媒介）的物理接口细节。
     》作用：提供给其上层-网络层一个访问接口，以便在其上传递IP分组
@@ -970,6 +1226,22 @@ TCP/IP
 	》制协议）和UDP（用户数据报文协议）。
 	》4、应用层负责处理特定的应用程序细节。几乎各种不同的TCP/IP实现都会提供下面这些通用的应用程序：
 	》Telnet 远程登录。FTP 文件传输协议。SMTP 简单邮件传送协议。 SNMP 简单网络治理协议。
+	OSI七层协议：
+	》应用层	打包数据		终端设备
+	》表示层	数据安全、压缩	终端设备
+	》会话层	流量控制、传输	终端设备
+	》传输层	加上双方端口号 	终端设备
+	》网络层	加上双方ip		网关 路由器
+	》链路层	加上双发的MAC地址，并将数据拆分层数据帧
+	》物理层					电缆
+	每一层的协议：
+	》应用层：FTP、DNS、Telnet、SMTP、HTTP、WWW、NFS
+	》表示层：JPEG、MPEG、ASII
+	》会话层：NFS、SQL、NETBIOS、RPC
+	》传输层：TCP、UDP、SPX
+	》网络层：IP、ICMP、ARP、RARP、OSPF、IPX、RIP、IGRP、 （路由器）
+	》数据链路：PPP、FR、HDLC、VLAN、MAC （网桥，交换机）
+	》物理层：RJ45、CLOCK、IEEE802.3 （中继器，集线器，网关）
     UDP：
     》UDP协议是一个不可靠的、无连接协议，主要适用于不需要对报文进行排序和流量控制的场合。　
     》源主机在传送数据前不需要和目标主机建立连接。
@@ -1002,4 +1274,9 @@ TCP/IP
     》同时在确认序号字段表明目标主机期待收到源主机下一个数据段的序号（即表明前一个数据段已收到并且没有错误）。
     》此外，此段中还包含目标主机的段初始序号。
     》3.源主机再回送一个数据段，同样带有递增的发送序号和确认序号。　
-    网络基础知识总结 https://blog.csdn.net/Scenlyf/article/details/52127296
+	TTL：
+	》数据包再传输过程中每经过一个路由器，TTL就减1，直到TTL=0时，数据包被丢弃，
+	》》并发送ICMP报文通知源主机防止重复发送。
+    网络基础知识总结 	https://blog.csdn.net/Scenlyf/article/details/52127296
+	面试题 关于tip/ip 	https://mp.weixin.qq.com/s/RZkAbvV2xVmc2tw3khbaCA
+	面试题 全面      	https://blog.csdn.net/linzhiqiang0316/article/details/80473906

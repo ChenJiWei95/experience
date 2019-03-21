@@ -13,6 +13,8 @@
 	》面试题
 	》所运用到的一些设计模式
 	》应用：https://www.jianshu.com/p/b5e8716e6552 全面总结 有案例
+	》ajax异步交互
+	
 简介：
 	》负责web个层次的衔接 这应该是spring的责任
 	》SpringMVC负责请求的转发和视图管理
@@ -103,6 +105,7 @@ SpringMVC校验：
 	引用：https://jinnianshilongnian.iteye.com/blog/1670856/
 	》》内容：拦截器的介绍、完整案例、各种场景的应用代码案例
 	》》标题：第五章 处理器拦截器详解
+	aop的使用借鉴https://www.cnblogs.com/parryyang/p/5881523.html
 	
 AOP、拦截器和过滤器的区别：
 	AOP：
@@ -208,7 +211,27 @@ SpringMVC中的常用注解及其作用：
 	
 能做什么：
 	》SpringMVC负责请求的转发和视图管理
-
+ajax异步交互
+	》前台代码：
+		ajax({
+			url:"test.do",
+			type:"post",
+			data:{user:"lisi"},
+			dataType:"json",
+			success:function(msg){
+				alert($$.json.toObject(msg).get("user"));
+			}
+		});
+	》dataType  ajax能够自动识别返回值类型。识别错误时，指定返回值类型从而不出错。
+	》返回的map 自动转换成json字符串
+	》后台代码
+		@RequestMapping("")
+		@ResponseBody
+		public Object doAjax(HttpServletRequest request){
+			return "";
+		}
+	》@ResponseBody  专用于异步请求返回数据
+	
 SpringMVC面试题
 		1、SpringMVC的控制器是不是单例模式，如果是；有什么问题，怎么解决？
 		》问题： SpringMVC的控制器是不是单例模式，如果是，有什么问题，怎么解决？

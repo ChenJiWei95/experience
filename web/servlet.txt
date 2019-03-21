@@ -9,9 +9,19 @@ servlet：
 	》Servlet线程安全问题：
 	》ServletConfig
 	》include和forward
+	》请求和重定向
+	》会话Cookie Session
 	》面试题：
 	
 	简介/定义：
+	》用于开发动态web资源的技术，Servlet做业务处理
+	
+	》mar,13,2019
+	》Servlet是一个功能，如果你希望你的项目功能多一些，那就要多写一此Servlet；
+	》Servlet是JavaWeb三大组件之一，也是最重要的组件！ 三大组件：Servlet、Filter、Listener
+	》须要实现javax.servlet.Servlet接口。
+	》Servlet是动态资源
+	》以往：
 	》独立于平台和协议的服务器端的java应用程序，处理请求的信息并将其发送到客户端。
 	》客户端可以提出请求并动态获得响应。
 	》动态生成web页面，担当浏览器或其他客户端发出的请求与HTTP服务器上的数据库或应用程序之间的中间层。
@@ -71,6 +81,7 @@ servlet：
 	》》就有可能引发线程安全问题。
 	》解决的方法：让Servlet去实现一个SingleThreadMode接口，
 	》》Servlet引擎将以单线程模式来调用其service方法。
+	》》尽可能不创建成员变量，因为成员变量多个线程会共享或者创建功能性的，只读
 	
 	ServletConfig
 	配置文件：
@@ -97,11 +108,47 @@ servlet：
 	include和forward：
 	》forward方法就是将请求继续往下传 传递的参数一直都是可以访问 
 	》》应用场景，验证后继续往下传，例如登录判断用户是否为空，不为空 继续
+	》
 	》RequestDispatcher rd = request.getRequestDispatcher("forward.do");
 	》》rd.forward(request, responce);
 	》》rd.include(request, response);
 	》include方法是将另一个servlet中的输出内容包含进来
 	
+	
+	转发重定向
+	》转发
+	》RequestDispatcher rd = request.getRequestDispatcher(“/BServlet”);//参数是要转发的目标
+	》rd.forward(request,response);//转发到BServlet
+	》可以理解成在一个Servlet中，调用另一个Servlet的service()方法。
+	》在转发语句之后，其他语句是否会执行？答案是“可以”
+	》不能在一个Servlet中即重定向，又转发。
+	》
+	》重定向
+	》response.sendRedirect(“/项目名/…”);
+	》两个请求。 
+	》第一个请求，服务器响应码：302
+	》第一个请求的响应头有一个Location头，它说明了要重定向的URL；
+	》第二个请求，浏览器重新向Location头指定的URL发出。
+	》重定向：可以重定向到本项目内的其他资源，可以使用相对路径，以“/项目名”开头
+	》重定向：会使浏览器的地址栏发生变化！
+	》
+	》两者比较
+	》请求转发后，地址栏中的地址不变！重定向变
+	》请求转发是一个请求，重定向是两个请求；
+	》请求转发可以共享request域，而重定向因为是两个请求，所以不能共享request。
+	
+	会话Cookie Session
+	》HTTP协议是无状态协议，需另外进行会话跟踪
+	》使用session来完成会话跟踪，session底层依赖Cookie技术。
+	》
+	》Cookie
+	》cookie.setMaxAge(-1) 只在浏览器内存中存活。一旦关闭浏览器窗口 消失
+	》cookie.setMaxAge(60*60)  Cookie保存到硬盘上
+	》
+	》HttpSession
+	》会话内需要共享的数据保存到HttSession对象中
+	》
+	》
 面试题：
 	1、生命周期4个阶段
 	2、servlet工作过程
