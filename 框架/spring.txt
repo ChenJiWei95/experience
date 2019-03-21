@@ -76,7 +76,8 @@ spring IOC和DI 注解操作
 	
 spring AOP: 
 	摘抄定义： https://blog.csdn.net/wuruijiang/article/details/78970720
-	》AOP面向切面编程，可以说是OOP面向对象编程的补充和完善。OOP引入封装、继承和多态等概念来建立一种对象层次结构，
+	》AOP面向切面编程，可以说是OOP（Object Oriented Programming）面向对象编程的补充和完善。OOP引入封装、
+	》》继承和多态等概念来建立一种对象层次结构，
 	》》用以模拟公共行为的一个集合。当我们需要为分散的对象引入公共行为的时候，OOP则显得无能为力。也就是说，
 	》》OOP允许你定义从上到下的关系，但并不适合从定义从左到右的关系。例如日志功能，
 	》》日志代码往往水平地散布在所有对象层次中，而与它所散布到的对象的核心功能毫无关系，对于其他代码，如安全性、
@@ -84,7 +85,7 @@ spring AOP:
 	》》而不利于各个模块的重用
 	》应用：权限认证、日志、事务处理
 	》总结：面向切面编程，是OOP的一种补充与完善，OOP所具备的是一种上的下的层次关系，而一些周边的功能代码如日志啊，
-	》》这是散列在各个层次的所有对象之中。这是一种左到右的关系，而OOP不具备，当然也可编写进OOP各个层次当中，
+	》》这是散列在各个层次的所有对象之中。这是一种左到右的水平关系，而OOP不具备，当然也可编写进OOP各个层次当中，
 	》》这样的代码不具备重用性的。而AOP我认为这也是解决这一问题的最佳解决方案，
 	》》将核心业务中公共行为即周边的功能代码封装到一个可重用的模块当中
 	》》达到了减少重复代码，降低模块间的耦合度，并有利于未来的可操作性和可维护性。
@@ -103,43 +104,81 @@ spring AOP:
 	》与业务无关，却为业务模块所共同调用的逻辑或责任封装起来（事务处理、日志管理、权限控制）
 	》减少系统的重复代码，降低模块间的耦合度，并有利于未来的可拓展性和可维护性
 	AOP当中的概念：
+	》连接点（Joinpoint）	被代理类拦截的方法
 	》切入点（Pointcut）   	在哪些类，哪些方法上切入（where）
 	》通知（Advice）       	在方法执行的什么时候（when:方法前/方法后/方法前后）做什么（what:增强的功能）
 	》切面（Aspect）		切面 = 切入点 + 通知，通俗点就是：在什么时机，什么地方，做什么增强！
+	》目标（Target）		只代理的目标对象
 	》织入（Weaving）		把切面加入到对象，并创建出代理对象的过程。（由 Spring 来完成）
 	AOP 编程：（有空看）
-	//目标对象
-	package service;
-	public class ProductService {
-		public void doSomeService(){
-			System.out.println("doSomeService");
+	声明式AOP：
+		通知类型：
+		》MethodBeforeAdvice 前置通知
+		》AfterReturningAdvice 后置通知
+		》MethodInterceptor 环绕通知
+		》ThrowsAdvice 异常抛出
+		》IntroductionInterceptor 引介通知
+		public class MyAspect implements  MethodInterceotor{
+			public Object invoke (MethodInvocation mi) throws Throwable{
+				...
+			}
 		}
-	}
-	//拦截对象
-	package aspect;
-	import org.aspectj.lang.ProceedingJoinPoint;
-	public class LoggerAspect {
-		public Object log(ProceedingJoinPoint joinPoint) throws Throwable {
-			System.out.println("start log:" + joinPoint.getSignature().getName());
-			Object object = joinPoint.proceed();
-			System.out.println("end log:" + joinPoint.getSignature().getName());
-			return object;
+		声明式工厂配置：
+		//通知对象
+		<bean id="myAspect" class="MyAspect"/>
+		//代理对象
+		<bean id="userDaoProxy">
+			//代理接口
+			<property name="interfaces" value="UserDao" />
+			//通知对象
+			<property name="interceptorNames" value="myAspect" />
+			//代理方式 true 使用cglib false使用jdk
+			<property name="proxyTragetClass" value="true" />
+		</bean>
+		
+	基于注解的AOP：
+		@AspectJ 定义一个切面
+		@Before 定义前置通知
+		@AfterReturning 定义后置通知
+		@Around	定义环绕通知
+		@AfterThrowing	定义抛出通知
+		@After	定义最终通知
+		@DeclareParents	定义引介通知
+	基于xml的AOP：
+		//目标对象
+		package service;
+		public class ProductService {
+			public void doSomeService(){
+				System.out.println("doSomeService");
+			}
 		}
-	}
-	//配置文件
-	<bean name="productService" class="service.ProductService" />
-	<bean id="loggerAspect" class="aspect.LoggerAspect"/>
-    <!-- 配置AOP -->
-    <aop:config>
-        <!-- where：在哪些地方（包.类.方法）做增加 -->
-        <aop:pointcut id="loggerCutpoint"
-                      expression="execution(* service.ProductService.*(..)) "/>
-        <!-- what:做什么增强 -->
-        <aop:aspect id="logAspect" ref="loggerAspect">
-            <!-- when:在什么时机（方法前/后/前后） -->
-            <aop:around pointcut-ref="loggerCutpoint" method="log"/>
-        </aop:aspect>
-    </aop:config>
+		//拦截对象
+		package aspect;
+		import org.aspectj.lang.ProceedingJoinPoint;
+		public class LoggerAspect {
+			public Object log(ProceedingJoinPoint joinPoint) throws Throwable {
+				System.out.println("start log:" + joinPoint.getSignature().getName());
+				Object object = joinPoint.proceed();
+				System.out.println("end log:" + joinPoint.getSignature().getName());
+				return object;
+			}
+		}
+		//基于xml的aop配置文件
+		<bean name="productService" class="service.ProductService" />
+		<bean id="loggerAspect" class="aspect.LoggerAspect"/>
+		<!-- 配置AOP -->
+		<aop:config>
+			<!-- where：在哪些地方（包.类.方法）做增加 -->
+			<aop:pointcut id="loggerCutpoint"
+						  expression="execution(* service.ProductService.*(..)) "/>
+			<!-- what:做什么增强 -->
+			<aop:aspect id="logAspect" ref="loggerAspect">
+				<!-- when:在什么时机（方法前/后/前后） -->
+				<aop:around pointcut-ref="loggerCutpoint" method="log"/>
+			</aop:aspect>
+		</aop:config>
+	两种代理的区别： 
+		https://blog.csdn.net/doujinlong1/article/details/80680149
 	
 spring的优势：
 	》1、低侵入、低耦合
