@@ -8,6 +8,7 @@
 	》九大内置对象：
 	》jsp中文乱码的解决：
 	》常用指令：
+	》#EL表达式#：
 	》引用：
 	
 简介：
@@ -136,6 +137,48 @@ jsp中文乱码的解决：
 	前后台向前台传递
 		${msg}   后台msg： model(Model).addAttribute("msg", "内容");
  	
+#EL表达式#：
+	学习案例：（http://www.cnblogs.com/zhplovelnn/p/6947696.html）
+	*描述：
+	》${javaBean.property}
+	》EL 提供 . 和 [ ] 两种运算符来导航数据。 
+	》${sessionScope.user.sex}等于${sessionScope.user["sex"]}
+	》当要存取的属性名称中包含一些特殊字符，如. 或 – 等并非字母或数字的符号，就一定要使用 [ ]，
+	》》例如：${user.My-Name } ，应当改为：${user["My-Name"] }
+	》${sessionScope.user[data]} 假如data是动态变量
+	》》如果要动态取值时，就可以用上述的方法来做，但. 无法做到动态取值。
+	*隐含对象（11个）：
+	》pageContext		表示JSP的PageContext
+	》PageScope         指定范围
+	》RequestScope		指定范围
+	》sessionScope		指定范围
+	》applicationScope	指定范围
+	》param				ServletRequest.getParameter(String name)。
+	》paramValues		ServletRequest.getParameterValues(String name)。
+	》header			ServletRequest.getHeader(String name)。
+	》headerValues		ServletRequest.getHeaders(String name)。
+	》cookie			HttpServletRequest.getCookies()
+	》initParam			ServletContext.getInitParameter(String name)。
+	使用pageContext：
+	》${pageContext.request.queryString}	取得请求的参数字符串
+	》${pageContext.request.requestURL}		取得请求的URL，但不包括请求之参数字符串,即servlet的HTTP地址。
+	》${pageContext.request.contextPath}	服务的webapplication的名称
+	》${pageContext.request.method}			取得HTTP的方法(GET、POST)
+	》${pageContext.request.protocol}		取得使用的协议(HTTP/1.1、HTTP/1.0)
+	》${pageContext.request.remoteUser}		取得用户名称
+	》${pageContext.request.remoteAddr}		取得用户的IP地址
+	》${pageContext.session.new}			判断session是否为新的，所谓新的session，表示刚由server产生而client尚未使用
+	》${pageContext.session.id}				取得session的ID
+	》${pageContext.servletContext.serverInfo}	取得主机端的服务信息
+	*EL算术运算：
+	》所有在Java语言里支持的算术运算符，表达式语言都可以使用；
+	*EL关系运算符：
+	*EL逻辑运算符：
+	*Empty 运算符：
+	》Empty 运算符主要用来判断值是否为空（NULL,空字符串，空集合）。
+	*条件运算符
+	》${ A ? B : C}
+	
 引用：
 	》http://www.runoob.com/jsp/jsp-page-redirect.html
 	》》学习网站

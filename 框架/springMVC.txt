@@ -6,7 +6,7 @@
 	》数据回显
 	》异常处理
 	》上传图片
-	》拦截器拦
+	》拦截器拦 
 	》AOP、截器和过滤器的区别
 	》能做什么
 	》优势
@@ -102,12 +102,35 @@ SpringMVC校验：
 	》afterCompletion:整个请求完成完毕。通常用于最后关闭资源、资源清理
 	适配器：
 	》HandlerInterceptorAdapter
+	如何使用：
+	方式一：
+	》在bean中配置拦截对象
+	使用方式：https://jinnianshilongnian.iteye.com/blog/1670856/ 
+		使用方式案例 从案例可以看出拦截的过程 应用场景并配相应的案例
+		拦截过程 pre control post jsp complete
+	
+	》Struts2自定义拦截器
+	常见应用场景：
+	》权限控制 用户登录控制
+	拦截器接口：
+	》Interceptor
+	》init			创建后立即被调用
+	》destroy		拦截器实例被销毁前调用
+	》String intercept(ActionInvocation invocation) throws Exception;  执行拦截工作   
+	如何使用：
+	》在struts.xml
+	》进行声明
+	》在action中添加引用 <interceptor-ref name="" />
+	
 	引用：https://jinnianshilongnian.iteye.com/blog/1670856/
 	》》内容：拦截器的介绍、完整案例、各种场景的应用代码案例
 	》》标题：第五章 处理器拦截器详解
 	aop的使用借鉴https://www.cnblogs.com/parryyang/p/5881523.html
 	
 AOP、拦截器和过滤器的区别：
+	mar 26 总结：
+	》filter 过滤请求 并且流程是线性的
+	该处研究的是struts2和SpringMVC中的拦截器和过滤器之间的对比。
 	AOP：
 	》只能拦截Spring管理的Bean的访问（业务service）
 	过滤器：
