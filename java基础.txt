@@ -10,10 +10,14 @@
 	#Object的公共方法#
 	#java基本类型的转换#
 	#jdbc#
+	#IO总结#
 	#设计模式#
 	#数据结构#
 	#并发包#
 	#CGLIB和jdk动态代理的区别#
+	#集合#
+	#并发集合#
+	#static#
 	
 #面试题#：
 	1、让该循环循环三次，可是这可能是一个死循环。
@@ -43,7 +47,6 @@
 		模块间要通过抽象接口隔离开，而不是通过具体的类强耦合起来
 	
 #java特性#：
-	封装：解决了数据的安全性问题
 	封装：解决了数据的安全性问题
 	多态：解决了程序的扩展问题
 	多态：
@@ -461,6 +464,24 @@ JVM内存模型：
 	》优先使用并发容器（并发集合）而非同步容器（对集合进行同步）。
 	》考虑使用线程池
 		
+#IO总结#：
+	流继承四大类：
+	》InputStream(字节输入流)，OutputStream（字节输出流），Reader（字符输入流），Writer（字符输出流）。
+	按数据传输单位分类：
+	》字节流：以字节（8位二进制）为单位进行处理。主要用于读写诸如图像或声音的二进制数据。
+	》字符流：以字符（16位二进制）为单位进行处理。字符流是对字节流进行了封装，方便操作。
+	》后缀是Stream是字节流，而后缀是Reader，Writer是字符流。
+
+#网络编程#
+	查阅：https://blog.csdn.net/qq_33275597/article/details/76156039
+		详细
+	客户端：
+	》创建一个Socket实例
+	服务端：
+	》创建一个ServerSocket实例并指定本地端口，用来监听客户端在该端口发送的TCP连接请求；
+	io读写信息：
+	》DataInputStream、DataOutputStream
+	
 	
 #设计模式#：
 	参考20个设计面试题：https://www.cnblogs.com/wozixiaoyao/p/5658820.html
@@ -934,7 +955,7 @@ JVM内存模型：
 	》
 	》
 	
-static 
+#static#
 	》静态方法是属于整个类的方法，非静态方法是属于整个对象的方法
 	》静态变量是一个公共的存储单元
 	》static 表明一个成员变量或者是成员方法可以在没有所属的类的实例变量的情况下被访问
@@ -1003,11 +1024,11 @@ JMX API MBean
 		模型MBean
 		MXBean
 
-集合
+#集合#
 	面试：
 	》https://blog.csdn.net/puppet100/article/details/80145519
 	》Vector和ArrayList  Vector是线程安全的
-	》LinkedList通过一个双向链接的节点列表实现
+	》LinkedList通过一个双向链接的节点列表（Deque）和List实现
 	》只有List和Map具有高效的线程安全实现
 	》HashMap几乎可以等价于Hashtable  线程同步Hashtable；ConcurrentHashMap，它是HashTable的替代
 	
@@ -1029,7 +1050,7 @@ JMX API MBean
     》   此方法从源数组中指定的位置复制指定个数的元素到目标数组里。（ ByteBuffer bulk复制可以研究）
     》所有的集合都可以用“return coll.toArray( new T[ coll.size() ] );”这样的方式复制到数组中
 	
-   
+    图：类加载图.png
     单线程集合：（这些集合所在包java.util包里）
     相关链接：https://blog.csdn.net/u014744118/article/details/50705424
 	对集合性能的分析，要考虑到遍历、存取等因素
@@ -1050,6 +1071,15 @@ JMX API MBean
     》每次操作都不会遍历数组一半以上，操作成本最高的元素就是数组中间的那个
     》也因为是Deque实现，链接列表可用作堆栈、队列或双端队列。
     》高效操作LinkedList代码可以使用 ListIterators 。
+	ArrayList和LinkedList的性能：
+	》对于常用类ArrayList（基于数组）和LinkedList（基于线性表），初学者可以不必理会性能差劣，
+	》》只知道LinkedList不仅提供了List功能，还提供了双端队列，栈的功能。
+	》抛弃插入删除性能，总体来来说ArrayList的性能优异与LinkedList，
+	》》因为大多数可以考虑使用ArrayList.对于ArrayList，Vector，and LinkedList的遍历，
+	》》因为ArrayList和Vector是基于数组实现的，应该使用随机访问方法get去访问，
+	》》对于LinkedList应该采用迭代器。
+	》使用场景：当需要对数据进行对此访问的情况下选用ArrayList，
+	》当需要对数据进行多次增加删除修改时采用LinkedList
     
     Queues/deques：（在处理元素前用于保存元素的 collection。）
     ArrayDeque:
@@ -1120,14 +1150,14 @@ JMX API MBean
 	》与HashSet类似。这个类是基于一个TreeMap实例的。
 	》这是在单线程部分唯一一个排序的Set。
 	
-	并发集合：（java.util.concurrent包中线程安全的集合）
+	#并发集合#：（java.util.concurrent包中线程安全的集合）
 	》多数为1.5引入
 	》Java 1.6引入ConcurrentSkipListMap / ConcurrentSkipListSet 和 LinkedBlockingDeque
 	》Java 1.7引入ConcurrentLinkedDeque 和 LinkedTransferQueue
 	Lists：
 	CopyOnWriteArrayList：
 	》list的实现
-	》每一次更新都会产生一个新的隐含数组副本，所以这个操作成本很高。
+	》每一次更新都会产生一个新的隐含数组副本（进行一次新的复制），所以这个操作成本很高。
 	》通常用在遍历操作比更新操作多的集合，比如listeners/observers集合。
 	Queues/deques：
 	ArrayBlockingQueue：
@@ -1323,7 +1353,7 @@ TCP/IP
 	》会话层	流量控制、传输	终端设备
 	》传输层	加上双方端口号 	终端设备
 	》网络层	加上双方ip		网关 路由器
-	》链路层	加上双发的MAC地址，并将数据拆分层数据帧
+	》链路层	加上双发的MAC地址，并将数据拆分成数据帧
 	》物理层					电缆
 	每一层的协议：
 	》应用层：FTP、DNS、Telnet、SMTP、HTTP、WWW、NFS
@@ -1365,6 +1395,12 @@ TCP/IP
     》同时在确认序号字段表明目标主机期待收到源主机下一个数据段的序号（即表明前一个数据段已收到并且没有错误）。
     》此外，此段中还包含目标主机的段初始序号。
     》3.源主机再回送一个数据段，同样带有递增的发送序号和确认序号。　
+	为什么是三次握手而不是两次握手？ https://blog.csdn.net/yu876876/article/details/81560122
+	》这主要是为了防止已失效的请求报文段突然又传送到了服务端而产生连接的误判
+	》
+	为什么连接是三次而断开是四次
+	》
+	》
 	TTL：
 	》数据包再传输过程中每经过一个路由器，TTL就减1，直到TTL=0时，数据包被丢弃，
 	》》并发送ICMP报文通知源主机防止重复发送。

@@ -114,9 +114,15 @@ jsp中文乱码的解决：
 	》errorPage jsp运行错误会自动跳转到指定页面
 	include：（转译成一个Servlet类）
 	》静态引入：  <%@include file="include01.jsp" %> 不能出现同名的变量，耦合性高
-	》》先将页面包含，后执行页面代码
+	》》先将页面包含，后执行页面代码  只执行一个文件
 	》动态引入：  <jsp:include page="include02.jsp"></jsp:include> 可以出现同名的变量耦合性低
-	》》先执行页面代码，后将页面包含
+	》》先执行页面代码，后将页面包含  执行两个文件
+	查阅：https://www.cnblogs.com/dorra/p/7078166.html 
+		很详细的讲解了两种include包含html和jsp的区别
+	查阅：https://blog.csdn.net/u012187452/article/details/51779052
+		详细的解析两种方式的基本概念
+	查阅：https://www.jb51.net/article/117075.htm
+		对嵌入页面的讲解
 	forward：
 	》请求转发（自带return）
 	》<jsp:forward page="要求转发的文件路径">
@@ -149,10 +155,10 @@ jsp中文乱码的解决：
 	》》如果要动态取值时，就可以用上述的方法来做，但. 无法做到动态取值。
 	*隐含对象（11个）：
 	》pageContext		表示JSP的PageContext
-	》PageScope         指定范围
 	》RequestScope		指定范围
 	》sessionScope		指定范围
 	》applicationScope	指定范围
+	》PageScope         指定范围
 	》param				ServletRequest.getParameter(String name)。
 	》paramValues		ServletRequest.getParameterValues(String name)。
 	》header			ServletRequest.getHeader(String name)。

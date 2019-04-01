@@ -6,6 +6,7 @@
 	#两大框架总结#
 	#Hibernate#
 	#MyBatis#
+	#如何防止sql注入#
 #简单词汇的解释#：
 	ORM - Object Relational Mapping 对象关联映射
 	
@@ -26,6 +27,18 @@
 	核心API SqlSessionFactory SqlSessionFactoryBuilder SqlSession 
 		SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(new InputStream()) ;
 		SqlSession session  = sessionFactory.openSession() ;
+	#{}、${}的区别：
+	#{}：
+	》PreparedStatement ps = conn.prepareStatement(sql);
+	》ps.setInt(1,id);
+	》好处：
+	》更安全，更迅速，通常也是首选做法。防止sql注入攻击
+	${}：
+	》Statement st = conn.createStatement();
+	》ResultSet rs = st.executeQuery(sql);
+	》缺点：
+	》以这种方式接受从用户输出的内容并提供给语句中不变的字符串是不安全的，会导致潜在的 SQL 注入攻击，
+	》》因此要么不允许用户输入这些字段，要么自行转义并检验。
 
 #两种框架的区别#：
 	1、开发速度的对比
@@ -78,3 +91,40 @@
 	对于没有那么高的对象模型要求的项目来说，相当完美。
 	*iBATIS的缺点就是框架还是比较简陋，功能尚有缺失，虽然简化了数据绑定代码，
 	但是整个底层数据库查询实际还是要自己写的，工作量也比较大，而且不太容易适应快速数据库修改。
+	
+#如何防止sql注入#：
+	注入案例：
+	》
+		比如在一个登录界面，要求输入用户名和密码：
+		可以这样输入实现免帐号登录：
+		用户名： ‘or 1 = 1 –
+		密 码：
+		点登陆,如若没有做特殊处理,那么这个非法用户就很得意的登陆进去了
+		从理论上说，后台认证程序中会有如下的SQL语句：
+		String sql = "select * from user_table where username=
+		' "+userName+" ' and password=' "+password+" '";
+		当输入了上面的用户名和密码，上面的SQL语句变成：
+		SELECT * FROM user_table WHERE username='’or 1 = 1 -- and password='’
+		然后后面加两个-，这意味着注释，它将后面的语句注释
+	》
+	
+	防止注入：
+	1.开启php的魔术模式
+	》magic_quotes_gpc = on即可，当一些特殊字符出现在网站前端的时候，
+	》就会自动进行转化，转化成一些其他符号导致sql语句无法执行。
+	2.网站代码里写入过滤sql特殊字符的代码
+	》对一些特殊字符进行转化，比如单引号，逗号，*
+	3.开启网站防火墙
+	》IIS防火墙，apache防火墙，nginx防火墙
+	》都有内置的过滤sql注入的参数
+	
+	针对jsp的防止注入： 引用：https://www.cnblogs.com/baizhanshi/p/6002898.html
+	1.使用PreparedStatement
+	》代码的可读性和可维护性.PreparedStatement尽最大可能提高性能.最重要的一点是极大地提高了安全性.
+	2.使用正则表达式过滤传入的参数
+	》private String CHECKSQL = “^(.+)\\sand\\s(.+)|(.+)\\sor(.+)\\s$”;
+	》Pattern.matches(CHECKSQL,targerStr);
+	3.字符串过滤
+	4.jsp中调用该函数检查是否包函非法字符
+	5.JSP页面判断代码
+	》检查是否含有”‘”,”\\”,”/”
