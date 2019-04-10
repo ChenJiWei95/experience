@@ -21,6 +21,14 @@
 		SessionFactory sf  = config.buildSessionFactory() ;	
 		Session session  = sf.openSession() ;
 		Transaction tx = session.beginTransaction() ;
+	Hibernate中共提供了三种检索方式：
+		HQL(Hibernate Query Language)、QBC(Query By Criteria)、QBE(Query By Example)。
+		HQL:
+			Query query = this.getCurrentSession().createQuery(hql);
+			query.setParameter(i, values[i]);
+			(List<T>) query.list();
+		QBC:
+			getCurrentSession().createCriteria(entityClass).add(Restrictions.eq(property, value)).list();
 #MyBatis#
 	简介：	
 		是一款优秀的持久层框架，它支持定制化 SQL、存储过程以及高级映射。
