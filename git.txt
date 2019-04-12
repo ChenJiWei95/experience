@@ -1,0 +1,20 @@
+  https://blog.csdn.net/ZTZY520/article/details/54023395
+	初始化版本库添加远程仓库
+	$ git init
+	Initialized empty Git repository in C:/Users/Administrator/.git/
+	和远程仓库连接
+	$ git remote add chenjiwei https://github.com/ChenJiWei95/MyBlog.git
+	从远程仓库拉代码
+	$ git clone https://github.com/ChenJiWei95/MyBlog.git 第一次用clone
+	git pull https://git.oschina.net/xxxx
+	修改过的文件添加到版本库 使用git status查看我们改的文件
+	git add <filename>
+	git add .
+	缓存区的文件提交到本地仓库
+	git commit -m "你给本次提交的文件加一个注释"
+	本地的修改提交到远程仓库
+	git push --set-upstream <上面用remote的时候你取得名字>  <要推送的分支>
+	git push --set-upstream chenjiwei master
+	还有一点需要注意的是，在你上次pull代码之后到你现在要push代码之前，
+	如果有其他人向你的远程仓库push了代码，那么当你在push的时候就要先用pull
+	代码重新把远程仓库的代码拉下来，然后重新git add 、git commit后才能push。
