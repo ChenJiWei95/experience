@@ -22,3 +22,14 @@
 	还有一点需要注意的是，在你上次pull代码之后到你现在要push代码之前，
 	如果有其他人向你的远程仓库push了代码，那么当你在push的时候就要先用pull
 	代码重新把远程仓库的代码拉下来，然后重新git add 、git commit后才能push。
+	
+提交使用分支
+	Git鼓励大量使用分支：
+	查看分支：git branch
+	创建分支：git branch <name>
+	切换分支：git checkout <name>
+	创建+切换分支：git checkout -b <name>
+	添加：git add readme.txt
+	提交：$ git commit -m "branch test"
+	合并某分支到当前分支：git merge <name>
+	删除分支：git branch -d <name>
