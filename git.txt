@@ -10,9 +10,13 @@
 	修改过的文件添加到版本库 使用git status查看我们改的文件
 	git add <filename>
 	git add .
+	设置name email
+	$ git config --global user.name "Your Name"
+	$ git config --global user.email "email@example.com"
 	缓存区的文件提交到本地仓库
 	git commit -m "你给本次提交的文件加一个注释"
 	本地的修改提交到远程仓库
+	git push -u -origin master
 	git push --set-upstream <上面用remote的时候你取得名字>  <要推送的分支>
 	git push --set-upstream chenjiwei master
 	还有一点需要注意的是，在你上次pull代码之后到你现在要push代码之前，
