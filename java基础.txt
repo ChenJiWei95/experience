@@ -1104,6 +1104,11 @@ JMX API MBean
     》允许使用 null 值和 null 键。
     》除了非同步和允许使用 null 之外，HashMap 类与 Hashtable 大致相同。
     》不保证映射的顺序，要想保证映射顺序可以使用LinkedHashMap
+	
+	》基于哈希表的的Map接口实现
+	》采用的是Entry数组和链表实现
+	》线程不安全
+	》保存数据 通过计算key的hash值来决定存储位置
     EnumMap：
     》枚举类型作为键值的Map。
     》因为键的数量相对固定，所以在内部用一个数组储存对应值。通常来说，效率要高于HashMap。

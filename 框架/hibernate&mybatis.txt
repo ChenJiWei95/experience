@@ -83,7 +83,6 @@
 		Hibernate数据库移植很好，MyBatis的数据库移植性不好，不同的数据库需要写不同的SQL
 		Hibernate有更好的二级缓存机制，可以使用第三方缓存。MyBatis本身提供的缓存机制不佳。
 		
-		
 #两个框架的相同点#：
 	Hibernate与MyBatis都可以是通过SessionFactoryBuider由XML配置文件生成SessionFactory，
 	然后由SessionFactory 生成Session，最后由Session来开启执行事务和SQL语句。

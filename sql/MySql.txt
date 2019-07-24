@@ -1,0 +1,119 @@
+目录：
+	# 复制表
+	# 序列化/自增
+	# 重复数据
+	# 导出数据
+	# 导入数据
+	# 排序
+	# 分组
+	# 连接
+	# 运算符
+	# 索引
+	# 函数
+	# 临时表
+	
+总结：
+	-
+	复制表 -- 菜鸟教程MySql
+		- 展示旧表的结构
+		SHOW CREATE TABLE 旧表 
+		
+		- 根据旧表显示的结构 创建一个表
+		CREATE TABLE `新表名`
+		
+		- 将旧表数据插入新表
+		INSERT INTO 新表名 SELECT form 旧表
+		
+		- 是否还有其他方式
+	-
+	序列化/自增 -- 菜鸟教程MySql
+		- AUTO_INCREMENT
+		id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+		
+		- 重置序列
+		通过删除自增的列，然后重新添加来实现
+		ALTER TABLE name DROP id
+		ALTER TABLE name
+			ADD id INT UNSIGNED NOT NULL AUTO_INCREMENT FIRST,
+			ADD PRIMARY KEY (id);
+		
+		- 可以指定自增开始值
+		方法1 CREATE TABLE name()auto_increment=100;
+		方法2 ALTER TABLE t AUTO_INCREMENT = 100;
+	-
+	重复数据 -- 菜鸟教程MySql
+		- 防止重复
+		数据表中设置指定的字段为 PRIMARY KEY（主键） 或者 UNIQUE（唯一） 索引来保证数据的唯一性
+		
+		- 过滤重复
+		DISTINCT 
+		GROUP BY ()
+		
+		- 删除重复
+	-
+	导出数据 -- 菜鸟教程MySql
+		- 导出数据
+		SELECT * FROM runoob_tbl INTO OUTFILE '/tmp/runoob.txt';
+		
+		- 导出 SQL 格式的数据
+		mysqldump -u root -p RUNOOB runoob_tbl > dump.txt
+		password ******
+	- 
+	导入数据 -- 菜鸟教程MySql
+	- 
+	排序 -- 菜鸟教程MySql
+		ORDER BY ... ASC 	降序
+		ORDER BY ... DESC 	升序
+	-
+	分组
+		GROUP BY 
+	-
+	连接
+		INNER JOIN （内连接,或等值连接）：获取两个表中字段匹配关系的记录。
+		LEFT JOIN （左连接）：获取左表所有记录，即使右表没有对应匹配的记录。
+		RIGHT JOIN （右连接）：与 LEFT JOIN 相反，用于获取右表所有记录，即使左表没有对应匹配的记录。
+	- 
+	运算符
+		+     	加
+		- 		减
+		* 		乘
+		/(DIV)  除
+		%(MOD)  余
+		IS NULL
+	-
+	索引
+		- 创建索引
+		CREATE INDEX indexName ON mytable(username(length)); 
+		- 修改表结构添加索引
+		ALTER table tableName ADD INDEX indexName(columnName);
+		- 修改表结构删除索引
+		ALTER TABLE testalter_tbl DROP INDEX c;
+		- 删除索引
+		DROP INDEX [indexName] ON mytable;
+		- 创建唯一索引
+		CREATE UNIQUE INDEX indexName ON mytable(username(length));
+		- 修改表结构创建唯一索引
+		ALTER table mytable ADD UNIQUE [indexName] (username(length))
+		- 显示索引
+		SHOW INDEX FROM table_name;
+	- 
+	函数 -- 菜鸟教程MySql函数	
+	    - 字符串函数
+		获取首字母ASCII码 拼接 长度 返回下标
+		
+		- 数字函数
+		
+		- 日期函数
+		CURRENT_TIMESTAMP 返回当前日期和时间
+		
+		- 高级函数
+		转换数据类型
+		CAST(x AS type)
+		CAST("2017-08-29" AS DATE)
+	-
+	临时表 -- 菜鸟教程MySql	
+		临时表在我们需要保存一些临时数据时是非常有用的
+		临时表只在当前连接可见
+		当你断开与数据库的连接后，临时表就会自动被销毁。
+		CREATE TEMPORARY TABLE NAME ()
+		DROP TABLE SalesSummary;
