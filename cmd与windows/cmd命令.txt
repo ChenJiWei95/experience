@@ -16,6 +16,9 @@ wiaacmgr-------扫描仪和照相机向导
 mspaint--------画图板
 osk------------打开屏幕键盘
 
+CMD 查看端口号 根据PID 关闭进程
+		netstat -ano|findstr "80"80   	//查找8080端口的pid进程
+		taskkill /f /pid pid编码		//根据pid清除进程
 
 
 
