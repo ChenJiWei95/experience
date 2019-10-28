@@ -1,0 +1,249 @@
+目录
+	#加密#
+	#RSA算法#
+	#Signature签名接口：#
+	#Cipher#
+	#MessageDigest 生成数据摘要#
+	#摘要与加密的区别#
+	#BASE64Encoder 进行简单加密#
+	#实现rsa案例#
+	#对于安全的相关解说#
+	#MD5Util 摘要工具类#
+-
+加密：
+		KCS8EncodedKeySpec类继承EncodedKeySpec类，以编码格式来表示私钥。
+		X509EncodedKeySpec和PKCS8EncodedKeySpec两个类在加密解密环节中经常会用到
+		密钥很可能会以二进制方式存储于文件中，由程序来读取。
+		需要通过这两个类将文件中的字节数组读出转换为密钥对象。
+		byte[] privateKeyBytes = keys.getPrivate().getEncoded();获得私钥密钥字节数组
+		PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(privateKeyBytes);实例化PKCS8EncodedKeySpec对象
+		KeyFactory keyFactory = KeyFactory.getInstance("DSA"); //指定DSA算法、RSA算法，medo使用的是RSA
+		PrivateKey privateKey = keyFactory.generatePrivate (keySpec);获得PrivateKey对象
+	
+-
+RSA算法
+	：参考：https://www.cnblogs.com/AloneSword/p/3326750.html
+		目前最有影响力的公钥加密算法
+		链接中有算法的是实现讲解
+	
+-
+Signature签名接口：
+	类用来为应用程序提供数字签名算法功能。数字签名用于确保数字数据的验证和完整性。
+	签名算法： MD2withRSA、MD5withRSA 或 SHA1withRSA（demo使用）。
+	Signature用来生成和验证数字签名。
+		生成：
+		initSign(PrivateKey privateKey) // 初始化这个用于签名的对象。
+		update(byte) 					// 
+		Byte[] sign() 					//返回所有已更新数据的签名字节。
+		验证：
+		initVerify(PublicKey publicKey) //初始化此用于验证的对象。
+		update(byte) 					//更新字节方式
+		Boolean verify(byte) 			//验证传入的签名。
+	
+-
+Cipher 
+	javax.crypto 类 Cipher
+	此类为加密和解密提供密码功能。
+	在serviceTool中用于解密密码
+		init(int opmode, Key key) 
+			  用密钥初始化此 Cipher。
+		doFinal(byte[] input) 
+			  按单部分操作加密或解密数据，或者结束一个多部分操作。
+	
+-
+MessageDigest 生成数据摘要
+		计算出数据的摘要
+		计算方式：MD5 或 SHA 
+		计算结果：固定为 128 bit 的二进制串，一般会转为 32个16进制位
+		java.security.MessageDigest类用于为应用程序提供信息摘要算法的功能，如 MD5 或 SHA 算法。
+		用于生成散列码 信息摘要是安全的单向哈希函数，它接收任意大小的数据，输出固定长度的哈希值。
+		MessageDigest 
+			getInstance	静态函数来进行实例化和初始化
+			update		处理数据
+			reset 		重置摘要
+			digest		一旦所有需要更新的数据都已经被更新了，进行哈希计算并返回结果。
+			
+		计算结果byte 转换成字符串
+			static String convertToHexString(byte data[]) {
+			StringBuffer strBuffer = new StringBuffer();
+			for (int i = 0; i < data.length; i++) {
+				strBuffer.append(Integer.toHexString(0xff & data[i]));
+			}
+			return strBuffer.toString();
+			
+-
+摘要与加密的区别
+	摘要的用途
+		登录密码
+		正版软件的校验
+	摘要
+		摘要是哈希值，我们通过散列算法比如MD5算法就可以得到这个哈希值。
+		摘要只是用于验证数据完整性和唯一性的哈希值，不管原始数据是什么样的，得到的哈希值都是固定长度的。
+		不管原始数据是什么样的，得到的哈希值都是固定长度的，也就是说摘要并不是原始数据加密后的密文，
+		》只是一个验证身份的令牌。所以我们无法通过摘要解密得到原始数据。
+	加密 
+		加密是通过 “加密算法” 将 "明文" 加密成 “密文”。
+		我们可以通过 “密钥” 和 “解密算法” 将 “密文” 还原成 “明文”。
+	MD5
+		MD5是用于计算摘要的散列算法，计算结果是 固定长度为 128bit 的二进制串。不是加密算法。
+		可以使用穷举法破解摘要。通常增加长度来加大穷举法的破解难度，
+		》先将信息进行BASE64编码，这样得到的就是一个很长的字符串
+		
+-
+BASE64Encoder 进行简单加密
+		BASE64Encoder base64en = new BASE64Encoder();
+		String strMd5=base64en.encode(byte);
+		
+-
+实现rsa案例
+
+-
+对于安全的相关解说
+		CA就相当于一个认证机构，只要经过这个机构签名的证书我们就可以当做是可信任的。
+		证书就是将我们的公钥和相关信息写入一个文件，CA用它们的私钥对我们的公钥和相关信息进行签名后，将签名信息也写入这个文件后生成的一个文件。
+		证书格式(是一种标准)：
+		x509            这种证书只有公钥，不包含私钥。
+		pcks#7       这种主要是用于签名或者加密。
+		pcks#12     这种含有私钥，同时也含有公钥，但是有口令保护。
+		编码方式：
+		.pem 后缀的证书都是base64编码
+		.der   后缀的证书都是二进制格式
+		证书：
+		.csr              后缀的文件是用于向ca申请签名的请求文件
+		.crt    .cer     后缀的文件都是证书文件（编码方式不一定，有可能是.pem,也有可能是.der）
+		私钥：
+		.key   后缀的文件是私钥文件
+		包含证书和私钥：
+		.keystore  .jks   .truststore 后缀的文件，是java搞的，java可以用这个格式。这个文件中包含证书和私钥，但是获取私钥需要密码才可以,
+		这是一个证书库，里面可以保存多个证书和密钥，通过别名可以获取到。
+		.pfx 主要用于windows平台，浏览器可以使用，也是包含证书和私钥，获取私钥需要密码才可以
+		最后总结：
+		1、使用公钥操作数据属于加密
+		2、使用私钥操作数据属于签名
+		3、公钥和私钥可以互相加解密
+		4、不同格式的证书之间可以互相转换
+		5、公钥可以对外公开，但是私钥千万不要泄露，要妥善保存
+		可能是公钥进行加密 私钥进行解密
+		
+		案例 https://www.cnblogs.com/vicent/p/3805722.html
+	用于签名专用类 com.rjht.sdsys.trans.channel.hc.common.RSASignature
+	
+-
+加密 "RSA/ECB/PKCS1PADDING"
+	public static String decrypt(String data, String pfx_path, String pfx_pass) throws Exception {
+
+		try {
+
+			RSAPrivateKey pbk = getPrivateKey(pfx_path, pfx_pass);
+
+			//Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1PADDING","SunJCE");
+			Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1PADDING");
+			cipher.init(Cipher.DECRYPT_MODE, pbk);
+
+			byte[] btSrc =cipher.doFinal(Base64.decode(data));
+
+			return new String(btSrc,ENCODING);
+
+		} catch (Exception e) {
+			logger.error(Strings.toString(e));
+			return "";
+		}
+	}
+	
+	-
+	循环读写二进制的方式
+		while (totalLen - offSet > 0) {
+            if (totalLen - offSet > maxLen) {
+                cache = cipher.doFinal(data, offSet, maxLen);
+            } else {
+                cache = cipher.doFinal(data, offSet, totalLen - offSet);
+            }
+            out.write(cache, 0, cache.length);
+            index++;
+            offSet = index * maxLen;
+        }
+-
+MD5Util 摘要工具类
+根据MessageDigest 实现的工具类
+public class MD5Util {
+
+    private static final String hexDigits[] = {"0", "1", "2", "3", "4", "5",
+            "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"};
+
+    /**
+     * 将1个字节（1 byte = 8 bit）转为 2个十六进制位
+     * 1个16进制位 = 4个二进制位 （即4 bit）
+     * 转换思路：最简单的办法就是先将byte转为10进制的int类型，然后将十进制数转十六进制
+     */
+    private static String byteToHexString(byte b) {
+        // byte类型赋值给int变量时，java会自动将byte类型转int类型，从低位类型到高位类型自动转换
+        int n = b;
+
+        // 将十进制数转十六进制
+        if (n < 0)
+            n += 256;
+        int d1 = n / 16;
+        int d2 = n % 16;
+
+        // d1和d2通过访问数组变量的方式转成16进制字符串；比如 d1 为12 ，那么就转为"c"; 因为int类型不会有a,b,c,d,e,f等表示16进制的字符
+        return hexDigits[d1] + hexDigits[d2];
+    }
+
+    /**
+     * 将字节数组里每个字节转成2个16进制位的字符串后拼接起来
+     */
+    private static String byteArrayToHexString(byte b[]) {
+        StringBuffer resultSb = new StringBuffer();
+        for (int i = 0; i < b.length; i++){
+            resultSb.append(byteToHexString(b[i]));
+        }
+        return resultSb.toString();
+    }
+
+    /**
+     * MD5算法，统一返回大写形式的摘要结果，默认固定长度是 128bit 即 32个16进制位
+     * String origin ：需要进行MD5计算的字符串
+     * String charsetname ：MD5算法的编码
+     */
+    private static String MD5_32(String origin, String charsetname) {
+        String resultString = null;
+        try {
+            // 1，创建MessageDigest对象
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            // 2，向MessageDigest传送要计算的数据;传入的数据需要转化为指定编码的字节数组
+            md.update(origin.getBytes( charsetname ));
+            // 3，计算摘要
+            byte[] bytesResult = md.digest();
+
+            // 第2步和第3步可以合并成下面一步
+            // byte[] bytesResult = md.digest(origin.getBytes(charsetname));
+
+            // 4,将字节数组转换为16进制位
+            resultString = byteArrayToHexString( bytesResult );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // 统一返回大写形式的字符串摘要
+        return resultString.toUpperCase();
+
+    }
+
+    /**
+     * 获取 16位的MD5摘要，就是截取32位结果的中间部分
+     */
+    private static String MD5_16(String origin, String charsetname) {
+        return MD5_32(origin, charsetname).substring(8,24);
+    }
+
+    public static void main(String[] args){
+        String origin = "1234567890";
+
+        // 默认MD5计算得到128 bit的摘要，即32个 16进制位
+        String result_32 = MD5_32(origin, "utf-8");
+        System.out.println(result_32);  // E807F1FCF82D132F9BB018CA6738A19F
+
+        // 默认MD5计算得到即16个 16进制位
+        String result_16 = MD5_16(origin, "utf-8");
+        System.out.println(result_16);  // F82D132F9BB018CA
+    }
+}
