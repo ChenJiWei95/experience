@@ -5,4 +5,105 @@ Struts Core：Struts2的核心部分，可是Struts2已经帮我们做好了，�
 Interceptors。Struts2的拦截器。Struts2提供了非常多默认的拦截器。能够完毕日常开发的绝大部分工作；而我们自己定义的拦截器，
 	用来实现实际的客户业务须要的功能。
 User Created，由开发者创建的。包含struts.xml、Action、Template。这些是每一个使用Struts2来进行开发的人员都必须会的。
+总结链接：
+	https://www.cnblogs.com/qjjazry/p/6379771.html
 
+目录：
+	》简介
+	》配置文件动态方法调用的配置
+	》配置文件配置转发重定向
+	》请求中获取参数的四种方式
+	》对Servlet中API的操作的三种方式
+	》值栈
+	》Struts2自带类型转换器以及自定义
+	
+配置文件配置转发重定向：
+	转发(默认) 
+		<result name="success" type="dispatcher" >/hello.jsp</result>
+	
+	重定向
+		<result name="success" type="redirect" >/hello.jsp</result>
+	
+	转发到action  -- 上面是页面，这里是action到action
+		<result name="success" type="chain">
+			<param name="actionName">Demo1Action</param>
+			<!-- action所在的命名空间 -->
+			<param name="namespace">/</param>
+		</result>
+	重定向到action  -- 上面是页面，这里是action到action
+		<result name="success" type="redirectAction">
+			<param name="actionName">Demo1Action</param>
+			<!-- action所在的命名空间 -->
+			<param name="namespace">/</param>
+		</result>
+		
+请求中获取参数的四种方式：
+	ModelDriven方式
+		实现特定接口 实体类对象得new出来
+		<input type="text" name="name" />
+	域驱动方式
+		实体类对象得new出来	private User user = new User();
+		有对应的getter方法 	public User getUser(){...}
+		<input type="text" name="user.name" />
+	属性驱动方式
+		属性得有setter方法
+		<input type="text" name="name" />
+	request	
+		request.getparameters();
+
+对Servlet中API的操作的三种方式：	
+	通过com.opensymphony.xwork2.ActionContext 操作
+		ActionContext 是一个本地化的线程，即其是线程安全的。存储在 ActionContext 中的值每一个线程都是独有的。
+		action 执行的上下文
+		ActionContext context = ActionContext.getContext();
+		方法：
+			Object get(String key);					通过参数key来查找当前ActionContext中的值
+			Map<String, Object> getApplication();	返回一个application级的Map对象
+			static ActionContext getContext();		获取当前线程的ActionContext对象
+			Map<String, Object> getParameters();	返回一个包含所有HttpServletRequest参数信息的Map对象
+			Map<String, Object> getSession();		返回一个Map类型的HttpSession对象
+			void put(String key, Object value);		向当前ActionContext对象中存入键值对信息
+			void setApplication(Map<String, Object> application);设置一个Map类型的application值
+			void setSession(Map<String, Object> session);设置一个Map类型的session值 
+		
+	通过org.apache.struts2.ServletActionContext 操作 
+		这个类是面向于 action 的，且是特定于 Web 上下文信息。
+		提供了访问 action name，value stack（值栈）等信息的途径。
+		而且这个类还增加了对 Web 对象的访问，如 servlet 参数、request 属性 和HTTP session 等。
+		静态方法：
+			getPageContext(),getRequest(),getResponse()和getServletContext()
+	IoC方式：(不推荐)
+		ServletContextAware：实现该接口的Action可以直接访问Web应用的ServletContext实例;
+		ServletRequestAware：实现该接口的Action可以直接访问用户请求对象的HttpServletRequest的实例;
+		ServletResponseAware：实现该接口的Action可以直接访问服务器响应的HttpServletResponse的实例;
+
+值栈：
+	root：
+		root的底层是一个封装了ArrayList的栈，对值栈ValueStack的访问，就是对root中对象的访问。
+	context：
+　　	context的类型为Map<String，Object>，在创建ValueStack时，就初始化root，在初始化root时，就创建了一个默认的context，而这个默认的context（Map）中又立即存放了这个ValueStack（其实是地址），
+		所以会出现context是ValueStack的成员变量，但同时ValueStack又属于context，这种情况。
+	支持类静态方法调用和常量访问，表达式的格式为：
+		@java.lang.Math@PI 或 @java.lang.Math@random()
+	支持对象方法调用，
+		如xxx.sayHello()	
+		
+Struts2自带类型转换器以及自定义：
+	https://www.iteye.com/blog/dongruan00-2017121
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
