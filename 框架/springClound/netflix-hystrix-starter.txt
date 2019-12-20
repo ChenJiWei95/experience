@@ -30,8 +30,3 @@ https://cloud.spring.io/spring-cloud-static/spring-cloud-netflix/2.2.0.RELEASE/r
 		Hystrix不允许注册多个Hystrix并发策略，因此可以通过将自己的HystrixConcurrencyStrategy声明为Spring bean来使用扩展机制。\
 		Spring Cloud在Spring上下文中寻找您的实现，并将其包装在自己的插件中。
 		
-		
-		
-		
-：{"transcode":"027","merchno":"sdxygj201910091","dsorderid":"xl1575292932013","sign":"f5abc913359e5e3d58c102cd33cf9611","version":"0100","ordersn":"48088163d10d4c088e063578c5f1e65c","idcard":"440222198108010313","mobile":"13554993681","settleBankCode":"307","settleBankName":"平安银行","settleBankCard":"6230580000205748630","accountName":"朱晓东","futureRateValue":"0.52","fixAmount":"200","subMerchantNo":"jNpWikun7X"} 
-[INFO ] 21:26:25:9 [LoggerUtil.infoLog:80] 商户号：sdxygj201910091_订单号：4fe625f5b8d24b94a8e0737d9b22dd55_描述：Request JsonData_信息：{"transcode":"027","merchno":"sdxygj201910091","dsorderid":"xl1575293268381","sign":"611bf1744d2a7f0d931a9f2eb17f2f0b","version":"0100","ordersn":"4fe625f5b8d24b94a8e0737d9b22dd55","idcard":"440222198108010313","mobile":"13554993681","settleBankCode":"307","settleBankName":"平安银行","settleBankCard":"6230580000205748630","accountName":"朱晓东","futureRateValue":"0.57","fixAmount":"100","subMerchantNo":"jNpWikun7X"} 
