@@ -1,0 +1,139 @@
+信息内容来自官方文档：http://caibaojian.com/vue/guide/
+
+目录
+	# 个人总结
+	# 介绍
+	  声明式渲染
+	  条件与循环
+	# 安装
+	# vue实例
+	# 模板语法
+	# 计算属性
+	# class与style的绑定
+	# 条件渲染
+	# 列表渲染
+	# 事件处理器
+	# 表单控件绑定
+	# 组件  
+	# node.js的介绍
+	# node API
+	# node.js中的包管理之npm使用介绍
+
+个人总结
+	简化DOM操作，自定义标签--模板开发，有效解耦
+	
+介绍
+	是一套构建用户界面的 渐进式框架。
+	采用自底向上增量开发的设计。
+	只关注视图层，易学。容易与其它库或已有项目整合。
+	有能力驱动采用单文件组件和 Vue 生态系统支持的库开发的复杂单页应用。
+	Vue.js 的目标是通过尽可能简单的 API 实现响应的数据绑定和组合的视图组件。
+	Vue.js 不支持 IE8 及其以下版本，因为 Vue.js 使用了 IE8 不能模拟的 ECMAScript 5 特性。
+	引入vue <script src="https://unpkg.com/vue/dist/vue.js"></script>
+	声明式渲染
+		简单的将数据渲染进DOM里面
+		  <div id="app">
+			{{ message }}
+		  </div>
+		  // js部分
+		  new Vue({
+			el: '#app',
+			data: {
+			  message: 'Hello Vue!'
+			}
+		  })
+		将数据绑定到DOM的属性中 
+		  （演示省略了一些代码）
+		  <!--v-bind 属性被称为指令。指令带有前缀 v-，以表示它们是 Vue.js 提供的特殊属性。-->
+		  <span v-bind:title="message">
+		  // js部分
+		  new Vue({
+			el: '#app',
+			data: {
+			  message: 'You loaded this page on ' + new Date()
+			}
+		  })
+		  <!--最后得到的结果是 <span title="{{message}}"> -->
+		  
+	条件与循环
+		条件
+		  （演示省略了一些代码）
+		  <p v-if="seen">Now you see me</p>
+		  // js部分
+		  data: {
+			seen: true
+		  }
+		循环
+		  （演示省略了一些代码）
+		  <li v-for="todo in todos">
+		    {{ todo.text }}
+		  </li>
+		  // js部分
+		  data: {
+			todos: [
+			  { text: 'Learn JavaScript' },
+			  { text: 'Learn Vue' },
+			  { text: 'Build something awesome' }
+			]
+		  }
+	表单
+vue实例
+	实例属性
+	实例方法
+node.js的介绍
+	是一个基于 Chrome V8 引擎的 JavaScript 运行环境。
+	Node.js 使用了一个事件驱动、非阻塞式 I/O 的模型。
+	Node 是一个让 JavaScript 运行在服务端的开发平台，让JavaScript与服务端语言平起平坐
+	用于方便地搭建响应速度快、易于扩展的网络应用。
+	使用事件驱动， 非阻塞I/O 模型而得以轻量和高效，非常适合在分布式设备上运行数据密集型的实时应用。
+
+node.js的特性
+	事件驱动（对性能的苛求是Node的一个关键因素。）
+		Node利用了Javascript是一个事件驱动语言，编写出可扩展性高的服务器。
+		Node采用了一个称为“事件循环(event loop）”的架构，使得编写可扩展性高的服务器变得既容易又安全。
+		Node绕过了并发编程（通常很复杂且布满地雷）
+	非阻塞式 I/O 
+		Node采用一系列“非阻塞”库来支持事件循环的方式。
+		本质上就是为文件系统、数据库之类的资源提供接口。
+		向文件系统发送一个请求时，无需等待硬盘（寻址并检索文件），硬盘ok时会通知NOde
+node的优点
+	一个新兴的前端框架，后台语言
+	RESTful API
+	单线程
+	 Node可以在不新增额外线程的情况下，依然可以对任务进行并发处理 —— Node.js是单线程的。
+	 它通过事件循环（event loop）来实现并发操作，
+	 对此，我们应该要充分利用这一点 —— 尽可能的避免阻塞操作，取而代之，多使用非阻塞操作。
+	非阻塞IO
+	V8虚拟机
+	事件驱动
+node API		  
+	underscore
+		https://underscorejs.org/
+	  
+node.js中的包管理之npm使用介绍
+	NPM介绍
+		是Node.js的包管理工具。Node.js 与 NPM的关系是密不可分的。
+	
+	NPM常用命令
+		npm -v 或 
+		npm version 
+			命令查看NPM的安装版本。
+		npm init
+			可以生产一个package.json文件。
+	package.json文件
+		是提供包描述的文件。
+		项目的包依赖关系、版本、作者等信息。
+		在Node.js中，一个包是一个文件夹，其中的package.json文件以 
+		 json 格式存储该包的相关描述。
+		主要字段有：
+		Name: 包的名字。 
+		Respository: 包存放的仓库地址。
+		Keywords: 包的关键字，有利于别人通过搜索找到你的包。
+		License: 遵循的协议。
+		Maintainers: 包的维护者。
+		Author: 包的作者。
+		Version: 包的版本号，遵循 版本命名规范。
+		Dependencies：包依赖的其他包。
+		devDependencies ：包开发阶段依赖的其他包。
+		homepage： 包的官方主页。 
+	 

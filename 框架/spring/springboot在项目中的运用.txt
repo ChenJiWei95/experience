@@ -1,0 +1,104 @@
+﻿目录：  
+	》shopManerge
+	》jsptest
+		》整合jsp
+		》使用fastjson
+		》日志的使用
+		》热部署
+		
+shopManerge
+	整合Thymeleaf
+	初步学习springboot
+	
+	测试th:href 对静态文件的访问，以及链接的请求 （th:href请求指向static和templates
+		mycss.css
+		login.html
+		register.html
+		LoginController.java
+		login使用a标签向register页面跳转<a th:href="@{register}">注册</a><br>
+		login对静态文件的获取mycss.css<link rel="stylesheet" th:href="@{css/mycss.css}" />
+		
+	初步搭建
+		login.html
+		LoginController.java 
+		依赖模块Thymeleaf
+		
+jsptest
+	整合jsp 
+		依赖
+			<!-- servlet 依赖 -->
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>javax.servlet-api</artifactId>
+			</dependency>
+			
+			<!-- JSTL jsp标准标签库 依赖 -->
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>jstl</artifactId>
+			</dependency>
+			
+			<!-- tomcat 依赖 -->
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-tomcat</artifactId>
+			</dependency>
+			
+			<!-- jsp引擎 依赖 -->
+			<dependency>
+				<groupId>org.apache.tomcat.embed</groupId>
+				<artifactId>tomcat-embed-jasper</artifactId>
+			</dependency>
+			
+		application.yml配置文件
+			在application中指向jsp文件路径 /WEB-INF/jsp/ 和 后缀.jsp 
+			 
+			spring:
+			  datasource:
+				username: chenjiwei
+				password: cjw168999
+				url: jdbc:mysql://120.79.149.233:3306/shop
+				driver-class-name: com.mysql.jdbc.Driver
+				hikari:
+				  idle-timeout: 60000
+				  maximum-pool-size: 30
+				  minimum-idle: 10
+			  mvc:
+				view:
+				  prefix: /WEB-INF/jsp/
+				  suffix: .jsp 	
+		
+		成功访问：
+			http://localhost:8080/login
+		
+	在项目中使用fastjson替换原来默认的jackson
+		Controller返回的是一个java对象或者是list集合时自动转换为json数据
+		<dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.29</version>
+        </dependency>
+	日志的使用
+		<dependency>
+		 <groupId>org.springframework.boot</groupId>
+		 <artifactId>spring-boot-starter-logging</artifactId>
+		</dependency>
+	热部署
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<!-- optional=true,依赖不会传递 -->
+			<optional>true</optional>
+			<scope>true</scope>
+		</dependency>
+		<build>
+			<plugins>
+				<plugin>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-maven-plugin</artifactId>
+					<configuration>
+						<fork>true</fork>
+					</configuration>
+				</plugin>
+			</plugins>
+		</build>

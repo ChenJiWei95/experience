@@ -63,58 +63,58 @@ alert table student
 	add index index_name (xuehao)
 	
 dml;
-select xuehao, xingbie, age from student;
+	select xuehao, xingbie, age from student;
 
-update student set age = 30 where xuehao = 2222;
+	update student set age = 30 where xuehao = 2222;
 
-delete from student where xuehao = 2222;
+	delete from student where xuehao = 2222;
 
-insert into student (xuehao, xingbie) values(2222, 0);
+	insert into student (xuehao, xingbie) values(2222, 0);
 
-约束:
-xuehao int(6) not null primary key      - not null, primary key
-alert table student						- unique index
-	add unique index index_name (xuehao)
-constrant fk_cId foreign key person(id)	- foreign key 
-constrant ck_sex check (0<=xingbie<=1)
-xingbie bit not null default 1,
+	约束:
+	xuehao int(6) not null primary key      - not null, primary key
+	alert table student						- unique index
+		add unique index index_name (xuehao)
+	constrant fk_cId foreign key person(id)	- foreign key 
+	constrant ck_sex check (0<=xingbie<=1)
+	xingbie bit not null default 1,
 
-索引：
-create index index_name on student(xuehao)
-alert table student 
-	add index index_name(xuehao)
-auto_increment
+	索引：
+	create index index_name on student(xuehao)
+	alert table student 
+		add index index_name(xuehao)
+	auto_increment
 
 
 11-28
 ddl：
-create database shop();
-alert database ...;
+	create database shop();
+	alert database ...;
 
-create table student(
-	xuehao int(6) not null primary key,
-	xingbie bit not null default 1,
-	c_id int(6),
-	constrant fk_cID foreign key (c_id)
-		references person(id_p),
-	constrant ck_sex check (0<=xingbie<=1)
-)engine=innodb charset=utf-8;
-rename tabel student to student1;
+	create table student(
+		xuehao int(6) not null primary key,
+		xingbie bit not null default 1,
+		c_id int(6),
+		constrant fk_cID foreign key (c_id)
+			references person(id_p),
+		constrant ck_sex check (0<=xingbie<=1)
+	)engine=innodb charset=utf-8;
+	rename tabel student to student1;
 
-create index index_name 
-	on student (xuehao);
-create unique index index_name
-	on student (xuehao);
-alert table student
-	drop index index_name;
-alert table student 
-	add index index_name (xuehao);
+	create index index_name 
+		on student (xuehao);
+	create unique index index_name
+		on student (xuehao);
+	alert table student
+		drop index index_name;
+	alert table student 
+		add index index_name (xuehao);
 
 dml:
-select xuehao,xingbie,c_id from student where xuehao = "1";
-delete from student where xuehao = "1";
-insert into student(xuehao,xingbie,c_id) values(1, 1, 1);
-update student set xingbie = 0 where xuehao=1;
+	select xuehao,xingbie,c_id from student where xuehao = "1";
+	delete from student where xuehao = "1";
+	insert into student(xuehao,xingbie,c_id) values(1, 1, 1);
+	update student set xingbie = 0 where xuehao=1;
 
 约束：
 xuehao int(6) not null primary key,

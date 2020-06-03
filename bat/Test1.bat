@@ -1,9 +1,10 @@
 @echo off
 ::设置lib库的路径
 set lib_path=%cd%\lib\
-set str=123456
-call %lib_path%String.bat substring %str% 5 6
-call %lib_path%System.bat print
+set str=中华人民共和国成立 
+cd %lib_path%
+call String substring %str% 5 7
+call System print
 pause
 
 

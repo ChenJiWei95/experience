@@ -13,11 +13,14 @@
 	# 索引
 	# 函数
 	# 临时表
+	# 存储过程
+	
 	
 总结：
 	-
 	实例
-	SELECT * FROM `user` ORDER BY `password` DESC LIMIT 0, 3; //0是起始 3是总数
+	 记录一些已应用过的语句，用来后续参考
+		SELECT * FROM `user` ORDER BY `password` DESC LIMIT 0, 3; //0是起始 3是总数
 	
 	-
 	复制表 -- 菜鸟教程MySql
@@ -113,9 +116,9 @@
 		CURRENT_TIMESTAMP 返回当前日期和时间
 		
 		- 高级函数
-		转换数据类型
-		CAST(x AS type)
-		CAST("2017-08-29" AS DATE)
+			转换数据类型
+			 CAST(x AS type)
+			 CAST("2017-08-29" AS DATE)
 	-
 	临时表 -- 菜鸟教程MySql	
 		临时表在我们需要保存一些临时数据时是非常有用的
@@ -123,3 +126,39 @@
 		当你断开与数据库的连接后，临时表就会自动被销毁。
 		CREATE TEMPORARY TABLE NAME ()
 		DROP TABLE SalesSummary;
+		
+	-
+	存储过程
+		摘抄链接：https://www.runoob.com/w3cnote/mysql-stored-procedure.html
+		存储过程的
+			创建
+				delimiter $$
+				CREATE PROCEDURE delete_matches(IN p_playerno INTEGER)
+					BEGIN
+						DELETE FROM MATCHES
+						WHERE playerno = p_playerno;
+					END$$
+				delimiter ;	
+			调用
+				call delete_matches(57);
+		存储过程的参数
+			CREATEPROCEDURE 存储过程名([[IN |OUT |INOUT ] 参数名 数据类形...])
+			in 输入参数
+			out输出参数
+				不接受输入只作为返回参数，
+			inout输入参数
+				接受了输入的参数，也输出参数
+		存储过程的查改删
+		控制语句
+			变量作用域
+			条件语句
+				if-then-else语句
+				case语句
+			循环语句
+				while ···· end while
+				repeat···· end repea
+				loop ·····endloop
+			ITERATE迭代
+
+
+		

@@ -1,4 +1,4 @@
-@echo off
+﻿@echo off
 ::语法
 ::[methodName] [string] 
 ::方法：

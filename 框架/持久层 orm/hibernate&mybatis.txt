@@ -6,11 +6,6 @@
 	#两大框架总结#
 	#Hibernate#
 	#MyBatis#
-		简介	
-		核心API
-		#{}、${}的区别
-		resultType 返回类型
-		jdbcType类型归纳
 	#如何防止sql注入#
 #简单词汇的解释#：
 	ORM - Object Relational Mapping 对象关联映射
@@ -26,21 +21,12 @@
 		SessionFactory sf  = config.buildSessionFactory() ;	
 		Session session  = sf.openSession() ;
 		Transaction tx = session.beginTransaction() ;
-	Hibernate中共提供了三种检索方式：
-		HQL(Hibernate Query Language)、QBC(Query By Criteria)、QBE(Query By Example)。
-		HQL:
-			Query query = this.getCurrentSession().createQuery(hql);
-			query.setParameter(i, values[i]);
-			(List<T>) query.list();
-		QBC:
-			getCurrentSession().createCriteria(entityClass).add(Restrictions.eq(property, value)).list();
 #MyBatis#
 	简介：	
 		是一款优秀的持久层框架，它支持定制化 SQL、存储过程以及高级映射。
 	核心API SqlSessionFactory SqlSessionFactoryBuilder SqlSession 
 		SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(new InputStream()) ;
-		SqlSession session  = sessionFactory.openSession() ; 
-        HotelMapper hotelMapper = session.getMapper(HotelMapper.class);
+		SqlSession session  = sessionFactory.openSession() ;
 	#{}、${}的区别：
 	#{}：
 	》PreparedStatement ps = conn.prepareStatement(sql);
@@ -53,108 +39,7 @@
 	》缺点：
 	》以这种方式接受从用户输出的内容并提供给语句中不变的字符串是不安全的，会导致潜在的 SQL 注入攻击，
 	》》因此要么不允许用户输入这些字段，要么自行转义并检验。
-	
-	resultType 返回类型：
-		javaBean ：
-			java代码： 
-				Employee getEmpById(Integer id);
-			配置：
-				<select id="getEmpById" resultType="employee">
-		List<T> ：
-			java代码： 
-				List<Employee> getAllEmps();
-			配置：
-				<select id="getAllEmps" resultType="employee"> // 返回值类型是集合内存储数据的类型，不是 'list'
-		Map<String, Object> ：
-			查询结果为一条：
-				Map中的数据格式为{表字段名， 对应的值}
-				java代码： 
-					Map<String, Object> getEmpAsMapById(Integer id);
-				配置：
-					<select id="getEmpAsMapById" resultType="map">
-			查询结果为多条：
-				Map中的数据格式为{表字段名， 对应的值}
-				java代码： 
-					Map<String, Object> getEmpAsMapById(Integer id);
-				配置：
-					<select id="getEmpAsMapById" resultType="map">
-		自定义返回一个对象中的那些字段：
-			使用心得
-				再多表查询中可能内心会问，此处配置了关联，对面需要配置关联吗。答案是不需要
-				
-			java代码： 
-				List<DdChargeWater> gets();
-			配置：
-				// resultMap 内容为空 按给定类型DdChargeWater中的属性映射
-				<resultMap id="userList" type="com.blog.entity.DdChargeWater"> </resultMap>
-				/*
-				在resultMap 中自定义映射字段属性，这多用于多表查询
-				<resultMap id="userList" type="com.blog.entity.DdChargeWater">
-					<id column="表的主键字段，或者可以为查询语句中的别名字段" jdbcType="字段类型" property="映射pojo对象的主键属性" />
-					<association property="pojo的一个对象属性" javaType="pojo关联的pojo对象">
-						<id column="关联pojo对象对应表的主键字段" jdbcType="字段类型" property="关联pojo对象的主席属性"/>
-						<result  column="任意表的字段" jdbcType="字段类型" property="关联pojo对象的属性"/>
-					</association>
-					<!-- 集合中的property须为oftype定义的pojo对象的属性-->
-					<collection property="pojo的集合属性" ofType="集合中的pojo对象">
-						<id column="集合中pojo对象对应的表的主键字段" jdbcType="字段类型" property="集合中pojo对象的主键属性" />
-						<result column="可以为任意表的字段" jdbcType="字段类型" property="集合中的pojo对象的属性" />  
-					</collection>
-				</resultMap>
-				*/
-				<select id="gets" resultMap="userList" useCache="false">
-					SELECT * FROM ${table}
-				</select>
-		以及返回Boolean，Integer 等；
-	jdbcType类型归纳 
-		Mybatis中javaType和jdbcType对应关系：
-		----------------------------------------------------
-		JDBC Type			Java Type
-		----------------------------------------------------
-		CHAR                String
-		VARCHAR          	String
-		LONGVARCHAR       	String
-		NUMERIC          	java.math.BigDecimal
-		DECIMAL            	java.math.BigDecimal
-		BIT                	boolean
-		BOOLEAN          	boolean
-		TINYINT           	byte
-		SMALLINT            short
-		INTEGER         	int
-		BIGINT           	long
-		REAL                float
-		FLOAT             	double
-		DOUBLE            	double
-		BINARY            	byte[]
-		VARBINARY         	byte[]
-		LONGVARBINARY      	byte[]
-		DATE                java.sql.Date
-		TIME                java.sql.Time
-		TIMESTAMP        	java.sql.Timestamp
-		CLOB                Clob
-		BLOB                Blob
-		ARRAY            	Array
-		DISTINCT            mapping of underlying type
-		STRUCT            	Struct
-		REF                	Ref
-		DATALINK            java.net.URL[color=red][/color]
-		----------------------------------------------------
-		
-		Mybatis中javaType和jdbcType对应和CRUD例子：
-		<resultMap type="java.util.Map" id="resultjcm">
-		  <result property="FLD_NUMBER" column="FLD_NUMBER"  javaType="double" jdbcType="NUMERIC"/>
-		  <result property="FLD_VARCHAR" column="FLD_VARCHAR" javaType="string" jdbcType="VARCHAR"/>
-		  <result property="FLD_DATE" column="FLD_DATE" javaType="java.sql.Date" jdbcType="DATE"/>
-		  <result property="FLD_INTEGER" column="FLD_INTEGER"  javaType="int" jdbcType="INTEGER"/>
-		  <result property="FLD_DOUBLE" column="FLD_DOUBLE"  javaType="double" jdbcType="DOUBLE"/>
-		  <result property="FLD_LONG" column="FLD_LONG"  javaType="long" jdbcType="INTEGER"/>
-		  <result property="FLD_CHAR" column="FLD_CHAR"  javaType="string" jdbcType="CHAR"/>
-		  <result property="FLD_BLOB" column="FLD_BLOB"  javaType="[B" jdbcType="BLOB" />
-		  <result property="FLD_CLOB" column="FLD_CLOB"  javaType="string" jdbcType="CLOB"/>
-		  <result property="FLD_FLOAT" column="FLD_FLOAT"  javaType="float" jdbcType="FLOAT"/>
-		  <result property="FLD_TIMESTAMP" column="FLD_TIMESTAMP"  javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
-		 </resultMap>
-		
+
 #两种框架的区别#：
 	1、开发速度的对比
 		Hibernate的真正掌握要比Mybatis来得难些。Mybatis框架相对简单很容易上手，但也相对简陋些
@@ -189,6 +74,7 @@
 		Hibernate对对象的维护和缓存要比MyBatis好，对增删查改的对象的维护要方便。
 		Hibernate数据库移植很好，MyBatis的数据库移植性不好，不同的数据库需要写不同的SQL
 		Hibernate有更好的二级缓存机制，可以使用第三方缓存。MyBatis本身提供的缓存机制不佳。
+		
 		
 #两个框架的相同点#：
 	Hibernate与MyBatis都可以是通过SessionFactoryBuider由XML配置文件生成SessionFactory，
