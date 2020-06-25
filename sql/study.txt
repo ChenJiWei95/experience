@@ -201,6 +201,40 @@ create table student (
 
 	
 ===========================================================================================
+DDL（Data Definition Languages）
+	数据定义语句，定义数据库、表、列、索引等数据库对象，create、drop、alter
+DML（Data Manipulation Language）
+	数据操纵语句，用于添加、删除、更新和查询数据库记录，并检查数据完整性 
+	insert、delete、udpate 和select
+数据库中常用的函数
+	1、数学函数
+	abs(x) 返回x的绝对值
+	floor(x) 返回小于x的最大整数值
+	rand()返回０到１内的随机值,
+	sqrt(x) 返回一个数的平方根
+	2、聚合函数(常用于group by从句的select查询中)
+	avg(col)返回指定列的平均值
+	count(col)返回指定列中非null值的个数
+	min(col)返回指定列的最小值
+	max(col)返回指定列的最大值
+	sum(col)返回指定列的所有值之和 
+	3、字符串函数
+	concat(s1,s2...,sn)将s1,s2...,sn连接成字符串
+	length(s)返回字符串str中的字符数
+	trim(str)去除字符串首部和尾部的所有空格
+	4、日期和时间函数
+	now() 返回当前的日期和时间
+	week(date) 返回日期date为一年中第几周(0~53)
+	year(date) 返回日期date的年份(1000~9999)
+	hour(time) 返回time的小时值(0~23)
+	minute(time) 返回time的分钟值(0~59)
+	month(date) 返回date的月份值(1~12)
+	5、格式化函数
+	date_format(date,fmt) 依照字符串fmt格式化日期date值
+	time_format(time,fmt) 依照字符串fmt格式化时间time值
+	6、类型转化函数
+	cast(now() as signed integer)
+	cast('f' as binary)
 	
 mysql中engine=innodb和engine=myisam的区别
 1. ISAM 
@@ -225,15 +259,13 @@ MyIASM是IASM表的新版本，有如下扩展：
 
 
 MyISAM
-	优点：速度快，磁盘空间占用少；某个库或表的磁盘占用情况既可以通过操作系统查相应的文件
-	（夹）的大小得知，也可以通过SQL语句SHOW TABLE STATUS查得
+	优点：速度快，磁盘空间占用少； 
 	缺点：没有数据完整性机制，即不支持事务和外键
 
 InnoDB
-	优点：支持事务和外键，数据完整性机制比较完备；可以用SHOW TABLE STATUS查得某个库或表的
-	磁盘占用
-	缺点：速度超慢，磁盘空间占用多；所有库都存于一个（通常情况）或数个文件中，无法通过操作
-	系统了解某个库或表的占用空间
+	优点：支持事务和外键，数据完整性机制； 
+	缺点：速度慢，磁盘空间占用多；
+	所有库都存于一个（通常情况）或数个文件中，无法通过操作系统了解某个库或表的占用空间
 
 InnoDB，MyISAM  两种类型有什么区别：
 	MyISAM类型不支持事务处理等高级处理，而InnoDB类型支持。 

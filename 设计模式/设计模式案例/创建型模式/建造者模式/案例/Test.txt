@@ -1,0 +1,62 @@
+//指挥类
+class Director{
+	public void Construct(Builer builder){
+		builder.BuilderPartA() ;
+		builder.BuilderPartB() ;
+	}
+}
+
+//
+interface Builder{
+	public void BuilderPartA() ;
+	public void BuilderPartB() ;
+}
+
+//惠普建筑工人
+class HPBuilder implements Builder{
+	private Computer c = null ;
+	ComputerBuilder(){
+		c = new Computer() ;
+	}
+	public void BuilderPartA() {
+		c.initA("这是惠普A部分") ;
+		System.out.println("建造A部分") ;
+	}
+	public void BuilderPartB() {
+		c.initB("这是惠普B部分") ;
+		System.out.println("建造B部分") ;
+	}
+	public Computer getComputer(){
+		return c ;
+	}
+}
+
+联想建筑工人
+class LenvoBuilder implements Builder{
+	private Computer c = null ;
+	ComputerBuilder(){
+		c = new Computer() ;
+	}
+	public void BuilderPartA() {
+		c.initA("这是联想A部分") ;
+		System.out.println("建造A部分") ;
+	}
+	public void BuilderPartB() {
+		c.initB("这是联想B部分") ;
+		System.out.println("建造B部分") ;
+	}
+	public Computer getComputer(){
+		return c ;
+	}
+}
+
+//生成的产品基类
+class Computer {
+	public void initA(String desc){
+		System.out.println(desc) ;
+	}
+	public void initB(){
+		System.out.println(desc) ;
+	}
+	
+}

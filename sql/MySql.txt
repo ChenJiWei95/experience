@@ -1,27 +1,25 @@
 目录：
 	
-	# 实例
-	# 复制表
-	# 序列化/自增
-	# 重复数据
-	# 导出数据
-	# 导入数据
-	# 排序
-	# 分组
-	# 连接
-	# 运算符
-	# 索引
-	# 函数
-	# 临时表
+	# 表
+		# 序列化/自增
+		# 重复数据
+		# 排序
+		# 分组
+		# 连接
+		# 运算符
+		# 索引
+		# 函数
+		# 临时表
 	# 存储过程
+	# 其他
+		# 实例
+		# 导出数据
+		# 导入数据
+		# 复制表
 	
 	
 总结：
-	-
-	实例
-	 记录一些已应用过的语句，用来后续参考
-		SELECT * FROM `user` ORDER BY `password` DESC LIMIT 0, 3; //0是起始 3是总数
-	
+
 	-
 	复制表 -- 菜鸟教程MySql
 		- 展示旧表的结构
@@ -62,7 +60,7 @@
 	-
 	导出数据 -- 菜鸟教程MySql
 		- 导出数据
-		SELECT * FROM runoob_tbl INTO OUTFILE '/tmp/runoob.txt';
+		SELECT * FROM runoob_tbl INTO OUTFILE 'd:runoob.txt';
 		
 		- 导出 SQL 格式的数据
 		mysqldump -u root -p RUNOOB runoob_tbl > dump.txt
@@ -92,7 +90,7 @@
 	-
 	索引
 		- 创建索引
-		CREATE INDEX indexName ON mytable(username(length)); 
+		CREATE INDEX indexName ON mytable(username(length));
 		- 修改表结构添加索引
 		ALTER table tableName ADD INDEX indexName(columnName);
 		- 修改表结构删除索引
@@ -159,6 +157,37 @@
 				repeat···· end repea
 				loop ·····endloop
 			ITERATE迭代
-
-
+	-
+	实例
+	 进行排序分页操作
+		SELECT * FROM `user` ORDER BY `password` DESC LIMIT 0, 3; //0是起始 3是总数
+	
+	 回顾数据平台代码（对查找时间进行比较、以及对时间的截取，oracle数据库
+		# 根据id找
+		# 查询所有集 根据有效时间之内 优先级
+		AND 2019-10-01 15:46:55 >= CREATE_DATE AND 2019-10-01 15:46:55 <= EXPIRE_DATE
+		使用字符串类型的比较 筛选时间范围内符合条件的数据
+		SELECT * FROM T_NOTICE
+		WHERE 1 = 1 AND to_date('2019-10-02 13:14:20','yyyyMMdd') BETWEEN to_char(create_date,'yyyyMMdd') AND to_char(expire_date,'yyyyMMdd')
+		ORDER BY priority ASC
+		使用date类型的比较 筛选时间范围内符合条件的数据
+		SELECT * FROM T_NOTICE WHERE 1 = 1 AND to_date('2019-10-02 13:14:20','yyyy-MM-dd HH24:mi:ss') BETWEEN create_date AND expire_date ORDER BY priority ASC
+		SELECT * FROM T_NOTICE WHERE 1 = 1 AND notice_id = 123456
+	 
+	 将商户号转换为商户名称模糊查询 添加下拉框
+		语句：
+		SELECT * FROM T_AUTHWATERS WHERE TRANSTYPE = '134' AND MERCHNO IN 
+		(SELECT MERCHNO FROM T_MERCHANT WHERE MERCHNAME LIKE '%中本%');
+		select "MERCHNAME" from "AUTHSYS"."T_MERCHANT" where "MERCHNAME" LIKE '%中本%'
+		SELECT * FROM T_AUTHWATERS WHERE T_AUTHWATERS.MERCHNO IN (SELECT MERCHNO FROM T_MERCHANT WHERE MERCHNAME LIKE '%测试%' AND rownum = 1)
+		INSERT INTO "AUTHSYS"."T_MERCHANT"("ID", "MERCHNO", "MERCHNAME", "DESKEY", "CREATEDATE", "MODIFYDATE", "STATUS", "DESCRIPTION", "BANKCARDFOURTH", "ENTERPRISETHREE", "ICARDCHECK", "BANKCARDTHREE", "ENTERPWD", "QUICKPAY", "MERREGISTER", "MERCHANTRATE", "MERCHANTFEE", "INTEGRALFLAG", "BQPAYCHECK", "ZNFQUICKPAY", "BANKCARDTWO", "AGENTNO", "AGENTNAME", "NEWMERREGISTER", "NEWQUICKPAY", "DF", "PERMITWITHDRAW", "RECEIVERCARDNO", "RECEIVERNAME", "RECEIVERTYPE", "BANKNAME", "BANKCODE", "BANKPROVINCE", "BANKCITY", "PAYEEBANKLINESNO", "TAX", "CHANNELCODE", "LARGECHANNELCODE", "LARGECHANNELREGISTER", "PAYPWD", "CONTACT", "PHONE", "CONTACTMAILBOX", "NOTIFYURL") VALUES ('2255ae239af54264aefa7cd8a25fc7ee', 'zb2018091201', '中本科技', 'wwi8qj30', '20180912155636', '20190813140154', '00', '还款免鉴权', NULL, NULL, NULL, NULL, 'b209c05ded2abbd590ee4a49a2639d44', NULL, NULL, NULL, NULL, '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2', '6214920602557546', '宋春晓', 'PERSON', '中国光大银行', 'CMBC', '上海', '上海', '305100000013', '0.06', '00730051', NULL, NULL, NULL, '戴佳利', '18616330000', 'info@zbcard.com.cn', 'http://hq1.zhongbencard.com/app/repayment_ground/applyCard');
+		INSERT INTO "AUTHSYS"."T_AUTHWATERS"("ORDERID", "TRANSTYPE", "DSORDERID", "MERCHNO", "CHANID", "CREATEDATE", "STATUS", "REGNO", "COMPAYNAME", "FRNAME", "DESCRIPTION", "TRANSDATE", "LASTUPDATE", "MESSAGE", "IDCARD", "IDTYPE", "BANKCARD", "MOBILE", "USERNAME", "CHANORDERID", "PAYSTATUS", "BANKID", "AMOUNT", "FEE", "TOTAL_AMOUNT", "COST", "BANKCODE", "BANKCODENAME", "ACCOUNTTYPE", "ACCOUNT_PROPERTY", "PROVINCE_CODE", "CITY_CODE", "PRODUCT_NAME", "APPID", "OPENID", "SETTDATE", "SETTTIME", "EXCHGRATE", "PAYTIME", "SETTCURRENCY", "RETURNURL", "NOTIFYURL", "BACKFEE", "TXNRATE", "SIGLEPRICE", "SUBMERCHNO", "TRADENO", "CVN2", "EXPIREDATE", "SUBMERCHANTNO", "MERCHANT_ID", "SETTLE_BANKCARD") VALUES ('2019071218142700100102561', '138', 'QKX1562926533125316', 'kb2019011115372', '00760026', '20190712181427', '02', NULL, NULL, NULL, '6230580000037113953', '20190712182413', '20190712182414', '无效订单号', '511028197502197528', NULL, '6258091746651467', '13543620295', '李良英', '6886001006844258', '02', NULL, '10900', '70.67', '10829.33', NULL, 'GDB', '广发银行', NULL, NULL, NULL, NULL, '杭州臻信', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'http://www.sskgj.com/sskgjapi/hqhjquickpay/paySuccess', 'http://www.sskgj.com/sskgjapi', '21.12', '0.63', '2', 'LP2MXSyBlD', NULL, 'A9F81A06AAE7530D', 'DE4FC4B652A3113F', NULL, NULL, '6230580000037113953');
+		#SELECT * FROM T_MERCHANT, T_AUTHWATERS WHERE T_AUTHWATERS.MERCHNO = T_MERCHANT.MERCHNO AND MERCHNAME LIKE '%测试%' AND TRANSTYPE = '142' AND SUBSTR(CREATEDATE, 1, 8) BETWEEN '20170627' AND '20170627';
+		#SELECT * FROM T_AUTHWATERS WHERE TRANSTYPE = '142' AND MERCHNO = ;
+	 
+	 
+	 
+	 
+	 
+	 
 		

@@ -1,0 +1,38 @@
+//一个抽象类中，有一个主方法，再定义1...n个方法，可以是抽象的，也可以是实际的方法，定义一个类，继承该抽象类，重写抽象方法，通过调用抽象类，实现对子类的调用
+
+//案例实现：实现加法
+
+public class Test{
+	public static void main(String[] args){
+		//通过调用抽象的父类来实现算法
+		AbstractCalculator plus = new Plus() ;
+		plus.calculate("8+9", "+") ;
+	}
+}
+
+//抽象类被当做模板来使用
+//变的可能只有主方法
+abstract class AbstractCalculator {
+	public final int calculate(String exp, String opt){
+		int array[] = split(exp, opt) ;
+		return calculate(array[0], array[1]) ;
+	}
+	//主方法
+	abstract int calculate(int num1, int num2) ;
+	
+	public int[] split(String exp, String opt){
+		String arry[] = exp.split(opt) ;
+		int arryInt[] = new int[2] ;
+		arryInt[0] = Integer.parseInt(arry[0]) ;
+		arryInt[1] = Integer.parseInt(arry[1]) ;
+		return arryInt ;
+	}
+}
+
+//加法：
+class Plus extends AbstractCalculate{
+	public int calculate(int num1, int num2) {
+		return num1 + num2 ;
+ 	}
+}
+ 

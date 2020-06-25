@@ -1,0 +1,62 @@
+
+//当一个对象变化时，其它依赖该对象的对象都会收到通知，并且随着变化！对象之间是一种一对多的关系。
+
+public class Test{
+	public static void main(String[] args){
+		AbstractSubject subject = new MySubject() ;
+		subject.add(new Observer()) ;
+		subject.add(new Observer1()) ;
+		
+		subject.oparation() ;
+	}
+}
+
+//观察者
+interface Subject{
+	public void add(Observer server) ;
+	public void del(Observer server) ;
+	public void notifyObserver() ;
+}
+
+abstract class AbstractSubject implements Subject{
+	private Vector<Observer> vector = new Vector<Observer>() ;
+	public void add(Observer server) {
+		vector.add(server) ;
+	}
+	public void del(Observer server) {
+		vector.remove(server) ;
+	}
+	public void notifyObserver() {
+		Enumeration<Observer> enumo = vector.elements() ;
+		while(enumo.hasMoreElements()){
+			enumo.nextElement().update() ;
+		}
+	}
+}
+
+//被观察者
+class MySubject extends AbstractSubject{
+	public void operation() {
+		System.out.println("MySubject update") ;	
+		notifyObeserver() ; // 通知所有相关类
+	}
+}
+
+
+//被通知者
+interface Observer {
+	publc void update() ;
+}
+
+class Observer1 implements Observer{
+	public void update(){
+		System.out.println("Observer1 has recived") ;
+	}
+}
+
+class Observer2 implements Observer{
+	public void update(){
+		System.out.println("Observer2 has recived") ;
+	}
+}
+

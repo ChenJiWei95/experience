@@ -1,0 +1,106 @@
+1名字//利用顺序存储求集合并集
+2初始化
+3输入
+4中间方法
+5输出
+
+
+//利用顺序存储求集合并集
+声明定义初始化la，lb，lc线性数组
+输入数组值 赋值
+通过比较la，lb是否相等为条件筛选合适的值插入lc中
+输出lc
+
+//利用顺序存储求集合并集
+SeqList<Integer> la=new SeqList<Integer>(5);
+SeqList<Integer> lb=new SeqList<Integer>(5);
+SeqLisr<Integet> lc=new SeqList<Integer>(5);
+
+通过Scanner输入值并，后la，lb通过insert插入Scanner输入的值以此进行赋值
+
+通过for进行筛选合适的值，后lc通过insert插入此值
+
+输出lc
+import java.util.*;
+public class text{
+  public static void main(String[] args){
+     Scanner sc =new Scanner(System.in);
+     StringBuffer s=new StringBuffer(sc.nextline);
+     for(int i=0;i<s.length;i++){
+        char ch=s.charAt(i);
+        ch=(char)((int)(ch)+1);
+        s.setCharAt(i,ch);
+       
+     } System.out.println("加密后为："+s.toString);
+     for(int i=0;i<s.length;i++){
+        char ch=s.CharAt(i);
+        ch=(char)((int)(ch)-1);
+        s.setCharAt(i,ch);
+        
+    }System.out.printnln("解密后为："+s.toString);
+  }
+}
+
+import java.uitl.*;
+public class Text{
+   public boolean huiwen(StringBuffer S){
+      int i=0;
+      int j=S.length-1;
+      while(i<j){
+         char ch1=S.CharAt(i);
+         char ch2=S.CharAt(j);
+         if(ch1!=ch2) return false;
+         i++;
+         j--;
+      }
+      return true;
+      
+   }
+   public static void main(String[] args){
+      Scanner sc=new Scanner(System.in);
+      StringBuffer s=new StringBuffer(sc.next());
+      Text t=new Text();
+      if(t.huiwen(s)=ture ) 
+          System.out.prrintln("字符串"+s+"是回文串")
+      else  System.out.printnln("字符串"+s+"不是回文串");
+   }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

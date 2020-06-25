@@ -1,0 +1,17 @@
+public Test{
+
+}
+
+//单例模式类
+class Singleton {
+	//懒汉式加载
+	private static Singleton instance = null ;
+	//将构造方法私有化 只允许一个单例
+	private Singleton (){}
+	public static Singleton getInstance(){
+		if(instance == null){
+			instance = new Singleton() ;
+		}
+		return instance ;
+	}
+}

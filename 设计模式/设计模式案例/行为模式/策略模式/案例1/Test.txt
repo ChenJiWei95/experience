@@ -1,0 +1,44 @@
+//策略模式定义了一系列算法，并将每个算法封装起来，使他们可以相互替换，且算法的变化不会影响到使用算法的客户
+//此案例实现是计算机的通能，通过策略模式实现
+
+public class Test{
+	public static void main(String[] srgs){
+		
+	}
+}
+
+interface ICalculator{
+	public void calculate() ;
+}
+
+//这个类是辅助作用，获取运算的参数
+abstract class AbstractCalculator{
+	public int[] split(String exp, String opt){
+		String arry[] = exp.split(opt) ;
+		int arryInt[] = new int[2] ;
+		arryInt[0] = Integer.parseInt(arry[0]) ;
+		arryInt[1] = Integer.parseInt(arry[1]) ;
+		return arryInt ;
+	}
+}
+
+class Plus extends AbstractCalculator implements ICalculator{
+	public int calculate(String exp){
+		int arrayInt[] = split(exp, "+") ;
+		return arrayInt[0] + arrayInt[1] ; 
+	}
+}
+
+class Minus extends AbstractCalculator implements ICalculator{
+	public int calculate(String exp){
+		int arrayInt[] = split(exp, "-") ;
+		return arrayInt[0] + arrayInt[1] ; 
+	}
+}
+
+class Multiply extends AbstractCalculator implements ICalculator{
+	public int calculate(String exp){
+		int arrayInt[] = split(exp, "\\*") ;
+		return arrayInt[0] + arrayInt[1] ; 
+	}
+}

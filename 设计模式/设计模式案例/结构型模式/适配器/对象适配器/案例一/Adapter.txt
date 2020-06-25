@@ -1,0 +1,5 @@
+public class Adapter extends Source implements Targetable{
+	public void method2(){
+		System.out.println("Targetable·½·¨2") ;
+	}
+}

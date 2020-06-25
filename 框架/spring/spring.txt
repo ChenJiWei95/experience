@@ -9,6 +9,7 @@
 	》spring的优势
 	》spring能做什么
 	》spring框架（模块）结构
+	》spring组成
 	》事务
 	》IoC 如何实现
 	》面试题
@@ -216,6 +217,10 @@ spring框架（模块）结构：
 	》AOP模块提供了一个符合AOP联盟标准的面向切面编程的实现。
 	》Core Container(核心容器)：包含有Beans、Core、Context和SpEL模块。
 	》Test模块支持使用JUnit和TestNG对Spring组件进行测试。
+	
+spring组成：
+	》Spring Core、 Spring AOP、 Spring ORM、 Spring DAO、
+	》Spring Context、 Spring Web和 Spring Web MVC
 	
 事务：
 	声明式事务：

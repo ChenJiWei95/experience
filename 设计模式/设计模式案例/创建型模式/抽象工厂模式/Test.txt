@@ -1,0 +1,30 @@
+interface Sender {
+	public void Send() ;
+}
+interface Provider{
+	public Sender produce() ;
+}
+
+class MainSender implements Sender{
+	public void Send() {
+		System.out.println("this is MailMessage") ;
+	}
+}
+
+class SmsSender implements Sender{
+	public void Send() {
+		System.out.println("this is SmslMessage") ;
+	}
+}
+
+class MailSendFactory implements Provider{
+	public Sender Produce() {
+		return new MailSender() ;
+	}
+}
+
+class SmsSendFactory implements Provider{
+	public Sender Produce() {
+		return new SmsSender() ;
+	}
+}
