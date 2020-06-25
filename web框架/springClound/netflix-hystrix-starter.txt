@@ -1,0 +1,32 @@
+https://cloud.spring.io/spring-cloud-static/spring-cloud-netflix/2.2.0.RELEASE/reference/html/#circuit-breaker-hystrix-clients
+翻译原链接 -- 当前文本翻译成中文
+
+4. Circuit Breaker: Hystrix客户
+    Netflix创建了一个名为Hystrix的库，该库实现了熔断器模式。在微服务架构中，通常有多个服务调用层，如以下示例所示：
+
+    较低级别的服务中的服务故障可能会导致级联故障，直至用户。当对特定服务的呼叫超过circuitBreaker时。
+    requestVolumeThreshold（默认值：20个请求），失败百分比大于circuitBreaker。  
+    由指标定义的滚动窗口中的errorThresholdPercentage（默认值：> 50％）。
+    timeInMilliseconds（默认值：10秒），电路断开并且未进行呼叫。在错误和断路的情况下，开发人员可以提供后备功能。
+
+    开路可以停止级联故障，并让不堪重负的服务故障时间得以恢复。回退可以是另一个受Hystrix保护的调用，静态数据或合理的空值。
+    可以将回退链接在一起，以便第一个回退进行其他业务调用，而后者又回退到静态数据。
+
+    4.1. How to Include Hystrix
+		要将Hystrix包含在您的项目中，请使用组ID为org.springframework.cloud的启动程序，以及工件ID为??spring-cloud-starter-netflix-		
+		hystrix的工件。
+
+    4.2。传播安全上下文或使用Spring Scope
+
+		如果您希望某些线程本地上下文传播到@HystrixCommand中，则默认声明将不起作用，因为它在线程池中执行命令（如果超时）。
+		您可以通过配置或要求注释使用不同的“隔离策略”，将Hystrix切换为使用与调用方相同的线程或直接在注释中使用。
+		以下示例演示了如何在注释中设置线程：
+
+
+		如果使用@SessionScope或@RequestScope，则同样适用。如果遇到运行时异常，提示它找不到范围内的上下文，则需要使用同一线程。
+		您还可以选择将hystrix.shareSecurityContext属性设置为true。
+		这样做会自动配置一个Hystrix并发策略插件挂钩，以将SecurityContext从您的主线程转移到Hystrix命令使用的线程。
+
+		Hystrix不允许注册多个Hystrix并发策略，因此可以通过将自己的HystrixConcurrencyStrategy声明为Spring bean来使用扩展机制。\
+		Spring Cloud在Spring上下文中寻找您的实现，并将其包装在自己的插件中。
+		
