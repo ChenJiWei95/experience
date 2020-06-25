@@ -1,0 +1,45 @@
+win 7
+》win D	显示桌面
+》alt space C 关闭当前程序    
+》alt space X 当前窗口最大化 R 还原
+》win M 最小化当前程序
+》win space 透明化所有窗口
+》win tab 立体桌面 alt tab类似 ctrl win tab 锁定
+》win X	移动中心快捷键
+》win L 锁住电脑
+》shift delete 永久删除选择的文件
+》ctrl W 关闭当前窗口 浏览器中适用
+》alt D 选中地址栏
+》win 左右上下 可以控制窗口的靠边状态
+》ctrl alt del 快速打开任务管理器
+》Alt+F4 关掉关机或者其他设置  关掉当前程序或者是关机设置（在桌面的时候）
+》win U 轻松访问中心
+
+win 8
+
+
+win 10
+》Win + Q 快速打开搜索
+》Win + I 快速打开Win10设置栏
+》创建新的虚拟桌面：Win + Ctrl + D。
+》关闭当前虚拟桌面：Win + Ctrl + F4。
+》切换虚拟桌面：Win + Ctrl + 左/右。
+》Alt+F4 关机快捷键
+
+
+命令：
+》rundll32.exe powrProf.dll,SetSuspendState 休眠
+》rundll32.exe user32.dll,LockWorkStation 锁定计算机
+》rundll32.exe powrprof.dll,SetSuspendState 0,1,0  睡眠
+》rundll32.exe user32.dll,LockWorkStation 锁屏命令
+》services.msc 快速启动系统服务
+》perfmon 性能查看器
+》inetcpl.cpl 快速打开Internet选项
+》nslookup 域名DNS查询域名
+》ipconfig /flushdns 刷新本地DNS缓存
+》ipconfig /displaydns 展示本地DNS缓存
+powercfg 
+》-h off/on 关闭打开休眠模式
+》-L 查看电源策略
+》-Q 选择策略
+
