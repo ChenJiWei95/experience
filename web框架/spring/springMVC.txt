@@ -1,12 +1,13 @@
 ﻿目录：
 	》简介
 	》总体框架/具体流程
+	Spring MVC的主要组件
 	》包装类型pojo参数绑定
 	》SpringMVC校验
 	》数据回显
 	》异常处理
-	》上传图片
-	》拦截器拦 
+	》上传图片 
+	》拦截器
 	》AOP、截器和过滤器的区别
 	》能做什么
 	》优势
@@ -28,6 +29,13 @@
 	5、ModelAndView逻辑视图名--》ViewResolver	将逻辑视图名解析为具体的view
 	6、view				--》渲染				根据传进来的Model模型数据进行渲染
 	7、返回控制权给DispatcherServlet，有DispatcherServlet返回响应给用户
+	
+	1、用户向服务器发送请求，请求被SpringMVC的前端控制器DispatcherServlet截获。
+	2、DispatcherServlet对请求的URL（统一资源定位符）进行解析，得到URI(请求资源标识符)
+	然后根据该URI，调用HandlerMapping获得Handler对象以及Handler对象对应的拦截器，
+	这些对象都会被封装到一个HandlerExecutionChain对象当中返回。
+	3、DispatcherServlet根据获得的Handler，选择一个合适的HandlerAdapter。
+	并调用Handler实际处理请求的方法。 
 
 包装类型pojo参数绑定：（通俗讲就是前端页面的数据传向服务器端）
 	》方法一：在形参中 添加HttpServletRequest request参数，通过request接收前台参数
@@ -90,37 +98,58 @@ SpringMVC校验：
     </bean>
 	》见https://www.jianshu.com/p/b5e8716e6552
 	
+Spring MVC的主要组件
+	1）前端控制器 DispatcherServlet（不需要程序员开发）
+		作用：接收请求、响应结果，相当于转发器，有了DispatcherServlet 
+			就减少了其它组件之间的耦合度。
+	2）处理器映射器HandlerMapping（不需要程序员开发）
+		作用：根据请求的URL来查找Handler
+	3）处理器适配器HandlerAdapter
+		注意：在编写Handler的时候要按照HandlerAdapter要求的规则去编写，
+			这样适配器HandlerAdapter才可以正确的去执行Handler。
+	4）处理器Handler（需要程序员开发）
+	5）视图解析器 ViewResolver（不需要程序员开发）
+		作用：进行视图的解析，根据视图逻辑名解析成真正的视图（view）
+	6）视图View（需要程序员开发jsp） 
+		View是一个接口， 它的实现类支持不同的视图类型（jsp，freemarker，pdf等等） 
+		
 拦截器：
-	》经测试发现，interceptor先于AOP执行。
+	
+	经测试发现，interceptor先于AOP执行。
+	
 	简介：
-	》Spring Web MVC的处理器拦截器
-	常见应用场景：
+		Spring Web MVC的处理器拦截器 
+	
 	拦截器接口：
-	》HandlerInterceptor接口
-	》preHandle：预处理 返回值：ture表示继续流程 false表示流程中断
-	》postHandle:后处理
-	》afterCompletion:整个请求完成完毕。通常用于最后关闭资源、资源清理
+		实现HandlerInterceptor接口
+		实现方法：
+		preHandle：		预处理 返回值：ture表示继续流程 false表示流程中断
+		postHandle:		后处理
+		afterCompletion:整个请求完成完毕。通常用于最后关闭资源、资源清理
 	适配器：
-	》HandlerInterceptorAdapter
+		HandlerInterceptorAdapter
 	如何使用：
-	方式一：
-	》在bean中配置拦截对象
+		方式一： 在bean中配置拦截对象
 	使用方式：https://jinnianshilongnian.iteye.com/blog/1670856/ 
 		使用方式案例 从案例可以看出拦截的过程 应用场景并配相应的案例
 		拦截过程 pre control post jsp complete
 	
-	》Struts2自定义拦截器
-	常见应用场景：
-	》权限控制 用户登录控制
-	拦截器接口：
-	》Interceptor
-	》init			创建后立即被调用
-	》destroy		拦截器实例被销毁前调用
-	》String intercept(ActionInvocation invocation) throws Exception;  执行拦截工作   
-	如何使用：
-	》在struts.xml
-	》进行声明
-	》在action中添加引用 <interceptor-ref name="" />
+	Struts2自定义拦截器：
+		常见应用场景：
+			权限控制 
+			用户登录控制
+			
+		拦截器接口：
+			实现接口Interceptor
+			实现方法：
+			init			创建后立即被调用
+			destroy			拦截器实例被销毁前调用
+			String intercept(ActionInvocation invocation) throws Exception;  执行拦截工作   
+			
+		如何使用：
+			在struts.xml
+			进行声明
+			在action中添加引用 <interceptor-ref name="" />
 	
 	引用：https://jinnianshilongnian.iteye.com/blog/1670856/
 	》》内容：拦截器的介绍、完整案例、各种场景的应用代码案例
@@ -129,30 +158,35 @@ SpringMVC校验：
 	
 AOP、拦截器和过滤器的区别：
 	mar 26 总结：
-	》filter 过滤请求 并且流程是线性的
+	filter 过滤请求 并且流程是线性的
+	
 	该处研究的是struts2和SpringMVC中的拦截器和过滤器之间的对比。
+	
 	AOP：
-	》只能拦截Spring管理的Bean的访问（业务service）
+		只能拦截Spring管理的Bean的访问（业务service）
+		AOP是一种编程思想，把相同的代码抽取出来，过滤器只是过滤请求
 	过滤器：
-	》Servlet中的过滤器Filter是实现了javax.servlet.Filter接口的服务器端程序
-	》主要的用途是设置字符集、控制权限、控制转向、做一些业务逻辑判断等。
+		针对所有请求
+		Servlet中的过滤器Filter是实现了javax.servlet.Filter接口的服务器端程序
+		主要的用途是设置字符集、控制权限、控制转向、做一些业务逻辑判断等。
 	拦截器：
-	》在struts.xml中配置
-	》拦截是AOP的一种实现策略。
-	》拦截器将很多功能从我们的Action中独立出来，大量减少了我们Action的代码，起到重用的作用
-	Filter与Interceptor联系与区别
-	》拦截器是基于java的反射机制，使用代理模式，而过滤器是函数回调（是一个前置条件判断）
-	》拦截器不依赖于servlet容器，过滤器依赖于servlet容器
-	》拦截器只能对action器作用，而过滤器可以对机乎所有的请求起作用（可以保护资源）
-	》拦截器可以访问action上下文，堆栈里面的对象，而过滤器不可以。
-	》执行顺序：过滤前--拦截前--Action处理--拦截后--过滤后
-	》AOP是一种编程思想，把相同的代码抽取出来，过滤器只是过滤请求
-	》图示拦截过程：见图示拦截过程.png
-	》在Action中的使用：
-		顺序：
+		针对action
+		在struts.xml中配置
+		拦截是AOP的一种实现策略。
+		拦截器将很多功能从我们的Action中独立出来，大量减少了我们Action的代码，起到重用的作用
+		使用：
 			1、编写自定义拦截器类 需实现Interceptor 或者继承一个自定义的AbstractAction类（继承好处多多）
 			2、在xml中声明自定义拦截器
 			3、在xml中的Action使用拦截器
+	Filter与Interceptor联系与区别
+		拦截器是基于java的反射机制，使用代理模式，而过滤器是函数回调（是一个前置条件判断）
+		拦截器不依赖于servlet容器，过滤器依赖于servlet容器
+		拦截器只能对action器作用，而过滤器可以对机乎所有的请求起作用（可以保护资源）
+		拦截器可以访问action上下文，堆栈里面的对象，而过滤器不可以。 
+	图示拦截过程：
+		见图示拦截过程.png 	
+	执行顺序：
+		过滤前--拦截前--Action处理--拦截后--过滤后
 	总结：
 	》Spring的Interceptor(拦截器)与Servlet的Filter有相似之处，比如二者都是AOP编程思想的体现，
 	》》都能实现权限检查、日志记录等
@@ -234,6 +268,7 @@ SpringMVC中的常用注解及其作用：
 	
 能做什么：
 	》SpringMVC负责请求的转发和视图管理
+	
 ajax异步交互
 	》前台代码：
 		ajax({
@@ -256,38 +291,92 @@ ajax异步交互
 	》@ResponseBody  专用于异步请求返回数据
 	
 SpringMVC面试题
-		1、SpringMVC的控制器是不是单例模式，如果是；有什么问题，怎么解决？
-		》问题： SpringMVC的控制器是不是单例模式，如果是，有什么问题，怎么解决？
-		》解决：是单例模式，所以在多线程访问的时候有线程安全问题，不要用同步，会影响性能，
-		》解决方案是在控制器里面不能写字段。
+	https://blog.csdn.net/a745233700/article/details/80963758
+	
+	1、SpringMVC的控制器是不是单例模式，如果是；有什么问题，怎么解决？
+	》问题： SpringMVC的控制器是不是单例模式，如果是，有什么问题，怎么解决？
+	》解决：是单例模式，所以在多线程访问的时候有线程安全问题，不要用同步，会影响性能，
+	》1、不要在controller中定义成员变量。
+	》2、万一必须要定义一个非静态成员变量时候，则通过注解@Scope("prototype")，将其设置为多例模式。
 		
-		2、SpringMVC中控制器的注解？
-		》@Controller：该注解表明该类扮演控制器的角色
-		
-		3、@RequestMapping 注解用在类上的作用？
+	2、springMvc常用的五个注解
+		前四个最常用
+		@RequestBody：
+			注解实现接收http请求的json数据，将json转换为java对象。 
+		@RequestMapping
+			作用：用来映射一个URL到一个类或者一个特定的处理方法上 
+			六个属性：
+			value：指定的地址
+			method：指定请求的method类型， GET、POST等；
+			consumes：Content-Type）
+			produces：仅当request请求头中的(Accept)类型中包含该指定类型才返回
+			params：指定request中必须包含某些参数值是
+			headers：指定request中必须包含某些指定的header值
+		@ResponceBody
+			将方法返回值，写入到Response对象的body数据区
+		@Autowired
+			按照类型（byType）装配依赖对象,默认依赖对象必须存在
+			如果允许null值，可以设置它的required属性为false。
+			使用按照名称（byName）来装配，可以结合@Qualifier注解一起使用
+		@Controller
+		@Component
+		@Repository
+		@Resource
+			默认按照ByName自动注入 
+		@PathVariable
+			取出@RequestMapping中uri中的变量作为参数。
+			//@RequestMapping ( "/showView/{variable2}" )
+			//@PathVariable String variable1
+	
+	3、@RequestMapping 注解用在类上的作用？
 		》作用：用来映射一个URL到一个类或者一个特定的处理方法上
 		
-		4、前台多个参数，这些参数都是一个对象，快速得到对象？
+	4、前台多个参数，这些参数都是一个对象，快速得到对象？
 		》方法：直接在方法中声明这个对象，SpringMVC就自动把属性赋值到这个对象里面
 		
-		5、SpringMVC中函数的返回值？
+	5、SpringMVC中函数的返回值？
 		》String、ModelAndView，List，Set等
 		》一般String，Ajax请求，返回一个list集合
 		
-		6、SpringMVC中的转发和重定向？
-		》转发：return  hello
-		》重定向：return  redirecthello.jsp
-		
-		7、SpringMVC和Ajax之间的相互调用？
+	6、SpringMVC中的转发和重定向？
+		转发重定向分别可以通过 Springmvc实现、servlet API、ModuleAndView去实现
+		转发
+			1.return "forward:/test.jsp" 	// Springmvc实现 
+			2.request.getRequestDispatcher("test.jsp").forward(request, response); // servlet API
+		重定向
+			1.return "redirect:/test.jsp"	// Springmvc实现
+			2.response.sendRedirect("test.jsp") // servlet API
+
+	7、SpringMVC和Ajax之间的相互调用？
 		》通过JackSon框架把java里面对象直接转换成js可识别的json对象，具体步骤如下：
 		》加入jackSon.jar
 		》在配置文件中配置json的映射
-		》在接收Ajax方法里面直接返回Object，list等，方法前面需要加上注解@ResonanceBody
+		》在接收Ajax方法里面直接返回Object，list等，方法前面需要加上注解@ResponceBody
 		
-		8、SpringMVC工作流程图？
+	8、SpringMVC工作流程图？
 		》图片见当前目录（springmvc工作流程.png）
-		
-		9、Struts2和SpringMVC的区别？
+		客户端发起请求，前端控制器进行请求的接收并通过处理映射得到处理对象。
+		前端控制器调用处理适配器对处理对象进行适配，然后执行处理器方法，最后获取ModleAndView对象并返回给前端控制器
+		前端控制器将ModleAndView传递给视图解析器进行解析成View对象并返回给前端控制器
+		前端控制器将View对象进行渲染生成视图，最后响应给用户
+	
+	5、Springmvc的优点:
+		1）可以支持各种视图技术,而不仅仅局限于JSP；
+		2）与Spring框架集成（如IoC容器、AOP等）；
+		3）清晰的角色分配：前端控制器(dispatcherServlet) , 
+		请求到处理器映射（handlerMapping), 处理器适配器（HandlerAdapter), 
+		视图解析器（ViewResolver）。
+		4） 支持各种请求资源的映射策略。 
+	
+	8、如何解决中文乱码问题，GET的又如何处理呢？
+		POST请求
+			在webxml配置中配置一个CharacterEncodingFilter过滤器，设置成utf-8；
+		get请求
+			1.修改tomcat配置文件添加编码与工程编码一致
+			2.对参数进行重新编码
+			new String(request.getParamter("userName").getBytes("ISO8859-1"),"utf-8")
+	
+	9、Struts2和SpringMVC的区别？
 		》入口不同：
 		》Struts2：filter过滤器
 		》SpringMVC：一个Servlet即前端控制器
@@ -296,5 +385,5 @@ SpringMVC面试题
 		》SpringMVC：基于方法开发（一个url对应一个方法），请求参数传递到方法形参，可以为单例也可以多例
 		》请求方法不同：
 		》Struts2：值栈存储请求和响应的数据，通过OGNL存取数据
-		》SpringMVC：通过参数解析器将request请求内容解析，给方法形参复制，将数据和视图封装成ModelAndView对象，
+		》SpringMVC：通过参数解析器将request请求内容解析，给方法形参赋值，将数据和视图封装成ModelAndView对象，
 		》》最后又将ModelAndView中的模型数据通过request域传输到页面，jsp视图解析器默认使用的是jstl。

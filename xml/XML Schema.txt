@@ -1,0 +1,10 @@
+
+学习链接：https://blog.csdn.net/wn084/article/details/80115889
+总结很详细的案例
+
+#simpleType和complexType的区别
+	simpleType用来定义简单数据类型,其中可以包含对该类型内容的限制.
+	可以指定某属性或元素属于某simpleType,从而起到规定元素文本内容和属性的作用.
+	
+	complexType定义复杂数据类型，包含复杂的结构，如属性、序列关系（sequence）、
+	选择关系（choice）等等，一般用于定义元素内容，可以指定某元素属于某complexType。 

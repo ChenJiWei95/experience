@@ -1,0 +1,127 @@
+
+目录：
+	概念
+	作用
+	Exchange类型
+	支持的协议
+	TTL
+	死信队列DLX
+	面试
+
+概念
+	RabbitMQ是一个开源的消息代理和队列服务器，用来通过普通协议在不同的应用之间共享数据
+	》(跨平台跨语言)。RabbitMQ是使用Erlang语言编写，并且基于AMQP协议实现 
+	
+	broker 
+		接收和分发消息的应用，RabbitMQ Server就是Message Broker。
+		指一个或多个 erlang node 的逻辑分组，且 node 上运行着 RabbitMQ 应用程序。
+		cluster 是在 broker 的基础之上，增加了 node 之间共享元数据的约束。
+	vhost 
+		当多个不同的用户使用同一个RabbitMQ server提供的服务时，可以划分出多个vhost，
+		 每个用户在自己的vhost创建exchange／queue等
+		可以理解为虚拟 broker ，即 mini-RabbitMQ  server。mq有大概都具备
+	cluster 
+		是在 broker 的基础之上，增加了 node 之间共享元数据的约束。
+	Connection: 
+		publisher／consumer和broker之间的TCP连接。
+	channel
+		是实际进行路由工作的实体，即负责按照 routing_key 将 message 投递给 queue 。
+	exchange 
+		内部实现为保存 binding 关系的查找表；
+	queue 
+		具有自己的 erlang 进程；
+	Binding: 
+		exchange和queue之间的虚拟连接，binding中可以包含routing key。binding信息保存在exchange中
+		
+作用：
+	解耦、
+		用于应用程序之间的相互通信，达到解耦
+	异步、
+		简单的例子，就是登陆时串行发送短信以及邮件，通过mq并行处理这一些列操作
+		》反应时间将大幅缩短，用户体验感更好
+	流量削锋、
+		对处理请求进行限制，如高峰时，每秒2000（即系统能承受的量），不至于服务器宕机
+	数据分发、
+	错峰流控、
+	日志收集
+
+Exchange类型：
+	direct  点对点
+		对应routing-key
+	fanout	广播
+		不需要关注routing-key，会将信息依次发送到所绑定的队列中
+	topic	主题 发布订阅	
+		根据key的订阅，响应的推送，
+		》规则 routing-key以点号隔开，*匹配一个词，#匹配多个词  
+		》例如 user.email 可以匹配到 user.*和*.email
+
+支持的协议
+	每个都了解一下，结合mq怎么使用
+	AMQP：
+		AMQP协议是一种二进制协议，提供客户端应用与消息中间件之间异步、安全、高效地交互。
+		AMQP定义了合适的服务器端域模型，用于规范服务器的行为
+		AMQP协议可划分为三层
+			Model层决定这些基本域模型所产生的行为，这种行为在AMQP中用”command”表示，在后文中会着重来分析这些域模型。
+			Session层定义客户端与broker之间的通信(通信双方都是一个peer，可互称做partner)，为command的可靠传输提供保障。
+			Transport层专注于数据传送，并与Session保持交互，接受上层的数据，组装成二进制流，传送到receiver后再解析数据，交付给Session层
+		
+		https://www.iteye.com/blog/langyu-759663
+	MQTT：
+		消息队列遥测传输协议
+		
+		是一种基于发布/订阅（publish/subscribe）模式的"轻量级"通讯协议，该协议构建于TCP/IP协议上，
+		可以以极少的代码和有限的带宽，为连接远程设备提供实时可靠的消息服务。
+		
+		https://www.runoob.com/w3cnote/mqtt-intro.html 
+	Stomp：
+		简单(流)文本定向消息协议，它提供了一个可互操作的连接格式，允许STOMP客户端与任意STOMP消息代理（Broker）进行交互。
+		STOMP协议由于设计简单，易于开发客户端，因此在多种语言和多种平台上得到广泛地应用。
+		
+		https://blog.csdn.net/jhfyuf/article/details/86800382
+TTL
+	Time To Live)：生存时间
+	两种设置方式
+		在消息发送时
+		在创建exchange时
+	
+死信队列DLX
+	利用DLX，当消息在一个队列中变成死信(dead message)之后，
+	》它能被重新publish到另一个Exchange，这个Exchange就是DLX。
+	
+	变成死信的情况：	
+		消息被拒绝(basic.reject/basic.nack)并且requeue=false
+		消息TTL过期
+		队列达到最大长度
+	
+	死信的设置
+		通过参数设置
+	
+	死信可以实现延迟队列
+	
+消费端ACK与NACK
+	basiAck
+	basiNack
+	
+	手动进行ACK保障消费端消费成功。
+
+	消费端重回队列是为了对没有成功处理消息，把消息重新返回到Broker。
+
+生产者Confirm机制
+	可靠投递的保障，如果Broker收到消息，则会给我们生产者一个应答
+
+Return消息机制
+	Return Listener用于处理一些不可路由的消息（找不到指定队列）
+	
+消费端自定义监听(推模式和拉模式pull/push)
+	拉是在一个死循环中通过consumer.nextDelivery()方法进行某条信息的消费，耗费cpu资源
+	推是通过对queue的订阅，等待消息的推送
+	
+如何保证幂等性
+	防止消息重复消费多次
+
+面试：
+	全是题
+	https://blog.csdn.net/jerryDzan/article/details/89183625
+
+	
+	

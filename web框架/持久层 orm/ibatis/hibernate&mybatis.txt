@@ -12,20 +12,26 @@
 		resultType 返回类型
 		jdbcType类型归纳
 	#如何防止sql注入#
+	#项目中的连接池的使用#
+	
+	
 #简单词汇的解释#：
 	ORM - Object Relational Mapping 对象关联映射
 	
 #Hibernate#
 	简介：	
-		是一个开放源代码的对象关系映射框架，它对JDBC进行了非常轻量级的对象封装，它将POJO与数据库表建立映射关系，
-		是一个全自动的orm框架，hibernate可以自动生成SQL语句，自动执行，
+		是一个开放源代码的全自动对象关系映射框架， 
+		它对JDBC进行了非常轻量级的对象封装，它将POJO与数据库表建立映射关系，
+		hibernate可以自动生成SQL语句，自动执行，		
 		使得Java程序员可以随心所欲的使用对象编程思维来操纵数据库。
 	核心API Configuration SqlSessionFactory Session Transaction
 		Configuration config = new Configuration() ;
 		config.configure("配置文件") ;
 		SessionFactory sf  = config.buildSessionFactory() ;	
 		Session session  = sf.openSession() ;
+		session.close();  
 		Transaction tx = session.beginTransaction() ;
+		tx.commit();
 	Hibernate中共提供了三种检索方式：
 		HQL(Hibernate Query Language)、QBC(Query By Criteria)、QBE(Query By Example)。
 		HQL:
@@ -34,9 +40,19 @@
 			(List<T>) query.list();
 		QBC:
 			getCurrentSession().createCriteria(entityClass).add(Restrictions.eq(property, value)).list();
+	缓存
+		一级缓存
+			是session级别的缓存
+		二级缓存
+			是SessionFactory级别的缓存
+			
+	注解：
+		
+	
 #MyBatis#
 	简介：	
-		是一款优秀的持久层框架，它支持定制化 SQL、存储过程以及高级映射。
+		是一个开放源代码的对象关系映射框架
+		它支持定制化 SQL、存储过程以及高级映射。
 	核心API SqlSessionFactory SqlSessionFactoryBuilder SqlSession 
 		SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(new InputStream()) ;
 		SqlSession session  = sessionFactory.openSession() ; 
@@ -79,10 +95,10 @@
 				配置：
 					<select id="getEmpAsMapById" resultType="map">
 		自定义返回一个对象中的那些字段：
-			使用心得
+			使用心得：
 				再多表查询中可能内心会问，此处配置了关联，对面需要配置关联吗。答案是不需要
 				
-			java代码： 
+			java代码：
 				List<DdChargeWater> gets();
 			配置：
 				// resultMap 内容为空 按给定类型DdChargeWater中的属性映射
@@ -163,7 +179,7 @@
 	2、开发工作量的对比
 		Mybatis需要手动编写SQL语句，以及ResultMap。
 		Hibernate有良好的映射机制，开发者无需关心SQL的生成与结果映射，可以更专注于业务流程。
-	3、sql优化方面	
+	3、sql优化方面
 		Hibernate的查询会将表中的所有字段查询出来，这一点会有性能消耗。
 		Hibernate也可以自己写SQL来指定需要查询的字段，但这样就破坏了Hibernate开发的简洁性。
 		而Mybatis的SQL是手动编写的，所以可以按需求指定查询的字段。
@@ -216,62 +232,64 @@
 
 MyBatis面试题
 		1、Ibatis和Mybatis？
-		》Ibatis：2010年，apache的Ibatis框架停止更新，并移交给了google团队，同时更名为MyBatis。
-		》MyBatis：Ibatis的升级版本
+			Ibatis：2010年，apache的Ibatis框架停止更新，并移交给了google团队，同时更名为MyBatis。
+			MyBatis：Ibatis的升级版本
 		
 		2、什么是Mybatis的接口绑定，有什么好处？
-		》Mybatis实现了DAO接口与xml映射文件的绑定，自动为我们生成接口的具体实现，使用起来变得更加省事和方便。
+			Mybatis实现了Dao接口与xml映射文件的绑定，自动为我们生成接口的具体实现，
+			使用起来变得更加省事和方便。
 		
 		3、什么情况注解，什么情况用xml绑定？
-		》注解使用：SQL语句简单时
-		》xml绑定使用情况：xml绑定（@RequestMap用来绑定xml文件）
+			注解使用：
+				SQL语句简单时
+			xml绑定使用：
+				xml绑定（@RequestMap用来绑定xml文件）
 		
 		4、MyBatis的核心处理类叫什么
-		》SqlSession
+			SqlSession
 		
 		5、查询表名和返回实体Bean对象不一致，如何处理？
-		》映射键值对即可
-		》<result column="title" property="title" javaType="java.lang.String" />
-		》column：数据库中表的列名
-		》property：实体Bean中的属性名
+			映射键值对即可
+			<result column="title" property="title" javaType="java.lang.String" />
+			column：数据库中表的列名
+			property：实体Bean中的属性名
 		
 		6、MyBatis的好处？
-		》把Sql语句从java中独立出来
-		》封装了底层的JDBC，API的调用，并且能够将结果集自动转换成JavaBean对象，简化了java数据库编程的重复工作
-		》自己编写Sql语句，更加的灵活
-		》入参无需用对象封装，使用@param注解
+			把Sql语句从java中独立出来，封装了底层的JDBC，API的调用，并且能够将结果集自动转换成JavaBean对象，
+			//简化了java数据库编程的重复工作，自己编写Sql语句，更加的灵活
+			入参无需用对象封装，使用@param注解
 		
 		7、MyBatis配置一对多？
-		》<collection property="topicComment" column="id" ofType="com.tmf.bbs.pojo.Comment" select="selectComment" />
-		》property：属性名
-		》column：共同列
-		》ofType：集合中元素的类型
-		》select：要连接的查询
+			<collection property="topicComment" column="id" ofType="com.tmf.bbs.pojo.Comment" select="selectComment" />
+			property：属性名
+			column：共同列
+			ofType：集合中元素的类型
+			select：要连接的查询
 		
 		8、MyBatis配置一对一？
-		》<association property="topicType" select="selectType" column="topics_type_id" javaType="com.tmf.bbs.pojo.Type" />
-		》property：属性名
-		》select：要连接的查询
-		》column：共同列
-		》javaType：集合中元素类型
+			<association property="topicType" select="selectType" column="topics_type_id" javaType="com.tmf.bbs.pojo.Type" />
+			property：属性名
+			select：要连接的查询
+			column：共同列
+			javaType：集合中元素类型
 		
 		9、${} 和 #{}的区别？
-		》${}：简单字符串替换，把${}直接替换成变量的值，不做任何转换，这种是取值以后再去编译SQL语句
-		》#{}: 预编译处理，sql中的#{}替换成？补全预编译语句，有效的防止Sql语句注入，这种取值是编译好SQL语句再取值
+			${}：简单字符串替换，把${}直接替换成变量的值，不做任何转换，这种是取值以后再去编译SQL语句
+			#{}: 预编译处理，sql中的#{}替换成？补全预编译语句，有效的防止Sql语句注入，这种取值是编译好SQL语句再取值
 		
 		10、获取上一次自动生成的主键值？
-		》select last _insert_id()
+			select last _insert_id()
 		
 		11、MyBatis如何分页，分页原理？
-		》RowBounds对象分页
-		》在Sql内直接书写，带有物理分页
+			RowBounds对象分页
+			在Sql内直接书写，带有物理分页
 		
 		12、MyBatis工作原理？
-		》图片请看当前目录（MyBAtis工作原理.jpg）
-		》原理：
-		》通过SqlSessionFactoryBuilder从mybatis-Config.xml配置文件中构建出SqlSessionFactory。
-		》SqlSessionFactory开启一个SqlSession，通过SqlSession实例获得Mapper对象并且运行Mapper映射的Sql语句
-		》完成数据库的CRUD操作和事务提交，关闭SqlSession
+			图片请看当前目录（MyBAtis工作原理.jpg）
+			原理：
+			通过SqlSessionFactoryBuilder从mybatis-Config.xml配置文件中构建出SqlSessionFactory。
+			SqlSessionFactory开启一个SqlSession，通过SqlSession实例获得Mapper对象并且运行Mapper映射的Sql语句
+			完成数据库的CRUD操作和事务提交，关闭SqlSession
 	
 #如何防止sql注入#：
 	注入案例：
@@ -320,3 +338,49 @@ MyBatis面试题
 	注入案例：
 	》https://blog.csdn.net/weixin_30624825/article/details/97223746?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromBaidu-1.nonecase&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromBaidu-1.nonecase
 	1.登录注入 
+	
+	
+#项目中的连接池的使用#
+	MyBlog项目
+	DRUID
+		概念：
+		Druid首先是一个数据库连接池。Druid是目前最好的数据库连接池，在功能、性能、扩展性方面，
+		都超过其他数据库连接池
+		
+		druid包括四个部分
+			Druid是一个JDBC组件
+			基于Filter－Chain模式的插件体系
+			DruidDataSource 高效可管理的数据库连接池
+			SQLParser
+		
+		可以做什么
+			替换：替换DBCP和C3P0。Druid提供了一个高效、功能强大、可扩展性好的数据库连接池。
+			监控：可以监控数据库访问性能，Druid内置提供了一个功能强大的StatFilter插件，
+			 能够详细统计SQL的执行性能，这对于线上分析数据库访问性能有帮助。
+			数据库密码加密：DruidDruiver和DruidDataSource都支持PasswordCallback
+			监控：SQL执行日志，Druid提供了不同的LogFilter。监控你应用的数据库访问情况
+			扩展：通过Druid提供的Filter机制，很方便编写JDBC层的扩展插件。
+		类:com.alibaba.druid.pool.DruidDataSource
+		
+		配置文件： 
+			<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+				init-method="init" destroy-method="close">
+				<property name="driverClassName" value="${pool.jdbc.driver}" />
+				<property name="url" value="${pool.jdbc.url}"/>
+				<property name="username" value="${pool.jdbc.username}"/>
+				<property name="password" value="${pool.jdbc.password}"/>
+				<property name="initialSize" value="${pool.initial.size}" /> 
+				<property name="maxActive" value="${pool.max.active}" />
+				<property name="proxyFilters">
+					<list>
+						<ref bean="stat-filter" />
+						<ref bean="wall-filter" />
+					</list>
+				</property>
+			</bean>
+		依赖
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>druid</artifactId>
+				<version>1.1.12</version>
+			</dependency>

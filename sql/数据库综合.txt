@@ -1,0 +1,625 @@
+﻿========================================================================
+								SQL
+========================================================================
+
+####################################
+oracle中临时表
+	用来保存一个会话SESSION的数据，或者保存在一个事务中需要的数据。
+	当会话退出或者用户提交commit和回滚rollback事务的时候，临时表的数据自动清空
+	
+	会话级临时表
+	
+	事务级临时表
+	
+
+####################################
+oracle中union和union all的区别
+	union		在连接查询的两张表的时候，会自动去除 重复的数据。
+	union all 	在连接查询的时候，只是简单的将两张表中的数据进行连接，不会去除重复的数据。
+
+####################################
+oracle中in和exists的区别
+	如果两个表中一个较小，一个是大表，则子查询表大的用exists，子查询表小的用in：
+
+	例如：表A（小表），表B（大表）
+	1：
+	select * from A where cc in (select cc from B) 
+	效率低，用到了A表上cc列的索引；
+	select * from A where exists(select cc from B where cc=A.cc) 
+	效率高，用到了B表上cc列的索引。
+	相反的
+	2：
+	select * from B where cc in (select cc from A) 
+	效率高，用到了B表上cc列的索引；
+	select * from B where exists(select cc from A where cc=B.cc) 
+	效率低，用到了A表上cc列的索引。
+
+为什么
+####################################
+#视图的了解
+视图
+	可以理解为虚表, 不占用物理空间。每次使用的时候,只是重新执行SQL。
+	 //为了防止用户通过视图间接修改基表的数据, 可以将视图创建为只读视图(带上with read only选项
+	视图也分为基本视图和连接视图
+视图的作用
+	提供各种数据表现形式
+	隐藏数据的逻辑复杂性并简化查询语句
+	//借助视图的帮助达到查询的任务
+	提供某些安全性保证
+	简化用户权限的管理
+视图与表的区别	
+	不占用空间、
+	不能添加索引、
+	简化复杂查询、
+	提高安全性
+	//表需要占用磁盘空间，视图不需要
+	//视图不能添加索引
+	//使用视图可以简化，复杂查询
+	//视图的使用利于提高安全性
+视图编写语法
+	普通视图--会操作基表
+	create view vw_emp as select empno,ename,job,hiredate,deptno from emp;
+	
+	只读视图
+	create view vw_emp_readonly as select empno,ename,job,hiredate,deptno from emp with read only;
+	
+	复杂视图
+	create view vw_emp_job_sal(job,avgsal,sumsal,maxsal,minsal)
+    2 as select job,avg(sal),sum(sal),max(sal),min(sal) from emp group by job;
+	复杂视图：使用函数、表达式、分组的视图
+	
+	查看视图
+	select last_ddl_time,object_name,status from user_objects where object_name='VW_TEST_TAB';
+####################################			
+#存储过程的了解
+	理解为在数据库中执行的某种带特定功能的程序，其中包含一条或多条sql语句
+	存储过程包含三部分：过程声明，执行过程部分，存储过程异常
+	
+为什么要写存储过程
+	效率高
+		存储过程编译一次后，就会存到数据库，每次调用时都直接执行。
+		sql语句都要先分析编译才会执行
+	降低网络流量
+		存储过程编译好会放在数据库
+		我们在远程调用时，不会传输大量的字符串类型的sql语句。
+	复用性高
+		对某功能进行了封装
+	可维护性高
+		当功能要求发生小的变化时，修改之前的存储过程比较容易，花费精力少。
+	安全性高
+		完成某个特定功能的存储过程一般只有特定的用户可以使用，具有使用身份限制，更安全
+
+存储过程
+	存储过程包含三部分：过程声明，执行过程部分，存储过程异常
+	
+	无参过程
+		CREATE OR REPLACE PROCEDURE demo AS/IS
+			变量2 DATE;
+			变量3 NUMBER;
+		BEGIN
+			--要处理的业务逻辑
+			EXCEPTION    --存储过程异常
+		END 
+		
+	有参数
+		CREATE OR REPLACE PROCEDURE 存储过程名称(param1 student.id%TYPE)
+		AS/IS
+		name student.name%TYPE;
+		age number :=20;
+		BEGIN
+		  --业务处理.....
+		END
+		第1行：param1 是参数，类型和student表id字段的类型一样。
+		第3行：声明变量name，类型是student表name字段的类型（同上）。
+		第4行：声明变量age，类型数数字，初始化为20	
+		 
+		CREATE OR REPLACE PROCEDURE 存储过程名称(
+		       s_no in varchar,
+		       s_name out varchar,
+		       s_age number) AS
+		total NUMBER := 0;
+		BEGIN
+		  SELECT COUNT(1) INTO total FROM student s WHERE s.age=s_age;
+		  dbms_output.put_line('符合该年龄的学生有'||total||'人');
+		  EXCEPTION
+		    WHEN too_many_rows THEN 
+		    DBMS_OUTPUT.PUT_LINE('返回值多于1行'); 
+		END	
+		 
+		其中参数IN表示输入参数，是参数的默认模式
+		OUT表示返回值参数，类型可以使用任意Oracle中的合法类型。
+	存储过程语法
+		运算符
+			算术运算符
+				mod(,)	m : = mod(3,2)	取模，取余
+				**		10**2 =100
+			关系运算符	
+				<>或!=或~=				不等于
+			比较运算符
+				LIKE
+				BETWEEN
+				IN
+				IS NULL
+			逻辑运算符
+			其他
+				:=			s := 0;
+				..			1..9，即1至9范围
+				||			‘hello’||’world’
+				
+		SELECT INTO STATEMENT语句
+			CREATE OR REPLACE PROCEDURE DEMO_CDD1 IS
+			s_name VARCHAR2;   --学生名称
+			s_age NUMBER;      --学生年龄
+			s_address VARCHAR2; --学生籍贯
+			BEGIN
+			  --给单个变量赋值
+			  SELECT student_address INTO s_address
+			  FROM student where student_grade=100;
+			   --给多个变量赋值
+			  SELECT student_name,student_age INTO s_name,s_age
+			  FROM student where student_grade=100;
+			  --输出成绩为100分的那个学生信息
+			  dbms_output.put_line('姓名：'||s_name||',年龄：'||s_age||',籍贯：'||s_address);
+			END
+		选择语句
+			a.IF..END IF 
+				IF s_sex=1 THEN
+				  dbms_output.put_line('这个学生是男生');
+				END IF
+			b.IF..ELSE..END IF 
+				IF s_sex=1 THEN
+				  dbms_output.put_line('这个学生是男生');
+				ELSE
+				  dbms_output.put_line('这个学生是女生');
+				END IF
+		循环语句
+		for循环
+		游标
+sql优化
+	物理优化
+		不采用 * 查询
+		分页查询
+	索引的优化
+		在作为主键的列上创建索引，强制该列的唯一性，并组织表中数据的排列结构。
+		在经常使用表连接的列上创建索引，这些列主要是一些外键，可以加快表连接的速度。
+		在经常需要根据范围进行搜索的列上创建索引，因为索引已经排序，所以其指定的范围是连续的。
+		在经常需要排序的列上创建索引，因为索引已经排序，加快排序查询。
+		在经常使用 WHERE 子句的列上创建索引，加快条件的判断速度
+
+https://blog.csdn.net/bless2015/article/details/84134361
+索引失效有哪些情况
+	存在NULL值条件
+		select * from test where id is not null;
+		在设计数据库表时，应该尽力避免NULL值出现，
+		如果非要不可避免的要出现NULL值，也要给一个DEFAULT值
+		如果索引列是可空的，是不会给其建索引的，索引值是少于表的count(*)值的，
+		所以这种情况下，执行计划自然就去扫描全表了。
+	NOT条件
+		查询条件为非时，索引定位困难，可能会全表扫描
+	LIKE通配符
+		使用前置通配符会无法定位，索引失效。而后置则可以
+	条件上包括函数
+		select * from test where upper(name)='SUNYANG';
+		索引在建立时会和计算后可能不同，无法定位到索引
+	数据类型的转换
+		条件存在隐式转换时，索引会失效。比如在数据库里id存的number类型
+	
+		
+Oracle中不同于Mysql的地方
+	类型：
+		number，varchar2而mysql中使用的是int，varchar
+		date 而mysql中使用DATATIME
+	字符串函数
+		oracle使用“||”来拼接字符串，而Mysql使用contact(str1, str2,,,)
+	空串
+		oracle ‘’（空串）为null，mysql ‘’（空串）还是空串
+	语法上的差别
+		没有if exists关键字 
+		添加列
+			MySQL:
+				A. alter table 表名 add column 字段 数据类型;
+				B. alter table 表名 add column 字段1 数据类型, add column 字段2 数据类型;
+			Oracle:
+				A. alter table 表名 add 字段 数据类型;
+				B. alter table 表名 add (字段 数据类型);
+				C. alter table 表名 add (字段1 数据类型, 字段2 数据类型); 
+	
+DDL（Data Definition Languages）
+	数据定义语句，定义数据库、表、列、索引等数据库对象，create、drop、alter
+DML（Data Manipulation Language）
+	数据操纵语句，用于添加、删除、更新和查询数据库记录，并检查数据完整性 
+	insert、delete、udpate 和select
+	
+事务（如何保证事务中数据的正确性？）
+	记忆就以几条数据同时进行操作时
+	四个特征：（ACID 特性）
+		原子性（ Atomicity ）
+			不可分割
+		一致性（ Consistency ）
+			所有数据都要保持一致的状态
+		隔离性（ Isolation ）
+			不受其他事务干扰
+		持久性（ Durability ）
+			提交后（事务成功后）将永久保存，即使数据库重启
+		
+			
+事务并发造成的问题
+	脏读
+		可以读到未提交的内容
+	不可重复读
+	虚读、幻读
+	更新丢失
+			
+四种隔离级别
+	1）Read Uncommitted(读未提交)
+		可以读到未提交的内容 -- 脏读 
+	2）Read Committed(读提交)
+		只能读到已经提交了的内容
+		使用“快照读（Snapshot Read）“
+		“读提交”只能避免“脏读”，
+		
+		并不能避免“不可重复读”和“幻读” 
+	3）Repeatable Read(可重读)	 
+		使用“快照读（Snapshot Read）“
+		该级别能够有效的避免“不可重复读”，
+		
+		但却避免不了“幻读” ，
+		因为幻读是由于“插入或者删除操作（Insert or Delete）”而产生的。
+	4）Serializable(串行化)
+		事务只能一个接一个的执行
+		这种级别下，“脏读”、“不可重复读”、“幻读”都可以被避免，
+		但是执行效率奇差，性能开销也最大
+	“快照（snapshot）”的解说
+		保证一致性又不加锁的读也被称为“快照读（Snapshot Read）”	
+		
+MySql、SQL Server和Oracle的默认隔离级别
+	MySql
+		可重读
+	SQL Server和Oracle
+		读提交
+		
+数据库中常用的函数
+	1、数学函数
+	abs(x) 返回x的绝对值
+	floor(x) 返回小于x的最大整数值
+	rand()返回０到１内的随机值,
+	sqrt(x) 返回一个数的平方根
+	2、聚合函数(常用于group by从句的select查询中)
+	avg(col)返回指定列的平均值
+	count(col)返回指定列中非null值的个数
+	min(col)返回指定列的最小值
+	max(col)返回指定列的最大值
+	sum(col)返回指定列的所有值之和 
+	3、字符串函数
+	concat(s1,s2...,sn)将s1,s2...,sn连接成字符串
+	length(s)返回字符串str中的字符数
+	trim(str)去除字符串首部和尾部的所有空格
+	4、日期和时间函数
+	now() 返回当前的日期和时间
+	week(date) 返回日期date为一年中第几周(0~53)
+	year(date) 返回日期date的年份(1000~9999)
+	hour(time) 返回time的小时值(0~23)
+	minute(time) 返回time的分钟值(0~59)
+	month(date) 返回date的月份值(1~12)
+	5、格式化函数
+	date_format(date,fmt) 依照字符串fm
+	t格式化日期date值
+	time_format(time,fmt) 依照字符串fmt格式化时间time值
+	6、类型转化函数
+	cast(now() as signed integer)
+	cast('f' as binary)
+
+MyISAM
+	优点：速度快，磁盘空间占用少； 
+	缺点：没有数据完整性机制，即不支持事务和外键
+
+InnoDB
+	优点：支持事务和外键，数据完整性机制； 
+	缺点：速度慢，磁盘空间占用多；
+	所有库都存于一个（通常情况）或数个文件中，无法通过操作系统了解某个库或表的占用空间
+	
+mysql中engine=innodb和engine=myisam的区别
+1. ISAM 
+	ISAM是一个定义明确且历经时间考验的数据表格管理方法，它在设计之时就考虑到数据库被查询的
+	次数要远大于更新的次数。因此，ISAM执行读取操作的速度很快，而且不占用大量的内存和存储资
+	源。ISAM的两个主要不足之处在于，它不支持事务处理，也不能够容错：如果你的硬盘崩溃了，那
+	么数据文件就无法恢复了。如果你正在把ISAM用在关键任务应用程序里，那就必须经常备份你所有
+	的实时数据，通过其复制特性，MySQL能够支持这样的备份应用程序。 
+2. InnoDB 
+	它提供了事务控制能力功能，它确保一组命令全部执行成功，或者当任何一个命令出现错误时所有
+	命令的结果都被回退，可以想像在电子银行中事务控制能力是非常重要的。支持COMMIT、ROLLBACK
+	和其他事务特性。最新版本的Mysql已经计划移除对BDB的支持，转而全力发展InnoDB。
+
+MyIASM是IASM表的新版本，有如下扩展：
+	二进制层次的可移植性。
+	NULL列索引。
+	对变长行比ISAM表有更少的碎片。
+	支持大文件。
+	更好的索引压缩。
+	更好的键吗统计分布。
+	更好和更快的auto_increment处理。 
+
+
+InnoDB，MyISAM  两种类型有什么区别：
+	MyISAM类型不支持事务处理等高级处理，而InnoDB类型支持。 
+	MyISAM类型的表强调的是性能，其执行数度比InnoDB类型更快，但是不提供事务支持，而InnoDB
+	提供事务支持，外键等高级数据库功能。
+
+	MyISAM类型的二进制数据文件可以在不同操作系统中迁移。也就是可以直接从Windows系统拷贝到
+	linux系统中使用。
+	
+修改表的引擎类型：
+	ALTER TABLE tablename ENGINE = MyISAM;
+
+数据库优化：（https://www.cnblogs.com/zhouyusheng/p/8038224.html）
+	1.为查询缓存优化你的查询：
+	》大多数的mysql服务器都开启了查询缓存。这是提高性能最有效的方法之一，而且这是被mysql的数据库引擎处理的。
+	》》当有很多相同的查询被执行了多次的时候，这些查询结果会被放到一个缓存中，这样，
+	》》后续的相同的查询就不用操作表而直接访问缓存结果了。
+	》// 查询缓存不开启
+	》》$r = mysql_query("SELECT username FROM user WHERE signup_date >= CURDATE()");
+	》》// 开启查询缓存
+	》》$today = date("Y-m-d");
+	》》$r = mysql_query("SELECT username FROM user WHERE signup_date >= '$today'");
+	》》CURDATE()、NOW()、RAND()这些函数的返回是会不定的、易变的，所以需要用一个变量来代替MySQL的函数，开启缓存。
+	2.EXPLAIN 你的 SELECT 查询：
+	》这可以帮你分析你的查询语句或是表结构的性能瓶颈。
+	》EXPLAIN 的查询结果还会告诉你你的索引主键被如何利用的，你的数据表是如何被搜索和排序的……等等
+	3.当只要一行数据时使用 LIMIT 1：
+	》// 没有效率的：
+	》》$r = mysql_query("SELECT * FROM user WHERE country = 'China'");
+	》》if (mysql_num_rows($r) > 0) {
+    》》	// ...
+	》》}
+	》// 有效率的：
+	》》$r = mysql_query("SELECT 1 FROM user WHERE country = 'China' LIMIT 1");
+	》》if (mysql_num_rows($r) > 0) {
+    》》	// ...
+	》》}
+	4.为搜索字段建索引；
+	》索引并不一定就是给主键或是唯一的字段。
+	》有某个字段你总要会经常用来做搜索，那么，请为其建立索引吧。
+	》有索引和没有索引性能差4倍左右。
+	5.在Join表的时候使用相当类型的例，并将其索引：
+	》如果你的应用程序有很多 JOIN 查询，你应该确认两个表中Join的字段是被建过索引的。
+	》MySQL内部会启动为你优化Join的SQL语句的机制。
+	》这些被用来Join的字段，应该是相同的类型的。
+	》// 在state中查找company
+	》》$r = mysql_query("SELECT company_name FROM users
+	》》	LEFT JOIN companies ON (users.state = companies.state)
+	》》	WHERE users.id = $user_id");
+	》》// 两个 state 字段应该是被建过索引的，而且应该是相当的类型，相同的字符集。 
+	6.千万不要 ORDER BY RAND()：
+	》这样使用只让你的数据库的性能呈指数级的下降。
+	》MySQL会不得不去执行RAND()函数（很耗CPU时间），而且这是为了每一行记录去记行，然后再对其排序。
+	》》就算是你用了Limit 1也无济于事（因为要排序）
+	》》// 千万不要这样做：
+	》》$r = mysql_query("SELECT username FROM user ORDER BY RAND() LIMIT 1");
+	》》 
+	》》// 这要会更好：
+	》》$r = mysql_query("SELECT count(*) FROM user");
+	》》$d = mysql_fetch_row($r);
+	》》$rand = mt_rand(0,$d[0] - 1);
+	》》
+	》》$r = mysql_query("SELECT username FROM user LIMIT $rand, 1");
+	7.避免 SELECT *
+	》从数据库里读出越多的数据，那么查询就会变得越慢。
+	》如果你的数据库服务器和WEB服务器是两台独立的服务器的话，这还会增加网络传输的负载。
+	8.永远为每张表设置一个ID
+	》我们应该为数据库里的每张表都设置一个ID做为其主键，而且最好的是一个INT型的（推荐使用UNSIGNED），
+	》》并设置上自动增加的AUTO_INCREMENT标志。
+	9.使用 ENUM 而不是 VARCHAR:
+	》ENUM 类型是非常快和紧凑的。在实际上，其保存的是 TINYINT，但其外表上显示为字符串。
+	》如果知道这些字段的取值是有限而且固定的，那么，你应该使用 ENUM 而不是 VARCHAR。
+	10.从 PROCEDURE ANALYSE() 取得建议：
+	》此函数会分析你的字段和其实际的数据，并会给你一些有用的建议。
+	》只有表中有实际的数据，这些建议才会变得有用，因为要做一些大的决定是需要有数据作为基础的。
+	11.尽可能的使用 NOT NULL：
+	》除非你有一个很特别的原因去使用 NULL 值，你应该总是让你的字段保持 NOT NULL。
+
+	
+	
+
+==========================================================================
+案例
+==========================================================================
+背景：
+学生信息表 、 
+CREATE TABLE student(
+	学号 INT(6) 				NOT NULL PRIMARY KEY,
+	姓名 CHAR(8) 				NOT NULL,
+	性别 bit 						NULL DEFAULT 1 COMMENT '1:男，0：女',
+	出生日期 date 			NULL,
+	专业	CHAR(12) 			NULL DEFAULT '计算机',
+	总学分 INT 					NULL DEFAULT 0,
+	备注	VARCHAR(500) 	NULL,
+	CONSTRAINT ck_sex CHECK (0<=性别<=1)
+);
+INSERT INTO student(学号,姓名,性别,出生日期,专业,总学分) 
+VALUES(191302, '程明', 1, '1996-02-01', '计算机', 70);
+INSERT INTO student(学号,姓名,性别,出生日期,专业,总学分) 
+VALUES(191303, '王燕', 0, '1994-10-12', '计算机', 50);
+INSERT INTO student(学号,姓名,性别,出生日期,专业,总学分) 
+VALUES(191304, '魏艳艳', 0, '1996-05-18', '计算机', 66);
+INSERT INTO student(学号,姓名,性别,出生日期,专业,总学分) 
+VALUES(191305, '李芳芳', 0, '1996-02-19', '计算机', 65);
+INSERT INTO student(学号,姓名,性别,出生日期,专业,总学分) 
+VALUES(191306, '张明', 1, '1997-03-19', '计算机', 86);
+INSERT INTO student(学号,姓名,性别,出生日期,专业,总学分) 
+VALUES(191307, '王敏', 0, '1995-08-13', '计算机', 77);
+INSERT INTO student(学号,姓名,性别,出生日期,专业,总学分) 
+VALUES(191309, '武威', 1, '1995-12-10', '计算机', 48);
+INSERT INTO student(学号,姓名,性别,出生日期,专业,总学分) 
+VALUES(191310, '刘艳', 0, '1995-12-27', '计算机', 75);
+INSERT INTO student(学号,姓名,性别,出生日期,专业,总学分) 
+VALUES(191311, '刘华', 1, '1995-06-10', '计算机', 65);
+
+学生课程表
+CREATE TABLE kcb(
+	课程号 		CHAR(3) 		NOT NULL PRIMARY KEY,
+	课程名 		CHAR(16) 		NOT	NULL,
+	开课学期 	TINYINT(1) 	NULL DEFAULT 1 COMMENT '范围1~8',
+	学时			TINYINT(1) 	NULL DEFAULT 0,
+	学分			TINYINT(1) 	NOT NULL DEFAULT 0 COMMENT '范围1~6',
+	CONSTRAINT ck_time CHECK (1<=开课学期<=8),
+	CONSTRAINT ck_score CHECK (1<=学分<=6)
+)ENGINE=INNODB CHARSET=utf8;
+INSERT INTO kcb(课程号,课程名,开课学期,学时,学分) VALUES('003', '计算机基础', 2, 18, 2);
+
+成绩表
+CREATE TABLE cjb(
+	学号 		INT(6) 		NOT NULL PRIMARY KEY,
+	课程号 	CHAR(3) 	NOT NULL,
+	成绩 		INT 			NULL DEFAULT 0 COMMENT '范围0~100',
+	CONSTRAINT ck_sc CHECK (0<=成绩<=100)
+);
+INSERT INTO cjb(学号,课程号,成绩) VALUES(191301, '003', 80);
+INSERT INTO cjb(学号,课程号,成绩) VALUES(191302, '003', 89);
+INSERT INTO cjb(学号,课程号,成绩) VALUES(191303, '003', 78);
+INSERT INTO cjb(学号,课程号,成绩) VALUES(191304, '003', 76);
+INSERT INTO cjb(学号,课程号,成绩) VALUES(191305, '003', 73);
+INSERT INTO cjb(学号,课程号,成绩) VALUES(191306, '003', 81);
+INSERT INTO cjb(学号,课程号,成绩) VALUES(191307, '003', 73);
+INSERT INTO cjb(学号,课程号,成绩) VALUES(191309, '003', 70);
+INSERT INTO cjb(学号,课程号,成绩) VALUES(191310, '003', 80);
+INSERT INTO cjb(学号,课程号,成绩) VALUES(191311, '003', 88);
+
+//删除表
+DROP TABLE student;
+
+//创建表
+CREATE TABLE student(
+	id INT(4) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	name CHAR(20)
+)ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+
+//表结构的修改 添加列
+ALTER TABLE test.student ADD age INT(3);
+ALTER TABLE test.student ADD score INT(3);
+
+//表结构的修改 删除列
+ALTER TABLE test.student DROP COLUMN age;
+
+INSERT INTO student(name,score) VALUES('小明', 89);
+
+//
+INSERT INTO student(name,score) VALUES('小明', 88);
+
+//修改
+UPDATE student SET name = '小红' WHERE id = 2;
+
+//插入
+INSERT INTO student(name,score) VALUES('小丽', 60);
+
+//
+INSERT INTO student(name,score) VALUES('小花', 100);
+
+//查询
+SELECT * FROM student;
+
+//平均值
+SELECT id AS '编号',name AS '名称' FROM student LIMIT 2;
+
+//聚合函数 总数
+SELECT SUM(score) AS '总数' FROM student;
+
+//聚合函数 平均值
+SELECT AVG(score) AS '平均值' FROM student;
+
+//聚合函数 
+SELECT MAX(score) AS '最大值' FROM student;
+
+//聚合函数 
+SELECT COUNT(*) AS '人数' FROM student;
+
+//LIKE匹配
+SELECT * FROM student WHERE name LIKE '小_';
+
+//LIKE匹配
+SELECT * FROM student WHERE score LIKE '%8_[1-9]';
+
+//导出表
+SELECT * FROM(
+	SELECT name,score FROM student WHERE score > 80
+) AS studenty WHERE studenty.`name` LIKE '小_';
+
+//插入
+INSERT INTO student(name, score) VALUES('小明', 89);
+INSERT INTO student(name, score) VALUES('小华', 78);
+INSERT INTO student(name, score) VALUES('小于', 69);
+
+//连接谓词
+SELECT student.id, name, score, major
+	FROM student, classinfor
+	WHERE student.id = classinfor.id;
+	
+SELECT student.学号, student.姓名, student.性别, student.出生日期, student.专业, kcb.课程名, cjb.成绩
+FROM cjb,kcb,student
+WHERE student.`学号` = cjb.`学号` 
+	AND kcb.课程号 = cjb.课程号;
+	
+//内连接
+SELECT student.学号, student.姓名, student.性别, student.出生日期, student.专业, kcb.课程名, cjb.成绩
+FROM cjb JOIN kcb JOIN student
+ON student.`学号` = cjb.`学号` 
+AND kcb.课程号 = cjb.课程号;
+
+//外连接
+SELECT *
+FROM cjb LEFT OUTER JOIN student
+ON student.`学号` = cjb.`学号` 
+
+//交叉连接
+SELECT *
+FROM cjb CROSS JOIN student
+ON student.`学号` = cjb.`学号` 
+
+
+//注释方式
+-- this comment...
+# this coment...
+/* this comment... */
+
+11-27
+ddl:
+create table student(
+	xuehao int(6) not null primary key,
+	xingming char(8) not null,
+	xingbie bit null default 1,
+	birstdate date null,
+	constraint ck_sex check (0<=xingbie<=1)
+)engine=innodb charset=utf-8;
+
+alter table student drop column age;
+
+drop table student;
+
+create database shop(
+	
+)
+
+create index index_name 
+	on student (xuehao)
+create unique index index_name
+	on student (xuehao)
+alter table student 
+	drop index index_name
+alter table student
+	add index index_name (xuehao)
+
+
+
+dml:
+select xuehao,xingbie,xingming from student where xuehao=1;
+insert into student(xuehao,xingming,xingbie) values(...);
+update student set xingming='xiaohong' where xuehao='1';
+DELETE FROM student WHERE xuehao BETWEEN '0015' AND '0099' 
+
+约束：
+xuehao int(6) not null primary key,
+create table student (
+	...
+	constrant uc_personID unique()
+)
+
